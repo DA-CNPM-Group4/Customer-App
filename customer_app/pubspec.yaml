@@ -76,10 +76,10 @@ flutter:
   fonts:
   - family: Roboto
     fonts:
-      - asset: fonts/Roboto/Roboto-Bold.ttf
-      - asset: fonts/Roboto/Roboto-Light.ttf
-      - asset: fonts/Roboto/Roboto-Medium.ttf
-      - asset: fonts/Roboto/Roboto-Regular.ttf
+      - asset: assets/fonts/Roboto/Roboto-Bold.ttf
+      - asset: assets/fonts/Roboto/Roboto-Light.ttf
+      - asset: assets/fonts/Roboto/Roboto-Medium.ttf
+      - asset: assets/fonts/Roboto/Roboto-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

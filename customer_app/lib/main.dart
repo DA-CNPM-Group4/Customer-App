@@ -1,4 +1,5 @@
 import 'package:customer_app/modules/register/views/register_view.dart';
+import 'package:customer_app/modules/welcome/views/welcome_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const RegisterView(),
+      home: const WelcomeView(),
     );
   }
 }

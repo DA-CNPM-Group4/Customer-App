@@ -26,7 +26,9 @@ class RegisterView extends StatelessWidget {
       child: Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               icon: const Icon(
                 Icons.arrow_back,
                 color: Colors.black,

@@ -1,3 +1,4 @@
+import 'package:customer_app/modules/otp/views/otp_view.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -90,7 +91,10 @@ class RegisterView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
               elevation: 0.0,
               backgroundColor: Colors.grey,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const OtpView()));
+              },
               child: const Icon(
                 Icons.arrow_forward,
                 color: Colors.white,
@@ -105,7 +109,7 @@ Widget _buildRegisterArea() {
     children: [
       Text(
         "Name",
-        style: BaseTextStyle.heading3(fontSize: 22),
+        style: BaseTextStyle.heading3(fontSize: 20),
       ),
       TextFormField(
         decoration: InputDecoration(
@@ -116,7 +120,7 @@ Widget _buildRegisterArea() {
       const SizedBox(height: 30),
       Text(
         "Email",
-        style: BaseTextStyle.heading3(fontSize: 22),
+        style: BaseTextStyle.heading3(fontSize: 20),
       ),
       TextFormField(
         decoration: InputDecoration(
@@ -127,7 +131,7 @@ Widget _buildRegisterArea() {
       const SizedBox(height: 30),
       Text(
         "Phone number",
-        style: BaseTextStyle.heading3(fontSize: 22),
+        style: BaseTextStyle.heading3(fontSize: 20),
       ),
       Row(
         children: [

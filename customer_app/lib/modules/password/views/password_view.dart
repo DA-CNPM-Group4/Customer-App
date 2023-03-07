@@ -1,13 +1,21 @@
-import 'package:customer_app/modules/password/views/password_view.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
-import 'package:pinput/pinput.dart';
+import 'dart:math';
 
-class OtpView extends StatelessWidget {
-  const OtpView({Key? key}) : super(key: key);
-
+class PasswordView extends StatelessWidget {
+  const PasswordView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double heightSafeArea = size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
+    double safeWidth = min(size.width, 500);
+    double keyboardHeight = EdgeInsets.fromWindowPadding(
+            WidgetsBinding.instance.window.viewInsets,
+            WidgetsBinding.instance.window.devicePixelRatio)
+        .bottom;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -40,39 +48,38 @@ class OtpView extends StatelessWidget {
             child: SingleChildScrollView(
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 64),
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset(
-                      "assets/images/img.png",
-                      height: 80,
-                    ),
-                    const SizedBox(height: 10),
+                    AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        alignment: Alignment.center,
+                        height: (keyboardHeight == 0)
+                            ? heightSafeArea * 0.3
+                            : heightSafeArea * 0.28,
+                        child: Image.asset("assets/images/car.png",
+                            width: safeWidth * 0.6, fit: BoxFit.fitWidth)),
+                    const SizedBox(height: 18),
                     Text(
                       "You're almost there!",
                       style: BaseTextStyle.heading1(),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     Text(
-                      "You must enter OTP which we sent you earlier",
+                      "Please enter a password in order to create an account in our system.",
                       style: BaseTextStyle.body1(),
                     ),
                     const SizedBox(height: 32),
-                    Form(
-                      child: Pinput(
-                        length: 6,
-                      ),
+                    Text(
+                      "Password",
+                      style: BaseTextStyle.heading3(fontSize: 22),
                     ),
-                    const SizedBox(height: 32),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 60,
-                      child: ElevatedButton(
-                          style:
-                              ElevatedButton.styleFrom(primary: Colors.green),
-                          onPressed: () {},
-                          child: const Text("Resend")),
+                    Form(
+                      child: TextFormField(
+                        obscureText: true,
+                        decoration: const InputDecoration(),
+                      ),
                     )
                   ],
                 ),
@@ -82,10 +89,7 @@ class OtpView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             elevation: 0.0,
             backgroundColor: Colors.grey,
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const PasswordView()));
-            },
+            onPressed: () {},
             child: const Icon(
               Icons.arrow_forward,
               color: Colors.white,

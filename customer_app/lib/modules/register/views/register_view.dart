@@ -114,6 +114,8 @@ Widget _buildRegisterArea() {
         style: BaseTextStyle.heading3(fontSize: 20),
       ),
       TextFormField(
+        textCapitalization: TextCapitalization.words,
+        textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           hintText: 'e.g., John Doe',
           hintStyle: BaseTextStyle.body3(color: Colors.grey),
@@ -125,6 +127,7 @@ Widget _buildRegisterArea() {
         style: BaseTextStyle.heading3(fontSize: 20),
       ),
       TextFormField(
+        textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           hintText: 'e.g., name@gmail.com',
           hintStyle: BaseTextStyle.body3(color: Colors.grey),
@@ -165,6 +168,7 @@ Widget _buildRegisterArea() {
           ),
           Flexible(
             child: TextFormField(
+              textInputAction: TextInputAction.done,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: InputDecoration(
                 hintText: '123xxxxxxx',

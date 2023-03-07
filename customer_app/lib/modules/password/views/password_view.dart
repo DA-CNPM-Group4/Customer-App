@@ -1,3 +1,4 @@
+import 'package:customer_app/modules/welcome/views/welcome_view.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -89,7 +90,9 @@ class PasswordView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             elevation: 0.0,
             backgroundColor: Colors.grey,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            },
             child: const Icon(
               Icons.arrow_forward,
               color: Colors.white,

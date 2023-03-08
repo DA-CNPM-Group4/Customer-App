@@ -1,4 +1,3 @@
-import 'package:customer_app/modules/otp/views/otp_view.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';

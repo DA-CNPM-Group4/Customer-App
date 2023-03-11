@@ -7,13 +7,13 @@ class LoginController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController phoneNumberController = TextEditingController();
   APIHandlerImp apiHandlerImp = APIHandlerImp();
-  var phoneNumberError = ''.obs;
+  var emailError = ''.obs;
   var isLoading = false.obs;
 
-  String? phoneNumberValidator(String value) {
+  String? emailValidator(String value) {
     if (value.isEmpty) {
       return "This field is required";
-    } else if (!GetUtils.isPhoneNumber(value)) {
+    } else if (!GetUtils.isEmail(value)) {
       return "This is not a valid phone number";
     }
     return null;
@@ -32,7 +32,7 @@ class LoginController extends GetxController {
         "user/checkPhonenumber");
 
     if (!phoneResponse.data["status"]) {
-      phoneNumberError.value = "Phone number is not existed, try another one";
+      emailError.value = "Phone number is not existed, try another one";
       isLoading.value = false;
       return false;
     }

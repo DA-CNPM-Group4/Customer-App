@@ -1,11 +1,14 @@
 import 'package:customer_app/modules/login/views/login_view.dart';
 import 'package:customer_app/modules/register/views/register_view.dart';
+import 'package:customer_app/modules/welcome/controllers/welcome_controller.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
+import 'package:get/get.dart';
 
-class WelcomeView extends StatelessWidget {
+class WelcomeView extends GetView<WelcomeController> {
   const WelcomeView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -61,8 +64,7 @@ class WelcomeView extends StatelessWidget {
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: Colors.green),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const LoginView()));
+                          Get.toNamed(Routes.LOGIN);
                         },
                         child: const Text("Log in"))),
                 Container(
@@ -79,8 +81,7 @@ class WelcomeView extends StatelessWidget {
                             primary: Colors.white,
                             elevation: 0),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const RegisterView()));
+                          Get.toNamed(Routes.REGISTER);
                         },
                         child: Text(
                           "I'm new, sign me up",

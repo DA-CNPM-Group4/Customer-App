@@ -1,6 +1,6 @@
+import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_grab/app/modules/register/controllers/register_controller.dart';
 
 import '../../../data/common/api_handler.dart';
 
@@ -17,10 +17,10 @@ class PasswordController extends GetxController {
     super.onInit();
   }
 
-  String? passwordValidator(String value){
+  String? passwordValidator(String value) {
     if (value.isEmpty) {
       return "This field is required";
-    } else if(value.length < 6) {
+    } else if (value.length < 6) {
       return "Password length must be longer than 6 digits";
     }
     return null;
@@ -35,13 +35,13 @@ class PasswordController extends GetxController {
     return true;
   }
 
-  register() async{
+  register() async {
     isLoading.value = true;
     var response = await apiHandlerImp.post({
       "username": '0${registerController.phoneNumberController.text}',
       "password": passwordController.text,
       "userInfor": {
-        "email":  registerController.emailController.text,
+        "email": registerController.emailController.text,
         "fullName": registerController.nameController.text
       }
     }, "user/signup");
@@ -49,7 +49,7 @@ class PasswordController extends GetxController {
       "username": '0${registerController.phoneNumberController.text}',
       "password": passwordController.text,
       "userInfor": {
-        "email":  registerController.emailController.text,
+        "email": registerController.emailController.text,
         "fullName": registerController.nameController.text
       }
     });
@@ -65,5 +65,4 @@ class PasswordController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
 }

@@ -1,10 +1,13 @@
 import 'package:customer_app/modules/otp/views/otp_view.dart';
+import 'package:customer_app/modules/register/controllers/register_controller.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
-class RegisterView extends StatelessWidget {
+class RegisterView extends GetView<RegisterController> {
   const RegisterView({Key? key}) : super(key: key);
 
   @override
@@ -27,7 +30,7 @@ class RegisterView extends StatelessWidget {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Get.back();
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -54,6 +57,7 @@ class RegisterView extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
                 child: Form(
+                  key: controller.formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -82,7 +86,91 @@ class RegisterView extends StatelessWidget {
                             fontSize: 16, color: Colors.grey),
                       ),
                       const SizedBox(height: 8),
-                      _buildRegisterArea(),
+                      Text(
+                        "Name",
+                        style: BaseTextStyle.heading3(fontSize: 20),
+                      ),
+                      TextFormField(
+                        textCapitalization: TextCapitalization.words,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) => controller.nameValidator(value!),
+                        controller: controller.nameController,
+                        decoration: InputDecoration(
+                          hintText: 'e.g., John Doe',
+                          hintStyle: BaseTextStyle.body3(color: Colors.grey),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Text(
+                        "Email",
+                        style: BaseTextStyle.heading3(fontSize: 20),
+                      ),
+                      Obx(
+                        () => TextFormField(
+                          textInputAction: TextInputAction.next,
+                          controller: controller.emailController,
+                          validator: (value) =>
+                              controller.emailValidator(value!),
+                          decoration: InputDecoration(
+                            hintText: 'e.g., name@gmail.com',
+                            hintStyle: BaseTextStyle.body3(color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Text(
+                        "Phone number",
+                        style: BaseTextStyle.heading3(fontSize: 20),
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            height: 30,
+                            child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Image.asset(
+                                      "assets/icons/flag.png",
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    Text(
+                                      "+84",
+                                      style: BaseTextStyle.body3(),
+                                    ),
+                                  ],
+                                )),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Obx(
+                            () => Flexible(
+                              child: TextFormField(
+                                textInputAction: TextInputAction.done,
+                                controller: controller.phoneNumberController,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                validator: (value) =>
+                                    controller.phoneNumberValidator(value!),
+                                decoration: InputDecoration(
+                                  errorText: controller.phoneNumberError.value,
+                                  hintText: '123xxxxxxx',
+                                  hintStyle:
+                                      BaseTextStyle.body3(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 32),
                     ],
                   ),
@@ -93,91 +181,22 @@ class RegisterView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
               elevation: 0.0,
               backgroundColor: Colors.grey,
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const OtpView()));
+              onPressed: () async {
+                var check = await controller.check();
+                if (check == true) {
+                  Get.toNamed(Routes.OTP);
+                }
               },
-              child: const Icon(
-                Icons.arrow_forward,
-                color: Colors.white,
+              child: Obx(
+                () => controller.isLoading.value
+                    ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      )
+                    : const Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                      ),
               ))),
     );
   }
-}
-
-Widget _buildRegisterArea() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        "Name",
-        style: BaseTextStyle.heading3(fontSize: 20),
-      ),
-      TextFormField(
-        textCapitalization: TextCapitalization.words,
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          hintText: 'e.g., John Doe',
-          hintStyle: BaseTextStyle.body3(color: Colors.grey),
-        ),
-      ),
-      const SizedBox(height: 30),
-      Text(
-        "Email",
-        style: BaseTextStyle.heading3(fontSize: 20),
-      ),
-      TextFormField(
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          hintText: 'e.g., name@gmail.com',
-          hintStyle: BaseTextStyle.body3(color: Colors.grey),
-        ),
-      ),
-      const SizedBox(height: 30),
-      Text(
-        "Phone number",
-        style: BaseTextStyle.heading3(fontSize: 20),
-      ),
-      Row(
-        children: [
-          SizedBox(
-            width: 100,
-            height: 30,
-            child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Image.asset(
-                      "assets/icons/flag.png",
-                      height: 20,
-                      width: 20,
-                    ),
-                    Text(
-                      "+84",
-                      style: BaseTextStyle.body3(),
-                    ),
-                  ],
-                )),
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          Flexible(
-            child: TextFormField(
-              textInputAction: TextInputAction.done,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: InputDecoration(
-                hintText: '123xxxxxxx',
-                hintStyle: BaseTextStyle.body3(color: Colors.grey),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ],
-  );
 }

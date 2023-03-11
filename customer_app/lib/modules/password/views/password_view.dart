@@ -1,9 +1,13 @@
+import 'package:customer_app/modules/password/controllers/password_controller.dart';
 import 'package:customer_app/modules/welcome/views/welcome_view.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-class PasswordView extends StatelessWidget {
+import 'package:get/get.dart';
+
+class PasswordView extends GetView<PasswordController> {
   const PasswordView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -77,8 +81,11 @@ class PasswordView extends StatelessWidget {
                       style: BaseTextStyle.heading3(fontSize: 22),
                     ),
                     Form(
+                      key: controller.formKey,
                       child: TextFormField(
                         obscureText: true,
+                        controller: controller.passwordController,
+                        validator: (val) => controller.passwordValidator(val!),
                         decoration: const InputDecoration(),
                       ),
                     )
@@ -88,16 +95,26 @@ class PasswordView extends StatelessWidget {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            elevation: 0.0,
-            backgroundColor: Colors.grey,
-            onPressed: () {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            },
-            child: const Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-            ),
-          )),
+              elevation: 0.0,
+              backgroundColor: Colors.grey,
+              onPressed: () async {
+                if (controller.check()) {
+                  await controller.register();
+                  Get.offAllNamed(Routes.WELCOME);
+                  Get.snackbar("Register successfully",
+                      "You can log in to our system from now on",
+                      colorText: Colors.black,
+                      backgroundColor: Colors.grey[200]);
+                }
+              },
+              child: Obx(() => controller.isLoading.value
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                    )))),
     );
   }
 }

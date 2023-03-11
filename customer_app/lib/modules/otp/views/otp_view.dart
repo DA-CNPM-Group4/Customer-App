@@ -1,9 +1,11 @@
+import 'package:customer_app/modules/otp/controllers/otp_controller.dart';
 import 'package:customer_app/modules/password/views/password_view.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 
-class OtpView extends StatelessWidget {
+class OtpView extends GetView<OtpController> {
   const OtpView({Key? key}) : super(key: key);
 
   @override
@@ -20,7 +22,7 @@ class OtpView extends StatelessWidget {
                 color: Colors.black,
               ),
               onPressed: () {
-                Navigator.pop(context);
+                Get.back();
               },
             ),
             actions: [
@@ -59,20 +61,46 @@ class OtpView extends StatelessWidget {
                       style: BaseTextStyle.body1(),
                     ),
                     const SizedBox(height: 32),
-                    // Form(
-                    //   child: Pinput(
-                    //     length: 6,
-                    //   ),
-                    // ),
+                    Form(
+                      key: controller.formKey,
+                      child: Pinput(
+                        length: 6,
+                        controller: controller.otpController,
+                        // validator: (value) => controller.validator(),
+                        errorText: controller.error.value,
+                      ),
+                    ),
                     const SizedBox(height: 32),
                     SizedBox(
                       width: double.infinity,
                       height: 60,
-                      child: ElevatedButton(
-                          style:
-                              ElevatedButton.styleFrom(primary: Colors.green),
-                          onPressed: () {},
-                          child: const Text("Resend")),
+                      child: Obx(
+                        () => ElevatedButton(
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.green),
+                            onPressed: controller.isClicked.value
+                                ? null
+                                : () {
+                                    controller.startTimer();
+                                  },
+                            child: controller.isClicked.value
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        "${controller.start.value}s",
+                                        style: const TextStyle(fontSize: 20),
+                                      ),
+                                    ],
+                                  )
+                                : const Text("Resend")),
+                      ),
                     )
                   ],
                 ),

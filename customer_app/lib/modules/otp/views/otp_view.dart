@@ -59,11 +59,11 @@ class OtpView extends StatelessWidget {
                       style: BaseTextStyle.body1(),
                     ),
                     const SizedBox(height: 32),
-                    Form(
-                      child: Pinput(
-                        length: 6,
-                      ),
-                    ),
+                    // Form(
+                    //   child: Pinput(
+                    //     length: 6,
+                    //   ),
+                    // ),
                     const SizedBox(height: 32),
                     SizedBox(
                       width: double.infinity,

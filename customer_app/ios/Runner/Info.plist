@@ -6,6 +6,8 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your app needs access to your location to provide relevant information.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Customer App</string>
 	<key>CFBundleExecutable</key>

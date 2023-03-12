@@ -2,9 +2,13 @@ import 'package:customer_app/modules/find_transportation/bindings/find_transport
 import 'package:customer_app/modules/find_transportation/views/find_transportation_view.dart';
 import 'package:customer_app/modules/home/bindings/home_binding.dart';
 import 'package:customer_app/modules/home/views/home_view.dart';
+import 'package:customer_app/modules/map/bindings/map_binding.dart';
+import 'package:customer_app/modules/map/views/map_view.dart';
 import 'package:customer_app/modules/otp/bindings/otp_binding.dart';
 import 'package:customer_app/modules/password_login/bindings/password_login_binding.dart';
 import 'package:customer_app/modules/password_login/views/password_login_view.dart';
+import 'package:customer_app/modules/search_page/bindings/search_page_binding.dart';
+import 'package:customer_app/modules/search_page/views/search_page_view.dart';
 import 'package:customer_app/modules/splash/bindings/splash_binding.dart';
 import 'package:customer_app/modules/splash/views/splash_view.dart';
 import 'package:customer_app/modules/user/bindings/user_binding.dart';
@@ -72,16 +76,16 @@ class AppPages {
         page: () => const FindTransportationView(),
         binding: FindTransportationBinding(),
         bindings: [UserBinding()]),
-    // GetPage(
-    //     name: _Paths.MAP,
-    //     page: () => const MapView(),
-    //     binding: MapBinding(),
-    //     bindings: [UserBinding()]),
-    // GetPage(
-    //   name: _Paths.SEARCH_PAGE,
-    //   page: () => const SearchPageView(),
-    //   binding: SearchPageBinding(),
-    // ),
+    GetPage(
+        name: _Paths.MAP,
+        page: () => const MapView(),
+        binding: MapBinding(),
+        bindings: [UserBinding()]),
+    GetPage(
+      name: _Paths.SEARCH_PAGE,
+      page: () => const SearchPageView(),
+      binding: SearchPageBinding(),
+    ),
     GetPage(
       name: _Paths.USER,
       page: () => const UserView(),

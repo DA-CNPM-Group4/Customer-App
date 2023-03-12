@@ -1,3 +1,4 @@
+import 'package:customer_app/data/common/fake_search.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class HomeView extends GetView<HomeController> {
           ),
           Text(
             title,
-            style: BaseTextStyle.heading2(),
+            style: BaseTextStyle.heading1(fontSize: 14),
           )
         ],
       ),
@@ -61,9 +62,14 @@ class HomeView extends GetView<HomeController> {
           preferredSize: const Size.fromHeight(65.0), // here the desired height
           child: AppBar(
             backgroundColor: Colors.green,
-            title: Text(
-              "Home Page",
-              style: BaseTextStyle.heading2(),
+            title: FakeSearch(
+              hint: "Find services, food, or places",
+              hintStyle: BaseTextStyle.body1(fontSize: 12),
+              prefixIcon: Icons.search,
+              prefixIconColor: Colors.black,
+              onTap: () {
+                // Get.toNamed(Routes.SEARCH_PAGE);
+              },
             ),
             actions: [
               GestureDetector(
@@ -78,7 +84,7 @@ class HomeView extends GetView<HomeController> {
                         color: Colors.white, shape: BoxShape.circle),
                     child: Center(
                         child: Image.asset(
-                      "assets/icon_account.png",
+                      "assets/icons/icon_account.png",
                       color: Colors.green,
                       height: 20,
                       width: 20,
@@ -99,26 +105,26 @@ class HomeView extends GetView<HomeController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       mainIconButton(
-                          icon: "assets/main_icon/main_icon_1.png",
-                          title: "GoRide",
+                          icon: "assets/icons/main_icon_1.png",
+                          title: "BikeHub",
                           onPressed: () {
                             Get.toNamed(Routes.FIND_TRANSPORTATION);
                           }),
                       mainIconButton(
-                          icon: "assets/main_icon/main_icon_2.png",
-                          title: "GoCar Protect",
+                          icon: "assets/icons/main_icon_2.png",
+                          title: "CarHub",
                           onPressed: () {
                             Get.toNamed(Routes.FIND_TRANSPORTATION);
                           }),
                       mainIconButton(
-                          icon: "assets/main_icon/main_icon_4.png",
-                          title: "GoFood",
+                          icon: "assets/icons/main_icon_4.png",
+                          title: "FoodHub",
                           onPressed: () {
                             print("3");
                           }),
                       mainIconButton(
-                          icon: "assets/main_icon/main_icon_3.png",
-                          title: "GoSend",
+                          icon: "assets/icons/main_icon_3.png",
+                          title: "SendHub",
                           onPressed: () {
                             print("4");
                           })
@@ -131,32 +137,12 @@ class HomeView extends GetView<HomeController> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (_, item) {
                       return mainBanner(
-                          icon: controller.banners[item], e: TYPES.VERTICAL);
+                          icon: controller.banners[item],
+                          e: TYPES.VERTICAL,
+                          elevation: 0);
                     },
                     itemCount: controller.banners.length,
                   ),
-                  Image.asset("assets/go_food_logo.png", height: 60, width: 60),
-                  Text(
-                    "Get your favourite dishes here!",
-                    style: textTheme.bodyText1,
-                  ),
-                  h,
-                  const Text("Choose from a wide range of restaurants"),
-                  h,
-                  SizedBox(
-                    height: 200,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (_, item) {
-                        return mainBanner(
-                            icon: controller.banners_2[item],
-                            e: TYPES.HORIZONTAL,
-                            elevation: 0);
-                      },
-                      itemCount: controller.banners_2.length,
-                    ),
-                  )
                 ],
               ),
             ),

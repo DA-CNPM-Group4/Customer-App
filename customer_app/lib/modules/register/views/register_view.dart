@@ -112,9 +112,10 @@ class RegisterView extends GetView<RegisterController> {
                           validator: (value) =>
                               controller.emailValidator(value!),
                           decoration: InputDecoration(
-                            hintText: 'e.g., name@gmail.com',
-                            hintStyle: BaseTextStyle.body3(color: Colors.grey),
-                          ),
+                              hintText: 'e.g., name@gmail.com',
+                              hintStyle:
+                                  BaseTextStyle.body3(color: Colors.grey),
+                              errorText: controller.emailError.value),
                         ),
                       ),
                       const SizedBox(height: 30),
@@ -182,10 +183,10 @@ class RegisterView extends GetView<RegisterController> {
               elevation: 0.0,
               backgroundColor: Colors.grey,
               onPressed: () async {
-                var check = await controller.check();
-                if (check == true) {
-                  Get.toNamed(Routes.OTP);
-                }
+                // var check = await controller.check();
+                // if (check == true) {
+                Get.toNamed(Routes.OTP);
+                // }
               },
               child: Obx(
                 () => controller.isLoading.value

@@ -4,9 +4,9 @@ class HomeController extends GetxController {
   //TODO: Implement HomeController
 
   List<String> banners = [
-    "assets/main_banner/1.png",
-    "assets/main_banner/2.png",
-    "assets/main_banner/3.png",
+    "assets/images/main_banner.png",
+    "assets/images/main_banner2.jpeg",
+    "assets/images/main_banner3.jpeg",
   ];
 
   List<String> banners_2 = [

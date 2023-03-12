@@ -1,3 +1,4 @@
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 
@@ -76,9 +77,11 @@ class PasswordLoginView extends GetView<PasswordLoginController> {
               elevation: 0.0,
               backgroundColor: Colors.grey,
               onPressed: () async {
-                if (controller.check()) {
-                  await controller.login();
-                }
+                // if (controller.check()) {
+                //   await controller.login();
+                // }
+                Get.offNamedUntil(
+                    Routes.HOME, ModalRoute.withName(Routes.HOME));
               },
               child: Obx(
                 () => controller.isLoading.value

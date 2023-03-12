@@ -1,5 +1,6 @@
 import 'package:customer_app/modules/otp/controllers/otp_controller.dart';
 import 'package:customer_app/modules/password/views/password_view.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -111,8 +112,7 @@ class OtpView extends GetView<OtpController> {
             elevation: 0.0,
             backgroundColor: Colors.grey,
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const PasswordView()));
+              Get.toNamed(Routes.PASSWORD);
             },
             child: const Icon(
               Icons.arrow_forward,

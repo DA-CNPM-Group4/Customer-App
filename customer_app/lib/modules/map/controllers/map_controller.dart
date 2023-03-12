@@ -43,34 +43,34 @@ class MapController extends GetxController {
     Vehicle(
         name: "Motorbike",
         type: "MOTORBIKE",
-        price: "",
+        price: "12.500",
         duration: "",
         priceAfterVoucher: "",
-        picture: "assets/vehicles/motorcycle.png",
+        picture: "assets/images/motorcycle.png",
         seatNumber: "2"),
     Vehicle(
         name: "Car4S",
         type: "CAR4S",
-        price: "",
+        price: "29.000",
         duration: "",
         priceAfterVoucher: "",
-        picture: "assets/vehicles/car.png",
+        picture: "assets/images/car.png",
         seatNumber: "4"),
     Vehicle(
         name: "Car7S",
         type: "CAR7S",
-        price: "",
+        price: "34.000",
         duration: "",
         priceAfterVoucher: "",
-        picture: "assets/vehicles/car.png",
+        picture: "assets/images/car.png",
         seatNumber: "7"),
     Vehicle(
         name: "Car16S",
         type: "CAR16S",
-        price: "",
+        price: "52000",
         duration: "",
         priceAfterVoucher: "",
-        picture: "assets/vehicles/car.png",
+        picture: "assets/images/car.png",
         seatNumber: "16"),
   ];
 
@@ -151,7 +151,6 @@ class MapController extends GetxController {
         }
       }
     }
-
     isLoading.value = false;
   }
 
@@ -202,7 +201,7 @@ class MapController extends GetxController {
     var start = "${from?.lat},${from?.lng}";
     var end = "${to?.lat},${to?.lng}";
     Map<String, String> query = {
-      "key": "d2c643ad1e2975f1fa0d1719903704e8",
+      "key": "007f1251dd7ab0b676d064a314b46fa4",
       "origin": start,
       "destination": end,
       "mode": selectedIndex.value == 0 ? "motorcycle" : "car"
@@ -217,31 +216,31 @@ class MapController extends GetxController {
     }
     polyline.refresh();
 
-    var response1 = await apiHandlerImp.put({
-      "distance": response["result"]["routes"][0]["legs"][0]["distance"]
-              ["value"] /
-          1000,
-      "timeSecond": response["result"]["routes"][0]["legs"][0]["duration"]
-          ["value"],
-    }, "user/getVehicleAndPrice");
+    // var response1 = await apiHandlerImp.put({
+    //   "distance": response["result"]["routes"][0]["legs"][0]["distance"]
+    //           ["value"] /
+    //       1000,
+    //   "timeSecond": response["result"]["routes"][0]["legs"][0]["duration"]
+    //       ["value"],
+    // }, "user/getVehicleAndPrice");
 
-    for (int i = 0;
-        i < response1.data["data"]["vehiclesAndPrices"].length;
-        i++) {
-      vehicleList[i].price =
-          response1.data["data"]["vehiclesAndPrices"][i]["price"].toString();
-      vehicleList[i].duration = response["result"]["routes"][0]["legs"][0]
-              ["duration"]["text"]
-          .toString()
-          .replaceFirst("phút", "m")
-          .replaceFirst("giờ", "h")
-          .replaceFirst("giây", "s");
-    }
+    // for (int i = 0;
+    //     i < response1.data["data"]["vehiclesAndPrices"].length;
+    //     i++) {
+    //   vehicleList[i].price =
+    //       response1.data["data"]["vehiclesAndPrices"][i]["price"].toString();
+    //   vehicleList[i].duration = response["result"]["routes"][0]["legs"][0]
+    //           ["duration"]["text"]
+    //       .toString()
+    //       .replaceFirst("phút", "m")
+    //       .replaceFirst("giờ", "h")
+    //       .replaceFirst("giây", "s");
+    // }
 
-    request["distance"] =
-        response["result"]["routes"][0]["legs"][0]["distance"]["value"] / 1000;
-    request["timeSecond"] =
-        response["result"]["routes"][0]["legs"][0]["duration"]["value"];
+    // request["distance"] =
+    //     response["result"]["routes"][0]["legs"][0]["distance"]["value"] / 1000;
+    // request["timeSecond"] =
+    //     response["result"]["routes"][0]["legs"][0]["duration"]["value"];
 
     isLoading.value = false;
     EasyLoading.dismiss();

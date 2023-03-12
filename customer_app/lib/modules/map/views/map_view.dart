@@ -1,5 +1,6 @@
 import 'package:customer_app/data/common/bottom_sheets.dart';
 import 'package:customer_app/data/common/util.dart';
+import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
@@ -12,112 +13,131 @@ class MapView extends GetView<MapController> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final textTheme = Theme.of(context).textTheme;
+    var textTheme = Theme.of(context).textTheme;
+
+    Size size = MediaQuery.of(context).size;
+    double heightSafeArea = size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
+    double keyboardHeight = EdgeInsets.fromWindowPadding(
+            WidgetsBinding.instance.window.viewInsets,
+            WidgetsBinding.instance.window.devicePixelRatio)
+        .bottom;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Obx(
-          () => GoogleMap(
-            polylines: controller.polyline.toSet(),
-            mapType: MapType.normal,
-            myLocationButtonEnabled: false,
-            zoomControlsEnabled: true,
-            zoomGesturesEnabled: true,
-            myLocationEnabled: true,
-            onMapCreated: (GoogleMapController control) {
-              controller.isLoading.value = true;
-              controller.googleMapController = control;
-              controller.isLoading.value = false;
-            },
-            markers: controller.markers.values.toSet(),
-            initialCameraPosition: CameraPosition(
-                target: controller.searchingLocation == null
-                    ? LatLng(
-                        controller
-                            .findTransportationController.position["latitude"],
-                        controller
-                            .findTransportationController.position["longitude"])
-                    : LatLng(controller.searchingLocation!.location!.lat!,
-                        controller.searchingLocation!.location!.lng!),
-                zoom: 15),
+        body: Stack(children: [
+          Obx(
+            () => GoogleMap(
+              polylines: controller.polyline.toSet(),
+              mapType: MapType.normal,
+              myLocationButtonEnabled: false,
+              zoomControlsEnabled: true,
+              zoomGesturesEnabled: true,
+              myLocationEnabled: true,
+              onMapCreated: (GoogleMapController control) {
+                controller.isLoading.value = true;
+                controller.googleMapController = control;
+                controller.isLoading.value = false;
+              },
+              markers: controller.markers.values.toSet(),
+              initialCameraPosition: CameraPosition(
+                  target: controller.searchingLocation == null
+                      ? LatLng(
+                          controller.findTransportationController
+                              .position["latitude"],
+                          controller.findTransportationController
+                              .position["longitude"])
+                      : LatLng(controller.searchingLocation!.location!.lat!,
+                          controller.searchingLocation!.location!.lng!),
+                  zoom: 15),
+            ),
           ),
-        ),
-        bottomSheet: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Positioned(
+            bottom: 0,
+            child: SizedBox(
+              width: size.width,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Obx(
-                    () => Visibility(
-                      visible: controller.status.value != STATUS.FOUND
-                          ? true
-                          : false,
-                      child: roundedButton(
-                          icon: Icons.arrow_back,
-                          f: () {
-                            if (controller.status.value == STATUS.FINDING) {
-                              controller.handleBackButton();
-                            } else {
-                              Get.back();
-                            }
-                          }),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Obx(
+                          () => Visibility(
+                            visible: controller.status.value != STATUS.FOUND
+                                ? true
+                                : false,
+                            child: roundedButton(
+                                icon: Icons.arrow_back,
+                                f: () {
+                                  if (controller.status.value ==
+                                      STATUS.FINDING) {
+                                    controller.handleBackButton();
+                                  } else {
+                                    Get.back();
+                                  }
+                                }),
+                          ),
+                        ),
+                        roundedButton(
+                            icon: Icons.navigation,
+                            f: () async {
+                              await controller.handleMyLocationButton();
+                            })
+                      ],
                     ),
                   ),
-                  roundedButton(
-                      icon: Icons.navigation,
-                      f: () async {
-                        await controller.handleMyLocationButton();
-                      })
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Obx(
+                    () => AnimatedContainer(
+                        height: controller.pass.value &&
+                                controller.status.value != STATUS.FOUND
+                            ? heightSafeArea * 0.41
+                            : heightSafeArea * 0.39,
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.symmetric(
+                            vertical: 18,
+                            horizontal: !controller.pass.value ? 10 : 0),
+                        margin: EdgeInsets.zero,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey[400]!,
+                                offset: const Offset(0.0, -2.5), //(x,y)
+                                blurRadius: 10.0,
+                              ),
+                            ],
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20)),
+                            border: Border.all(color: Colors.grey[300]!)),
+                        duration: const Duration(milliseconds: 500),
+                        child: controller.isDragging.value
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : controller.pass.value
+                                ? (controller.status.value ==
+                                            STATUS.SELECTVEHICLE ||
+                                        controller.status.value ==
+                                            STATUS.HASVOUCHER
+                                    ? selectVehicle(
+                                        context: context, textTheme: textTheme)
+                                    : controller.status.value == STATUS.FINDING
+                                        ? findingDriver(textTheme: textTheme)
+                                        : foundDriver(textTheme: textTheme))
+                                : searchContainer(textTheme)),
+                  )
                 ],
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Obx(
-              () => AnimatedContainer(
-                  height: controller.pass.value &&
-                          controller.status.value != STATUS.FOUND
-                      ? height * 0.42
-                      : height * 0.25,
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.symmetric(
-                      vertical: 20,
-                      horizontal: !controller.pass.value ? 10 : 0),
-                  margin: EdgeInsets.zero,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey[400]!,
-                          offset: const Offset(0.0, -2.5), //(x,y)
-                          blurRadius: 10.0,
-                        ),
-                      ],
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20)),
-                      border: Border.all(color: Colors.grey[300]!)),
-                  duration: const Duration(milliseconds: 500),
-                  child: controller.isDragging.value
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : controller.pass.value
-                          ? (controller.status.value == STATUS.SELECTVEHICLE ||
-                                  controller.status.value == STATUS.HASVOUCHER
-                              ? selectVehicle(
-                                  context: context, textTheme: textTheme)
-                              : controller.status.value == STATUS.FINDING
-                                  ? findingDriver(textTheme: textTheme)
-                                  : foundDriver(textTheme: textTheme))
-                          : searchContainer(textTheme)),
-            )
-          ],
-        ));
+          )
+        ]));
   }
 
   Widget foundDriver({required TextTheme textTheme}) {
@@ -133,12 +153,12 @@ class MapView extends GetView<MapController> {
                 children: [
                   Text(
                     "Your driver is coming",
-                    style: textTheme.headline1!.copyWith(fontSize: 13),
+                    style: BaseTextStyle.heading2(fontSize: 13),
                   ),
                   Text(
                     "Never go on a bike which doesn't match the information",
-                    style: textTheme.headline2!
-                        .copyWith(fontSize: 11, color: Colors.grey),
+                    style:
+                        BaseTextStyle.body1(fontSize: 11, color: Colors.grey),
                   ),
                   SizedBox(
                     height: 100,
@@ -164,11 +184,9 @@ class MapView extends GetView<MapController> {
                                         fit: BoxFit.cover),
                                   ),
                                 ),
-                                Text(
-                                  controller.driver?.fullname ?? "",
-                                  style: textTheme.headline2!
-                                      .copyWith(fontSize: 12),
-                                ),
+                                Text(controller.driver?.fullname ?? "",
+                                    style:
+                                        BaseTextStyle.heading2(fontSize: 12)),
                               ],
                             ),
                             const Spacer(),
@@ -181,19 +199,16 @@ class MapView extends GetView<MapController> {
                                   controller.driver?.vehicleList?.first
                                           .licensePlateNum ??
                                       "",
-                                  style: textTheme.headline1!
-                                      .copyWith(fontSize: 16),
+                                  style: BaseTextStyle.heading2(fontSize: 16),
                                 ),
                                 Text(
                                   controller.driver?.vehicleList?.first.brand ??
                                       "",
-                                  style: textTheme.headline2!
-                                      .copyWith(fontSize: 16),
+                                  style: BaseTextStyle.heading2(fontSize: 16),
                                 ),
                                 Text(
                                   controller.driver?.phone ?? "",
-                                  style: textTheme.headline2!
-                                      .copyWith(fontSize: 16),
+                                  style: BaseTextStyle.heading2(fontSize: 16),
                                 ),
                               ],
                             ),
@@ -244,11 +259,11 @@ class MapView extends GetView<MapController> {
                       ),
                       title: Text(
                         "Finding a driver for you",
-                        style: textTheme.headline2,
+                        style: BaseTextStyle.heading2(fontSize: 14),
                       ),
                       subtitle: Text(
                         "We got your order",
-                        style: textTheme.headline3,
+                        style: BaseTextStyle.body1(fontSize: 12),
                       ),
                     ),
                   ),
@@ -264,16 +279,16 @@ class MapView extends GetView<MapController> {
                     ),
                     child: ListTile(
                       leading: Image.asset(
-                        "assets/cash_icon.jpeg",
+                        "assets/icons/cash_icon.jpeg",
                         height: 40,
                       ),
                       title: Text(
                         "Cash",
-                        style: textTheme.headline2,
+                        style: BaseTextStyle.body1(fontSize: 14),
                       ),
                       trailing: Text(
                         "${formatBalance.format(double.parse(controller.vehicleList[controller.selectedIndex.value].price!))}đ",
-                        style: textTheme.headline2,
+                        style: BaseTextStyle.body1(fontSize: 14),
                       ),
                     ),
                   ),
@@ -296,30 +311,26 @@ class MapView extends GetView<MapController> {
   }
 
   Widget searchContainer(TextTheme textTheme) {
-    const h_2 = SizedBox(
-      height: 20,
-    );
     return Wrap(
       spacing: 10,
       children: [
         Obx(
           () => Text(
             controller.text.value,
-            style: textTheme.headline1
-                ?.copyWith(color: Colors.green, fontSize: 15),
+            style: BaseTextStyle.heading2(fontSize: 18, color: Colors.green),
           ),
         ),
-        h_2,
+        const SizedBox(height: 48),
         Text(
           controller.address.value,
-          style: textTheme.headline1,
+          style: BaseTextStyle.body3(fontSize: 16),
         ),
-        h_2,
+        const SizedBox(height: 20),
         Text(
           controller.address.value,
-          style: textTheme.headline2?.copyWith(fontSize: 15),
+          style: BaseTextStyle.body2(fontSize: 15),
         ),
-        h_2,
+        const SizedBox(height: 20),
         Row(
           children: [
             Visibility(
@@ -332,7 +343,8 @@ class MapView extends GetView<MapController> {
                     style: ElevatedButton.styleFrom(primary: Colors.green),
                     child: Text(
                       "Next",
-                      style: textTheme.headline1!.copyWith(color: Colors.white),
+                      style: BaseTextStyle.body1(
+                          fontSize: 15, color: Colors.white),
                     )),
               ),
             ),
@@ -344,6 +356,7 @@ class MapView extends GetView<MapController> {
 
   Widget selectVehicle(
       {required BuildContext context, required TextTheme textTheme}) {
+    print("isLoading value: ${controller.isLoading.value}");
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Obx(
@@ -369,12 +382,12 @@ class MapView extends GetView<MapController> {
                         children: [
                           Text(
                             controller.vehicleList[itemBuilder].name!,
-                            style: textTheme.headline1!.copyWith(fontSize: 12),
+                            style: BaseTextStyle.heading2(fontSize: 13),
                           ),
                           const Spacer(),
                           Text(
                             "${formatBalance.format(double.parse(controller.vehicleList[itemBuilder].price!))}đ",
-                            style: textTheme.headline1!.copyWith(fontSize: 12),
+                            style: BaseTextStyle.heading2(fontSize: 16),
                           ),
                         ],
                       ),
@@ -461,7 +474,7 @@ class MapView extends GetView<MapController> {
                   child: Row(
                     children: [
                       Image.asset(
-                        "assets/cash_icon.jpeg",
+                        "assets/icons/cash_icon.jpeg",
                         height: 15,
                       ),
                       const SizedBox(
@@ -469,7 +482,7 @@ class MapView extends GetView<MapController> {
                       ),
                       Text(
                         controller.groupValue.value,
-                        style: textTheme.headline1!.copyWith(fontSize: 13),
+                        style: BaseTextStyle.body1(fontSize: 15),
                       ),
                       const SizedBox(
                         width: 5,
@@ -491,10 +504,8 @@ class MapView extends GetView<MapController> {
                         onPressed: () async {
                           await controller.handleVoucher();
                         },
-                        child: Text(
-                          "Voucher",
-                          style: textTheme.headline2,
-                        )))
+                        child: Text("Voucher",
+                            style: BaseTextStyle.body1(fontSize: 12))))
               ],
             ),
             const Spacer(),
@@ -506,7 +517,7 @@ class MapView extends GetView<MapController> {
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(primary: Colors.green),
                       onPressed: () async {
-                        // await controller.bookingCar();
+                        // await controllerq  .bookingCar();
                       },
                       child: const Text("Order")),
                 )),

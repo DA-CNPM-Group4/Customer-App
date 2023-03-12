@@ -1,3 +1,5 @@
+import 'package:customer_app/modules/find_transportation/bindings/find_transportation_binding.dart';
+import 'package:customer_app/modules/find_transportation/views/find_transportation_view.dart';
 import 'package:customer_app/modules/home/bindings/home_binding.dart';
 import 'package:customer_app/modules/home/views/home_view.dart';
 import 'package:customer_app/modules/otp/bindings/otp_binding.dart';
@@ -5,6 +7,8 @@ import 'package:customer_app/modules/password_login/bindings/password_login_bind
 import 'package:customer_app/modules/password_login/views/password_login_view.dart';
 import 'package:customer_app/modules/splash/bindings/splash_binding.dart';
 import 'package:customer_app/modules/splash/views/splash_view.dart';
+import 'package:customer_app/modules/user/bindings/user_binding.dart';
+import 'package:customer_app/modules/user/views/user_view.dart';
 import 'package:get/get.dart';
 
 import '../modules/login/bindings/login_binding.dart';
@@ -63,11 +67,11 @@ class AppPages {
           // FindTransportationBinding(),
           // SearchPageBinding()
         ]),
-    // GetPage(
-    //     name: _Paths.FIND_TRANSPORTATION,
-    //     page: () => const FindTransportationView(),
-    //     binding: FindTransportationBinding(),
-    //     bindings: [UserBinding()]),
+    GetPage(
+        name: _Paths.FIND_TRANSPORTATION,
+        page: () => const FindTransportationView(),
+        binding: FindTransportationBinding(),
+        bindings: [UserBinding()]),
     // GetPage(
     //     name: _Paths.MAP,
     //     page: () => const MapView(),
@@ -78,11 +82,11 @@ class AppPages {
     //   page: () => const SearchPageView(),
     //   binding: SearchPageBinding(),
     // ),
-    // GetPage(
-    //   name: _Paths.USER,
-    //   page: () => const UserView(),
-    //   binding: UserBinding(),
-    // ),
+    GetPage(
+      name: _Paths.USER,
+      page: () => const UserView(),
+      binding: UserBinding(),
+    ),
     // GetPage(
     //   name: _Paths.VOUCHER,
     //   page: () => const VoucherView(),

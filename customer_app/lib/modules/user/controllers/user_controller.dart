@@ -22,50 +22,42 @@ class UserController extends GetxController {
   var error = ''.obs;
   var buttonLoading = false.obs;
 
-  List<String> header = ["Account", "General"];
+  List<String> header = ["Account"];
   List<UserSettings> settings = [
     UserSettings(
         name: "My Orders",
-        icons: "assets/setting_icons/my_orders.png",
+        icons: "assets/icons/my_orders.png",
         page: Routes.HOME),
     UserSettings(
         name: "Payment methods",
-        icons: "assets/setting_icons/my_orders.png",
+        icons: "assets/icons/my_orders.png",
         page: Routes.HOME),
     UserSettings(
         name: "My Orders",
-        icons: "assets/setting_icons/my_orders.png",
+        icons: "assets/icons/my_orders.png",
         page: Routes.HOME),
     UserSettings(
         name: "My Orders",
-        icons: "assets/setting_icons/my_orders.png",
+        icons: "assets/icons/my_orders.png",
         page: Routes.HOME),
     UserSettings(
         name: "My Orders",
-        icons: "assets/setting_icons/my_orders.png",
+        icons: "assets/icons/my_orders.png",
         page: Routes.HOME),
     UserSettings(
         name: "My Orders",
-        icons: "assets/setting_icons/my_orders.png",
-        page: Routes.HOME),
-    UserSettings(
-        name: "My Orders",
-        icons: "assets/setting_icons/my_orders.png",
-        page: Routes.HOME),
-    UserSettings(
-        name: "My Orders",
-        icons: "assets/setting_icons/my_orders.png",
+        icons: "assets/icons/my_orders.png",
         page: Routes.HOME),
     UserSettings(
         name: "Log out",
-        icons: "assets/setting_icons/log_out.jpeg",
+        icons: "assets/icons/log_out.jpeg",
         page: Routes.WELCOME),
   ];
 
   @override
   void onInit() async {
     isLoading.value = true;
-    await init();
+    // await init();
     isLoading.value = false;
   }
 

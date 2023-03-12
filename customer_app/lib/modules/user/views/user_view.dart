@@ -1,3 +1,4 @@
+import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -24,7 +25,7 @@ class UserView extends GetView<UserController> {
               const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
           child: Center(
               child: Image.asset(
-            "assets/icon_account.png",
+            "assets/icons/icon_account.png",
             color: Colors.white,
             height: 20,
             width: 20,
@@ -44,6 +45,14 @@ class UserView extends GetView<UserController> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double heightSafeArea = size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
+    double keyboardHeight = EdgeInsets.fromWindowPadding(
+            WidgetsBinding.instance.window.viewInsets,
+            WidgetsBinding.instance.window.devicePixelRatio)
+        .bottom;
     var textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
@@ -58,19 +67,20 @@ class UserView extends GetView<UserController> {
         ),
         title: Text(
           "My Profile",
-          style: textTheme.headline1,
+          style: BaseTextStyle.heading2(fontSize: 18),
         ),
       ),
       body: CustomScrollView(
         physics: const ClampingScrollPhysics(),
         slivers: [
           SliverAppBar(
+            backgroundColor: Colors.white,
             automaticallyImplyLeading: false,
             title: Obx(() => controller.isLoading.value
                 ? userLoading()
                 : ListTile(
                     leading: Container(
-                        margin: const EdgeInsets.only(right: 10),
+                        margin: const EdgeInsets.only(right: 12),
                         width: 50,
                         height: 50,
                         alignment: Alignment.center,
@@ -78,26 +88,26 @@ class UserView extends GetView<UserController> {
                             color: Colors.red, shape: BoxShape.circle),
                         child: Center(
                             child: Image.asset(
-                          "assets/icon_account.png",
+                          "assets/icons/icon_account.png",
                           color: Colors.white,
                           height: 20,
                           width: 20,
                         ))),
                     title: Text(
-                      controller.user?.fullName ?? "",
-                      style: textTheme.headline1,
+                      controller.user?.fullName ?? "Minh Duc",
+                      style: BaseTextStyle.heading4(fontSize: 18),
                     ),
-                    horizontalTitleGap: 10,
+                    horizontalTitleGap: 20,
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          controller.user?.email ?? "",
-                          style: textTheme.headline2,
+                          controller.user?.email ?? "minhduc@gmail.com",
+                          style: BaseTextStyle.body2(fontSize: 14),
                         ),
                         Text(
-                          "+84${controller.user?.phoneNumber ?? ""}",
-                          style: textTheme.headline2,
+                          "+84${controller.user?.phoneNumber ?? "0987654981"}",
+                          style: BaseTextStyle.body2(fontSize: 14),
                         )
                       ],
                     ),
@@ -142,7 +152,7 @@ class UserView extends GetView<UserController> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       controller.header[index],
-                      style: textTheme.headline1!.copyWith(fontSize: 12),
+                      style: BaseTextStyle.heading2(fontSize: 16),
                     ),
                   ),
                   content: ShrinkWrappingViewport(
@@ -166,8 +176,7 @@ class UserView extends GetView<UserController> {
                               horizontalTitleGap: 10,
                               title: Text(
                                 controller.settings[index].name,
-                                style:
-                                    textTheme.headline1!.copyWith(fontSize: 16),
+                                style: BaseTextStyle.body2(fontSize: 16),
                               ),
                               trailing: const Icon(
                                 Icons.arrow_forward_ios,
@@ -191,7 +200,6 @@ class UserView extends GetView<UserController> {
       ),
     );
   }
-
 
   Widget choice({required TextTheme textTheme}) {
     return Container(
@@ -217,10 +225,10 @@ class UserView extends GetView<UserController> {
           ),
           Text(
             "Which choice do you want to choose?",
-            style: textTheme.headline1,
+            style: BaseTextStyle.heading2(fontSize: 16),
           ),
           const SizedBox(
-            height: 10,
+            height: 22,
           ),
           Expanded(
             child: ListView(
@@ -291,7 +299,7 @@ class UserView extends GetView<UserController> {
         isScrollControlled: true,
         Container(
           padding: const EdgeInsets.all(10),
-          height: Get.height * 0.45,
+          height: Get.height * 0.52,
           decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -300,6 +308,8 @@ class UserView extends GetView<UserController> {
               )),
           child: Scaffold(
               appBar: AppBar(
+                elevation: 0,
+                backgroundColor: Colors.transparent,
                 leading: IconButton(
                   icon: const Icon(
                     Icons.close,
@@ -312,7 +322,7 @@ class UserView extends GetView<UserController> {
                 centerTitle: true,
                 title: Text(
                   type ? "Recharge" : "Withdraw",
-                  style: textTheme.headline1,
+                  style: BaseTextStyle.heading2(fontSize: 16),
                 ),
               ),
               body: SingleChildScrollView(
@@ -322,7 +332,7 @@ class UserView extends GetView<UserController> {
                     h,
                     Text(
                       "Money",
-                      style: textTheme.headline1!.copyWith(fontSize: 16),
+                      style: BaseTextStyle.body2(fontSize: 16),
                     ),
                     TextFormField(
                         controller: moneyController,
@@ -335,7 +345,7 @@ class UserView extends GetView<UserController> {
                     h,
                     Text(
                       "OTP",
-                      style: textTheme.headline1!.copyWith(fontSize: 16),
+                      style: BaseTextStyle.body2(fontSize: 16),
                     ),
                     h,
                     Pinput(

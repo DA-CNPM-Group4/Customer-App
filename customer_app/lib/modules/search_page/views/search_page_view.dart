@@ -15,13 +15,13 @@ class SearchPageView extends GetView<SearchPageController> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final textTheme = Theme.of(context).textTheme;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.green,
             leading: IconButton(
               icon: const Icon(
                 Icons.close,
@@ -36,11 +36,11 @@ class SearchPageView extends GetView<SearchPageController> {
                 !controller.isMyLocationFocused.value
                     ? "Where do you want to go?"
                     : "Set pickup location",
-                style: textTheme.headline1,
+                style: BaseTextStyle.heading2(fontSize: 18),
               ),
             ),
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(height * 0.3),
+              preferredSize: Size.fromHeight(height * 0.32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -62,7 +62,7 @@ class SearchPageView extends GetView<SearchPageController> {
                                   ? Padding(
                                       padding: const EdgeInsets.all(8.05),
                                       child: Image.asset(
-                                        "assets/my_location.png",
+                                        "assets/icons/my_location.png",
                                         height: 25,
                                       ),
                                     )
@@ -74,7 +74,7 @@ class SearchPageView extends GetView<SearchPageController> {
                                           const Duration(milliseconds: 200),
                                       glowColor: Colors.green,
                                       child: Image.asset(
-                                        "assets/my_location.png",
+                                        "assets/icons/my_location.png",
                                         height: 25,
                                       )),
                             ),
@@ -86,7 +86,7 @@ class SearchPageView extends GetView<SearchPageController> {
                                   ? Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Image.asset(
-                                        "assets/destination.png",
+                                        "assets/icons/destination.png",
                                         height: 25,
                                       ),
                                     )
@@ -98,7 +98,7 @@ class SearchPageView extends GetView<SearchPageController> {
                                           const Duration(milliseconds: 200),
                                       glowColor: Colors.green,
                                       child: Image.asset(
-                                        "assets/destination.png",
+                                        "assets/icons/destination.png",
                                         height: 25,
                                       )),
                             ),
@@ -164,7 +164,7 @@ class SearchPageView extends GetView<SearchPageController> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(12),
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: Colors.white),
                         onPressed: () {
@@ -177,7 +177,7 @@ class SearchPageView extends GetView<SearchPageController> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Image.asset(
-                              "assets/map.png",
+                              "assets/icons/map.png",
                               height: 20,
                             ),
                             const SizedBox(
@@ -195,61 +195,65 @@ class SearchPageView extends GetView<SearchPageController> {
             ),
             elevation: 1,
           ),
-          body: Obx(
-            () => controller.location.isEmpty && !controller.isLoading.value
-                ? Image.asset("assets/empty.jpeg")
-                : controller.isLoading.value
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : ListView.separated(
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            leading: const Icon(Icons.location_on),
-                            horizontalTitleGap: 0,
-                            title: Text(controller.location[index].name!),
-                            subtitle: Text(controller.location[index].address!),
-                            onTap: () async {
-                              if (controller
-                                      .myLocationController.text.isNotEmpty &&
-                                  controller
-                                      .destinationController.text.isEmpty) {
-                                controller.myLocationController.text =
-                                    controller.location[index].address!;
-                                Get.toNamed(Routes.MAP, arguments: {
-                                  'location': controller.location[index],
-                                  "type": SEARCHTYPES.LOCATION
-                                });
-                              } else if (controller
-                                      .myLocationController.text.isEmpty &&
-                                  controller
-                                      .destinationController.text.isNotEmpty) {
-                                controller.destinationController.text =
-                                    controller.location[index].address!;
-                                Get.toNamed(Routes.MAP, arguments: {
-                                  'destination': controller.location[index],
-                                  "type": SEARCHTYPES.MYDESTINATION
-                                });
-                              } else if (controller
-                                      .myLocationController.text.isNotEmpty &&
-                                  controller
-                                      .destinationController.text.isNotEmpty) {
-                                Get.toNamed(Routes.MAP, arguments: {
-                                  'destination': controller.location[index],
-                                  "type": SEARCHTYPES.MYDESTINATION
-                                });
-                              }
-                            },
-                          );
-                        },
-                        itemCount: controller.location.length,
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const Divider(
-                            thickness: 1,
-                            height: 20,
-                          );
-                        },
-                      ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            child: Obx(
+              () => controller.location.isEmpty && !controller.isLoading.value
+                  ? Image.asset("assets/images/empty.jpeg")
+                  : controller.isLoading.value
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ListView.separated(
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              leading: const Icon(Icons.location_on),
+                              horizontalTitleGap: 0,
+                              title: Text(controller.location[index].name!),
+                              subtitle:
+                                  Text(controller.location[index].address!),
+                              onTap: () async {
+                                if (controller
+                                        .myLocationController.text.isNotEmpty &&
+                                    controller
+                                        .destinationController.text.isEmpty) {
+                                  controller.myLocationController.text =
+                                      controller.location[index].address!;
+                                  Get.toNamed(Routes.MAP, arguments: {
+                                    'location': controller.location[index],
+                                    "type": SEARCHTYPES.LOCATION
+                                  });
+                                } else if (controller
+                                        .myLocationController.text.isEmpty &&
+                                    controller.destinationController.text
+                                        .isNotEmpty) {
+                                  controller.destinationController.text =
+                                      controller.location[index].address!;
+                                  Get.toNamed(Routes.MAP, arguments: {
+                                    'destination': controller.location[index],
+                                    "type": SEARCHTYPES.MYDESTINATION
+                                  });
+                                } else if (controller
+                                        .myLocationController.text.isNotEmpty &&
+                                    controller.destinationController.text
+                                        .isNotEmpty) {
+                                  Get.toNamed(Routes.MAP, arguments: {
+                                    'destination': controller.location[index],
+                                    "type": SEARCHTYPES.MYDESTINATION
+                                  });
+                                }
+                              },
+                            );
+                          },
+                          itemCount: controller.location.length,
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const Divider(
+                              thickness: 1,
+                              height: 20,
+                            );
+                          },
+                        ),
+            ),
           )),
     );
   }

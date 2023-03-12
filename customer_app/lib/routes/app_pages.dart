@@ -13,6 +13,8 @@ import 'package:customer_app/modules/splash/bindings/splash_binding.dart';
 import 'package:customer_app/modules/splash/views/splash_view.dart';
 import 'package:customer_app/modules/user/bindings/user_binding.dart';
 import 'package:customer_app/modules/user/views/user_view.dart';
+import 'package:customer_app/modules/voucher/bindings/voucher_binding.dart';
+import 'package:customer_app/modules/voucher/views/voucher_view.dart';
 import 'package:get/get.dart';
 
 import '../modules/login/bindings/login_binding.dart';
@@ -91,11 +93,11 @@ class AppPages {
       page: () => const UserView(),
       binding: UserBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.VOUCHER,
-    //   page: () => const VoucherView(),
-    //   binding: VoucherBinding(),
-    // ),
+    GetPage(
+      name: _Paths.VOUCHER,
+      page: () => const VoucherView(),
+      binding: VoucherBinding(),
+    ),
     GetPage(
         name: _Paths.OTP,
         page: () => const OtpView(),

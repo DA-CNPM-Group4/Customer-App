@@ -209,9 +209,14 @@ class SearchPageView extends GetView<SearchPageController> {
                             return ListTile(
                               leading: const Icon(Icons.location_on),
                               horizontalTitleGap: 0,
-                              title: Text(controller.location[index].name!),
-                              subtitle:
-                                  Text(controller.location[index].address!),
+                              title: Text(
+                                controller.location[index].name!,
+                                style: BaseTextStyle.heading2(fontSize: 18),
+                              ),
+                              subtitle: Text(
+                                controller.location[index].address!,
+                                style: BaseTextStyle.body1(fontSize: 16),
+                              ),
                               onTap: () async {
                                 if (controller
                                         .myLocationController.text.isNotEmpty &&

@@ -1,3 +1,4 @@
+import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -23,7 +24,9 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 // }
 
 void showPaymentMethod(
-    {required BuildContext context, required double height, required RxString groupValue}) {
+    {required BuildContext context,
+    required double height,
+    required RxString groupValue}) {
   var textTheme = Theme.of(context).textTheme;
   showModalBottomSheet<void>(
     context: context,
@@ -36,17 +39,18 @@ void showPaymentMethod(
             color: Colors.white,
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20))),
-        child: Obx(() => Column(
+        child: Obx(
+          () => Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
                 "Select a payment method",
-                style: textTheme.headline1,
+                style: BaseTextStyle.heading2(fontSize: 18),
               ),
               Text(
                 "Digital payment method",
-                style: textTheme.headline1!.copyWith(fontSize: 18),
+                style: BaseTextStyle.heading2(fontSize: 18),
               ),
               ListTile(
                 leading: const Icon(CupertinoIcons.creditcard_fill),
@@ -60,16 +64,19 @@ void showPaymentMethod(
               ),
               Text(
                 "Traditional payment method",
-                style: textTheme.headline1!.copyWith(fontSize: 18),
+                style: BaseTextStyle.heading2(fontSize: 18),
               ),
               ListTile(
-                leading: const Icon(CupertinoIcons.money_dollar_circle_fill, color: Colors.yellow,),
+                leading: const Icon(
+                  CupertinoIcons.money_dollar_circle_fill,
+                  color: Colors.yellow,
+                ),
                 title: const Text("Cash"),
                 trailing: Radio(
                     value: "CASH",
                     groupValue: groupValue.value,
                     onChanged: (value) {
-                      groupValue.value= value.toString();
+                      groupValue.value = value.toString();
                     }),
               ),
             ],

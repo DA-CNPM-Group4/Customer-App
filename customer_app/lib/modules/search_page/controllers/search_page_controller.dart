@@ -86,7 +86,7 @@ class SearchPageController extends GetxController
     isLoading.value = true;
     location = [];
     Map<String, String> query = {
-      "key": "d2c643ad1e2975f1fa0d1719903704e8",
+      "key": "007f1251dd7ab0b676d064a314b46fa4",
       "text": text,
       "location": "${currentLocation.lat},${currentLocation.lng}"
     };

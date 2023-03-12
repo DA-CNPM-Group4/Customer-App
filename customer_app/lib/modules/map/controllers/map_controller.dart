@@ -43,7 +43,7 @@ class MapController extends GetxController {
     Vehicle(
         name: "Motorbike",
         type: "MOTORBIKE",
-        price: "12.500",
+        price: "12500",
         duration: "",
         priceAfterVoucher: "",
         picture: "assets/images/motorcycle.png",
@@ -51,7 +51,7 @@ class MapController extends GetxController {
     Vehicle(
         name: "Car4S",
         type: "CAR4S",
-        price: "29.000",
+        price: "29000",
         duration: "",
         priceAfterVoucher: "",
         picture: "assets/images/car.png",
@@ -59,7 +59,7 @@ class MapController extends GetxController {
     Vehicle(
         name: "Car7S",
         type: "CAR7S",
-        price: "34.000",
+        price: "34000",
         duration: "",
         priceAfterVoucher: "",
         picture: "assets/images/car.png",

@@ -517,7 +517,7 @@ class MapView extends GetView<MapController> {
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(primary: Colors.green),
                       onPressed: () async {
-                        // await controllerq  .bookingCar();
+                        // await controller.bookingCar();
                       },
                       child: const Text("Order")),
                 )),

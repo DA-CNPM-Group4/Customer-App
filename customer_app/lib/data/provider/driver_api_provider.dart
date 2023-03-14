@@ -3,7 +3,7 @@ import 'package:customer_app/data/models/requests/create_passenger_request.dart'
 import 'package:customer_app/data/models/requests/login_request.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
 
-class PassengerAPIService {
+class PassengerAPIProvider {
   static Future<void> login({required LoginRequestBody body}) async {
     var response = await APIHandlerImp.instance
         .post(body.toJson(), '/Authentication/Login');

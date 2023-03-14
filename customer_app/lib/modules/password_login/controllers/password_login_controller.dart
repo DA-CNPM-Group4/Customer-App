@@ -48,7 +48,7 @@ class PasswordLoginController extends GetxController {
     );
 
     try {
-      await PassengerAPIService.login(body: body);
+      await PassengerAPIProvider.login(body: body);
       await box.put("notFirstTime", false);
       Get.offNamedUntil(Routes.HOME, ModalRoute.withName(Routes.HOME));
     } catch (e) {

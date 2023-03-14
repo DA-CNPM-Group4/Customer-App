@@ -48,7 +48,7 @@ class PasswordController extends GetxController {
         name: registerController.nameController.text);
 
     try {
-      await PassengerAPIService.register(body: body);
+      await PassengerAPIProvider.register(body: body);
       Get.offAllNamed(Routes.OTP);
       Get.snackbar(
           "Register successfully", "Enter your OTP to active this account",

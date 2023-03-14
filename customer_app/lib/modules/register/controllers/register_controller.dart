@@ -3,7 +3,6 @@ import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class RegisterController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   var emailError = ''.obs;
@@ -32,22 +31,22 @@ class RegisterController extends GetxController {
   String? emailValidator(String value) {
     if (value.isEmpty) {
       return "This field is required";
-    } else if(!GetUtils.isEmail(value)) {
+    } else if (!GetUtils.isEmail(value)) {
       return "This is not an email";
     }
     return null;
   }
 
-  String? phoneNumberValidator(String value){
+  String? phoneNumberValidator(String value) {
     if (value.isEmpty) {
       return "This field is required";
-    } else if(!GetUtils.isPhoneNumber(value)) {
+    } else if (!GetUtils.isPhoneNumber(value)) {
       return "This is a valid phone number";
     }
     return null;
   }
 
-  Future<bool> check() async{
+  Future<bool> check() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) {
       return false;
@@ -55,26 +54,21 @@ class RegisterController extends GetxController {
     isLoading.value = true;
 
     print(emailController.text);
-    var emailResponse = await apiHandlerImp.post({
-      "email": emailController.text
-    },
-        "user/checkEmail");
+    var emailResponse = await apiHandlerImp
+        .post({"email": emailController.text}, "user/checkEmail");
 
-    if(emailResponse.data["status"]){
+    if (emailResponse.data["status"]) {
       emailError.value = "Email is existed, try another one";
       isLoading.value = false;
       return false;
     }
     emailError.value = '';
 
-
-    print(phoneNumberController.text);
-    var phoneResponse = await apiHandlerImp.post({
-      "phoneNumber": '0${phoneNumberController.text}'
-    },
+    var phoneResponse = await apiHandlerImp.post(
+        {"phoneNumber": '0${phoneNumberController.text}'},
         "user/checkPhonenumber");
 
-    if(phoneResponse.data["status"]){
+    if (phoneResponse.data["status"]) {
       phoneNumberError.value = "Phone number is existed, try another one";
       isLoading.value = false;
       return false;
@@ -85,8 +79,8 @@ class RegisterController extends GetxController {
     phoneNumberError.value = '';
     return true;
   }
-  
-  getOTP() async{
+
+  getOTP() async {
     // var response = await apiHandlerImp.get("sendOTP", {
     //   "username": '0${phoneNumberController.text}'
     // });
@@ -102,5 +96,4 @@ class RegisterController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
 }

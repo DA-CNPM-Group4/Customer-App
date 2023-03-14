@@ -77,8 +77,8 @@ class OtpView extends GetView<OtpController> {
                       height: 60,
                       child: Obx(
                         () => ElevatedButton(
-                            style:
-                                ElevatedButton.styleFrom(primary: Colors.green),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green),
                             onPressed: controller.isClicked.value
                                 ? null
                                 : () {
@@ -112,7 +112,7 @@ class OtpView extends GetView<OtpController> {
             elevation: 0.0,
             backgroundColor: Colors.grey,
             onPressed: () {
-              Get.toNamed(Routes.PASSWORD);
+              Get.toNamed(Routes.WELCOME);
             },
             child: const Icon(
               Icons.arrow_forward,

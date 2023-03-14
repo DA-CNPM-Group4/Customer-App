@@ -1,4 +1,3 @@
-import 'package:customer_app/modules/otp/views/otp_view.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
@@ -131,7 +130,7 @@ class RegisterView extends GetView<RegisterController> {
                             child: ElevatedButton(
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.white,
+                                  backgroundColor: Colors.white,
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
@@ -185,7 +184,7 @@ class RegisterView extends GetView<RegisterController> {
               onPressed: () async {
                 // var check = await controller.check();
                 // if (check == true) {
-                Get.toNamed(Routes.OTP);
+                Get.toNamed(Routes.PASSWORD);
                 // }
               },
               child: Obx(

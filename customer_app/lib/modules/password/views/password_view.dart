@@ -98,12 +98,10 @@ class PasswordView extends GetView<PasswordController> {
               elevation: 0.0,
               backgroundColor: Colors.grey,
               onPressed: () async {
+                await controller.register();
+
                 // if (controller.check()) {
-                //   await controller.register();
-                Get.offAllNamed(Routes.WELCOME);
-                Get.snackbar("Register successfully",
-                    "You can log in to our system from now on",
-                    colorText: Colors.black, backgroundColor: Colors.grey[200]);
+
                 // }
               },
               child: Obx(() => controller.isLoading.value

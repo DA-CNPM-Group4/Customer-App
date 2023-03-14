@@ -19,15 +19,20 @@ abstract class APIHandlerInterface {
 }
 
 class APIHandlerImp implements APIHandlerInterface {
-  static var host = "https://localhost:8001/";
+  static var host = "http://192.168.100.9:8001/api";
   static const _storage = FlutterSecureStorage();
   static final APIHandlerImp _singleton = APIHandlerImp._internal();
+
+  static get instance => _singleton;
+
   static final client = Dio();
 
   @override
   init() {}
 
-  APIHandlerImp._internal();
+  APIHandlerImp._internal(
+      // init here
+      );
 
   factory APIHandlerImp() {
     return _singleton;
@@ -47,7 +52,6 @@ class APIHandlerImp implements APIHandlerInterface {
       String? token = await getToken();
       if (token != "") {
         baseHeader["Authorization"] = "Bearer $token";
-        print("[API] Token: ${token ?? ''}");
       }
     }
     return baseHeader;
@@ -60,22 +64,13 @@ class APIHandlerImp implements APIHandlerInterface {
   }
 
   @override
-  Future<void> deleteToken() async {
-    await _storage.delete(key: "token");
-  }
-
-  @override
   Future<String?> getToken() async {
     return await _storage.read(key: "token");
   }
 
   @override
-  Future<Response> post(var body, String endpoint) async {
-    Response response = await client.post(host + endpoint,
-        data: json.encode(body),
-        options: Options(headers: await _buildHeader()));
-    print(response);
-    return response;
+  Future<void> deleteToken() async {
+    await _storage.delete(key: "token");
   }
 
   @override
@@ -83,23 +78,45 @@ class APIHandlerImp implements APIHandlerInterface {
     await _storage.write(key: "token", value: token);
   }
 
+  Future<void> storeIdentity(String id) async {
+    await _storage.write(key: "id", value: id);
+  }
+
+  Future<String?> getIdentity() async {
+    return await _storage.read(key: "id");
+  }
+
   @override
-  Future<Response> get(String endpoint, Map<String, dynamic> query) async {
-    Response response = await client.get(host + endpoint,
-        queryParameters: query,
-        options: Options(headers: await _buildHeader()));
-    print("\n\n" + endpoint);
-    print(response);
+  Future<Response> post(var body, String endpoint,
+      {bool useToken = false}) async {
+    Response response = await client.post(host + endpoint,
+        data: json.encode(body),
+        options: Options(headers: await _buildHeader(useToken: useToken)));
     return response;
   }
 
   @override
-  Future<Response> put(body, String endpoint) async {
-    Response response = await client.put(host + endpoint,
-        data: json.encode(body),
-        options: Options(headers: await _buildHeader()));
-    print("\n\n" + endpoint);
-    print(response);
+  Future<Response> get(String endpoint, Map<String, dynamic> query,
+      {bool useToken = false}) async {
+    Response response = await client.get(
+      host + endpoint,
+      queryParameters: query,
+      options: Options(
+        headers: await _buildHeader(useToken: useToken),
+      ),
+    );
+    return response;
+  }
+
+  @override
+  Future<Response> put(body, String endpoint, {bool useToken = false}) async {
+    Response response = await client.put(
+      host + endpoint,
+      data: json.encode(body),
+      options: Options(
+        headers: await _buildHeader(useToken: useToken),
+      ),
+    );
     return response;
   }
 }

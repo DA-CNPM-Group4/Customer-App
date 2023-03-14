@@ -1,4 +1,6 @@
 import 'package:customer_app/data/common/util.dart';
+import 'package:customer_app/data/models/requests/login_request.dart';
+import 'package:customer_app/data/provider/driver_api_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -37,24 +39,35 @@ class PasswordLoginController extends GetxController {
     isLoading.value = true;
     var box = await Hive.openBox("box");
     await box.clear();
-    print(passwordController.text);
-    print({
-      "username": '0${loginController.phoneNumberController.text}',
-      "password": passwordController.text
-    });
-    var response = await apiHandler.post({
-      "username": '0${loginController.phoneNumberController.text}',
-      "password": passwordController.text
-    }, "user/login");
 
-    if (response.data["status"]) {
+    LoginRequestBody body = LoginRequestBody(
+      email: loginController.phoneNumberController.text,
+      phone: loginController.phoneNumberController.text,
+      password: passwordController.text,
+      role: "Passenger",
+    );
+
+    try {
+      await PassengerAPIService.login(body: body);
       await box.put("notFirstTime", false);
       Get.offNamedUntil(Routes.HOME, ModalRoute.withName(Routes.HOME));
-      apiHandler.storeToken(response.data["data"]);
-    } else {
-      showSnackBar("Lỗi", "Mật khẩu không đúng");
+    } catch (e) {
+      showSnackBar("Error", e.toString());
     }
     isLoading.value = false;
+
+    // var response = await apiHandler.post({
+    //   "username": '0${loginController.phoneNumberController.text}',
+    //   "password": passwordController.text
+    // }, "user/login");
+
+    // if (response.data["status"]) {
+    //   await box.put("notFirstTime", false);
+    //   Get.offNamedUntil(Routes.HOME, ModalRoute.withName(Routes.HOME));
+    //   apiHandler.storeToken(response.data["data"]);
+    // } else {
+    //   showSnackBar("Lỗi", "Mật khẩu không đúng");
+    // }
   }
 
   @override

@@ -42,7 +42,7 @@ class OtpController extends GetxController {
     }, "validateOTP");
     if (response.data["status"]) {
       error.value = '';
-      Get.toNamed(Routes.PASSWORD);
+      Get.toNamed(Routes.WELCOME);
     } else {
       // error.value = "OTP doesn't match what we sent. Try again";
       Get.snackbar("Fail", "OTP doesn't match what we sent. Try again",

@@ -1,11 +1,13 @@
+import 'package:customer_app/data/models/requests/register_request.dart';
+import 'package:customer_app/data/provider/driver_api_provider.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../data/common/api_handler.dart';
 
 class PasswordController extends GetxController {
-  //TODO: Implement PasswordController
   var registerController = Get.find<RegisterController>();
   var isLoading = false.obs;
   APIHandlerImp apiHandlerImp = APIHandlerImp();
@@ -37,22 +39,25 @@ class PasswordController extends GetxController {
 
   register() async {
     isLoading.value = true;
-    var response = await apiHandlerImp.post({
-      "username": '0${registerController.phoneNumberController.text}',
-      "password": passwordController.text,
-      "userInfor": {
-        "email": registerController.emailController.text,
-        "fullName": registerController.nameController.text
-      }
-    }, "user/signup");
-    print({
-      "username": '0${registerController.phoneNumberController.text}',
-      "password": passwordController.text,
-      "userInfor": {
-        "email": registerController.emailController.text,
-        "fullName": registerController.nameController.text
-      }
-    });
+
+    var body = RegisterRequestBody(
+        email: registerController.emailController.text,
+        phone: registerController.phoneNumberController.text,
+        password: passwordController.text,
+        role: "Passenger",
+        name: registerController.nameController.text);
+
+    try {
+      await PassengerAPIService.register(body: body);
+      Get.offAllNamed(Routes.OTP);
+      Get.snackbar(
+          "Register successfully", "Enter your OTP to active this account",
+          colorText: Colors.black, backgroundColor: Colors.grey[200]);
+    } catch (e) {
+      Get.snackbar("Failed: ", e.toString(),
+          colorText: Colors.black, backgroundColor: Colors.grey[200]);
+    }
+
     isLoading.value = false;
   }
 

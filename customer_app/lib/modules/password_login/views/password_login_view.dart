@@ -77,11 +77,12 @@ class PasswordLoginView extends GetView<PasswordLoginController> {
               elevation: 0.0,
               backgroundColor: Colors.grey,
               onPressed: () async {
-                // if (controller.check()) {
-                //   await controller.login();
-                // }
-                Get.offNamedUntil(
-                    Routes.HOME, ModalRoute.withName(Routes.HOME));
+                if (controller.check()) {
+                  print("valid");
+                  await controller.login();
+                }
+                // Get.offNamedUntil(
+                //     Routes.HOME, ModalRoute.withName(Routes.HOME));
               },
               child: Obx(
                 () => controller.isLoading.value

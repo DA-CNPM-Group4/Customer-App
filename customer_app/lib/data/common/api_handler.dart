@@ -19,10 +19,13 @@ abstract class APIHandlerInterface {
 }
 
 class APIHandlerImp implements APIHandlerInterface {
-  static var host = "https://ubercloneserver.herokuapp.com/";
+  static var host = "https://localhost:8001/";
   static const _storage = FlutterSecureStorage();
   static final APIHandlerImp _singleton = APIHandlerImp._internal();
   static final client = Dio();
+
+  @override
+  init() {}
 
   APIHandlerImp._internal();
 
@@ -30,18 +33,22 @@ class APIHandlerImp implements APIHandlerInterface {
     return _singleton;
   }
 
-  Future<Map<String, String>> _buildHeader({bool refreshToken = false}) async {
-    String? token = await getToken();
-
+  Future<Map<String, String>> _buildHeader({
+    bool useToken = false,
+    bool refreshToken = false,
+  }) async {
     var baseHeader = {
       HttpHeaders.dateHeader: DateTime.now().millisecondsSinceEpoch.toString(),
       HttpHeaders.acceptHeader: "application/json",
       HttpHeaders.contentTypeHeader: "application/json",
       "device": "app"
     };
-    if (token != "") {
-      print("[API] Token: ${token ?? ''}");
-      baseHeader["token"] = "$token";
+    if (useToken) {
+      String? token = await getToken();
+      if (token != "") {
+        baseHeader["Authorization"] = "Bearer $token";
+        print("[API] Token: ${token ?? ''}");
+      }
     }
     return baseHeader;
   }
@@ -61,9 +68,6 @@ class APIHandlerImp implements APIHandlerInterface {
   Future<String?> getToken() async {
     return await _storage.read(key: "token");
   }
-
-  @override
-  init() {}
 
   @override
   Future<Response> post(var body, String endpoint) async {

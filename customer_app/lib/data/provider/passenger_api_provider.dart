@@ -1,3 +1,4 @@
+
 import 'package:customer_app/data/common/api_handler.dart';
 import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
@@ -46,7 +47,7 @@ class PassengerAPIProvider {
     body.AccountId = identity;
 
     var response = await APIHandlerImp.instance
-        .post(body.toJson(), '/Info/Passenger/AddInfo');
+        .post(body.toJson(), '/Info/Passenger/UpdateInfo');
     if (response.data["status"]) {
       return;
     } else {

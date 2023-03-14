@@ -1,5 +1,5 @@
 import 'package:customer_app/data/models/requests/register_request.dart';
-import 'package:customer_app/data/provider/driver_api_provider.dart';
+import 'package:customer_app/data/provider/passenger_api_provider.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';

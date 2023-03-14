@@ -1,6 +1,6 @@
 import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
-import 'package:customer_app/data/provider/driver_api_provider.dart';
+import 'package:customer_app/data/provider/passenger_api_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';

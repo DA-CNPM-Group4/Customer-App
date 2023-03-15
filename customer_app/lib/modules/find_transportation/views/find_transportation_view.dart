@@ -53,7 +53,7 @@ class FindTransportationView extends GetView<FindTransportationController> {
                         () => controller.userController.isLoading.value
                             ? const Center(child: CircularProgressIndicator())
                             : Text(
-                                "Up for an adventure,${controller.userController.user?.fullName}?",
+                                "Up for an adventure,${controller.userController.user?.name}?",
                                 style: BaseTextStyle.body1(
                                     fontSize: 13, color: Colors.white)),
                       ),

@@ -4,39 +4,45 @@ import 'package:get/get.dart';
 
 class LoginController extends GetxController {
   //TODO: Implement LoginController
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> phoneFormKey = GlobalKey<FormState>();
+
   TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
   APIHandlerImp apiHandlerImp = APIHandlerImp();
   var emailError = ''.obs;
   var isLoading = false.obs;
 
-  String? emailValidator(String value) {
+  String? phoneNumberValidator(String value) {
     if (value.isEmpty) {
-      return "This field is required";
-    } else if (!GetUtils.isEmail(value)) {
-      return "This is not a valid phone number";
+      return "This field must be filled";
+    } else if (!value.isPhoneNumber) {
+      return "You must enter a right phone number";
     }
     return null;
   }
 
-  Future<bool> check() async {
+  String? emailValidator(String value) {
+    if (value.isEmpty) {
+      return "This field must be filled";
+    } else if (!value.isEmail) {
+      return "You must enter a email address";
+    }
+    return null;
+  }
+
+  Future<bool> validateAndSave() async {
     isLoading.value = true;
-    final isValid = formKey.currentState!.validate();
-    if (!isValid) {
+    final isPhoneValid = phoneFormKey.currentState!.validate();
+    final isEmailValid = emailFormKey.currentState!.validate();
+    if (!isPhoneValid || !isEmailValid) {
       isLoading.value = false;
       return false;
     }
-
-    var phoneResponse = await apiHandlerImp.post(
-        {"phoneNumber": '0${phoneNumberController.text}'},
-        "user/checkPhonenumber");
-
-    if (!phoneResponse.data["status"]) {
-      emailError.value = "Phone number is not existed, try another one";
-      isLoading.value = false;
-      return false;
-    }
-    formKey.currentState!.save();
+    // call api to check
+    phoneFormKey.currentState!.save();
+    emailFormKey.currentState!.save();
     isLoading.value = false;
     return true;
   }

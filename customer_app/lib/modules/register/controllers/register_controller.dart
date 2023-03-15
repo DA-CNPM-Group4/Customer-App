@@ -53,26 +53,25 @@ class RegisterController extends GetxController {
     }
     isLoading.value = true;
 
-    print(emailController.text);
-    var emailResponse = await apiHandlerImp
-        .post({"email": emailController.text}, "user/checkEmail");
+    // var emailResponse = await apiHandlerImp
+    //     .post({"email": emailController.text}, "user/checkEmail");
 
-    if (emailResponse.data["status"]) {
-      emailError.value = "Email is existed, try another one";
-      isLoading.value = false;
-      return false;
-    }
+    // if (emailResponse.data["status"]) {
+    //   emailError.value = "Email is existed, try another one";
+    //   isLoading.value = false;
+    //   return false;
+    // }
     emailError.value = '';
 
-    var phoneResponse = await apiHandlerImp.post(
-        {"phoneNumber": '0${phoneNumberController.text}'},
-        "user/checkPhonenumber");
+    // var phoneResponse = await apiHandlerImp.post(
+    //     {"phoneNumber": '0${phoneNumberController.text}'},
+    //     "user/checkPhonenumber");
 
-    if (phoneResponse.data["status"]) {
-      phoneNumberError.value = "Phone number is existed, try another one";
-      isLoading.value = false;
-      return false;
-    }
+    // if (phoneResponse.data["status"]) {
+    //   phoneNumberError.value = "Phone number is existed, try another one";
+    //   isLoading.value = false;
+    //   return false;
+    // }
 
     formKey.currentState!.save();
     isLoading.value = false;

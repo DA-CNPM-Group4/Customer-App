@@ -10,8 +10,6 @@ import '../../find_transportation/controllers/find_transportation_controller.dar
 
 class SearchPageController extends GetxController
     with GetSingleTickerProviderStateMixin {
-  //TODO: Implement SearchPageController
-
   final count = 0.obs;
   late AnimationController animationController;
   late Animation animation;

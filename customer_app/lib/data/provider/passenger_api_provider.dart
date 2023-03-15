@@ -1,8 +1,11 @@
-
 import 'package:customer_app/data/common/api_handler.dart';
 import 'package:customer_app/data/models/requests/create_passenger_request.dart';
+import 'package:customer_app/data/models/requests/get_passenger_request.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
+import 'package:customer_app/data/models/user/user_entity.dart';
+import 'package:customer_app/main.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class PassengerAPIProvider {
   static Future<void> login({required LoginRequestBody body}) async {
@@ -10,8 +13,8 @@ class PassengerAPIProvider {
         .post(body.toJson(), '/Authentication/Login');
 
     if (response.data["status"]) {
-      await APIHandlerImp.instance
-          .storeIdentity(response.data["data"]['accountId']);
+      var identity = response.data["data"]['accountId'];
+      await APIHandlerImp.instance.storeIdentity(identity);
     } else {
       return Future.error(response.data['message']);
     }
@@ -21,7 +24,9 @@ class PassengerAPIProvider {
     var response = await APIHandlerImp.instance
         .post(body.toJson(), '/Authentication/Register');
     if (response.data["status"]) {
-      return;
+      var identity = response.data["data"]['accountId'];
+
+      await APIHandlerImp.instance.storeIdentity(identity);
     } else {
       return Future.error(response.data['message']);
     }
@@ -31,11 +36,31 @@ class PassengerAPIProvider {
       {required CreatePassengerRequestBody body}) async {
     var identity = await APIHandlerImp.instance.getIdentity();
     body.AccountId = identity;
-
     var response = await APIHandlerImp.instance
         .post(body.toJson(), '/Info/Passenger/AddInfo');
     if (response.data["status"]) {
       return;
+    } else {
+      return Future.error(response.data['message']);
+    }
+  }
+
+  static Future<UserEntity> getPassengerInfo() async {
+    var identity = await APIHandlerImp.instance.getIdentity();
+    var body = GetPassengerRequestBody(accountId: identity);
+
+    var response = await APIHandlerImp.instance
+        .post(body.toJson(), '/Info/Passenger/GetPassengerInfoById');
+    if (!response.data["status"]) {
+      var data = response.data['data'];
+      var user = UserEntity.fromJson(data);
+      box = await Hive.openBox("box");
+      await box.put("user", user);
+
+      UserEntity test = await box.get("user");
+      print(test);
+
+      return user;
     } else {
       return Future.error(response.data['message']);
     }

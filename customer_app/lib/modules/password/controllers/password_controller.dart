@@ -1,3 +1,4 @@
+import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
 import 'package:customer_app/data/provider/passenger_api_provider.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
@@ -47,8 +48,18 @@ class PasswordController extends GetxController {
         role: "Passenger",
         name: registerController.nameController.text);
 
+    var body2 = CreatePassengerRequestBody(
+        Email: registerController.emailController.text,
+        Phone: registerController.phoneNumberController.text,
+        Name: registerController.nameController.text,
+        Gender: false);
+
     try {
+      print("Request Body ${body.toJson()}");
       await PassengerAPIProvider.register(body: body);
+      print("Register Done");
+      await PassengerAPIProvider.createPassenger(body: body2);
+      print("Create Info Done");
       Get.offAllNamed(Routes.OTP);
       Get.snackbar(
           "Register successfully", "Enter your OTP to active this account",

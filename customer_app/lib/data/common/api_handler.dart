@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:customer_app/core/constants/backend_constant.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -15,15 +16,19 @@ abstract class APIHandlerInterface {
 
   Future<String?> getToken();
 
+  Future<void> storeIdentity(String token);
+
+  Future<String?> getIdentity();
+
   Future<void> deleteToken();
 }
 
 class APIHandlerImp implements APIHandlerInterface {
-  static var host = "http://192.168.100.9:8001/api";
+  static var host = BackendConstant.host;
   static const _storage = FlutterSecureStorage();
   static final APIHandlerImp _singleton = APIHandlerImp._internal();
 
-  static get instance => _singleton;
+  static APIHandlerImp get instance => _singleton;
 
   static final client = Dio();
 
@@ -78,10 +83,12 @@ class APIHandlerImp implements APIHandlerInterface {
     await _storage.write(key: "token", value: token);
   }
 
+  @override
   Future<void> storeIdentity(String id) async {
     await _storage.write(key: "id", value: id);
   }
 
+  @override
   Future<String?> getIdentity() async {
     return await _storage.read(key: "id");
   }

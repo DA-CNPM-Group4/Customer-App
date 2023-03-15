@@ -1,36 +1,27 @@
 class UserModel {
-  int? id;
-  String? homeAddress;
+  String? id;
   bool? gender;
-  String? phoneNumber;
+  String? phone;
   String? email;
-  String? fullName;
+  String? name;
 
-  UserModel(
-      {id,
-        homeAddress,
-        gender,
-        phoneNumber,
-        email,
-        fullName});
+  UserModel({id, homeAddress, gender, phoneNumber, email, fullName});
 
   UserModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    homeAddress = json['homeAddress'];
     gender = json['gender'];
-    phoneNumber = json['phoneNumber'];
+    phone = json['phoneNumber'];
     email = json['email'];
-    fullName = json['fullName'];
+    name = json['fullName'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['homeAddress'] = homeAddress;
     data['gender'] = gender;
-    data['phoneNumber'] = phoneNumber;
+    data['phone'] = phone;
     data['email'] = email;
-    data['fullName'] = fullName;
+    data['name'] = name;
     return data;
   }
 }

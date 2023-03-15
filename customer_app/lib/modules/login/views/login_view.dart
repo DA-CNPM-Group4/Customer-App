@@ -79,10 +79,10 @@ class LoginView extends GetView<LoginController> {
                     style: BaseTextStyle.heading3(fontSize: 20),
                   ),
                   Form(
-                    key: controller.formKey,
+                    key: controller.emailFormKey,
                     child: Obx(
                       () => TextFormField(
-                        controller: controller.phoneNumberController,
+                        controller: controller.emailController,
                         inputFormatters: [
                           FilteringTextInputFormatter.singleLineFormatter
                         ],
@@ -94,6 +94,32 @@ class LoginView extends GetView<LoginController> {
                             hintText: 'someone@gmail.com',
                             hintStyle: BaseTextStyle.body3(color: Colors.grey),
                             suffixIcon: const Icon(Icons.email_rounded)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Text(
+                    "Phone",
+                    style: BaseTextStyle.heading3(fontSize: 20),
+                  ),
+                  Form(
+                    key: controller.phoneFormKey,
+                    child: Obx(
+                      () => TextFormField(
+                        controller: controller.phoneNumberController,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        validator: (value) =>
+                            controller.phoneNumberValidator(value!),
+                        textCapitalization: TextCapitalization.words,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            errorText: controller.emailError.value,
+                            hintText: 'Enter phone number',
+                            hintStyle: BaseTextStyle.body3(color: Colors.grey),
+                            suffixIcon: const Icon(Icons.phone_android)),
                       ),
                     ),
                   ),

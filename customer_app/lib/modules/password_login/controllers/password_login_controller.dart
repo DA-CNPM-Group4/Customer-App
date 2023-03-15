@@ -41,7 +41,7 @@ class PasswordLoginController extends GetxController {
     await box.clear();
 
     LoginRequestBody body = LoginRequestBody(
-      email: loginController.phoneNumberController.text,
+      email: loginController.emailController.text,
       phone: loginController.phoneNumberController.text,
       password: passwordController.text,
       role: "Passenger",

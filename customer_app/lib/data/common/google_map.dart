@@ -6,37 +6,38 @@ class Maps {
   late bool serviceEnabled;
   late LocationPermission permission;
 
-   Future<Position> determinePosition() async {
-     serviceEnabled = await Geolocator.isLocationServiceEnabled();
-     if (!serviceEnabled) {
-       return Future.error('Location services are disabled.');
-     }
+  Future<Position> determinePosition() async {
+    //  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    //  if (!serviceEnabled) {
+    //    return Future.error('Location services are disabled.');
+    //  }
 
-     permission = await Geolocator.checkPermission();
-     if (permission == LocationPermission.denied) {
-       permission = await Geolocator.requestPermission();
-       if (permission == LocationPermission.denied) {
-         return Future.error('Location permissions are denied');
-       }
-     }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
 
-     if (permission == LocationPermission.deniedForever) {
-       return Future.error(
-           'Location permissions are permanently denied, we cannot request permissions.');
-     }
-     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-   }
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
 
-   Future<Map<String,dynamic>> getCurrentPosition() async{
-     position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-     return {
-       "latitude": position.latitude,
-       "longitude": position.longitude
-     };
-   }
+  Future<Map<String, dynamic>> getCurrentPosition() async {
+    position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return {"latitude": position.latitude, "longitude": position.longitude};
+  }
 
-   Future<Placemark> getCurrentAddress(dynamic latitude, dynamic longitude) async{
-     List<Placemark> newPlace = await placemarkFromCoordinates(latitude, longitude);
-     return newPlace[0];
-   }
+  Future<Placemark> getCurrentAddress(
+      dynamic latitude, dynamic longitude) async {
+    List<Placemark> newPlace =
+        await placemarkFromCoordinates(latitude, longitude);
+    return newPlace[0];
+  }
 }

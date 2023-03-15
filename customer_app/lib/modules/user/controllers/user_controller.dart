@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:customer_app/data/common/api_handler.dart';
+import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/user/user_entity.dart';
+import 'package:customer_app/data/provider/passenger_api_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -57,7 +59,7 @@ class UserController extends GetxController {
   @override
   void onInit() async {
     isLoading.value = true;
-    // await init();
+    await init();
     isLoading.value = false;
   }
 
@@ -70,7 +72,7 @@ class UserController extends GetxController {
         user = await box.get("user");
       }
     }
-    await getWallet();
+    // await getWallet();
   }
 
   @override
@@ -86,9 +88,15 @@ class UserController extends GetxController {
 
   Future<void> getUserData() async {
     isLoading.value = true;
-    var response = await apiHandlerImp.get("user/getInforByToken", {});
-    user = UserEntity.fromJson(response.data["data"]);
-    await box.put("user", user);
+    // var response = await apiHandlerImp.get("user/getInforByToken", {});
+    // user = UserEntity.fromJson(response.data["data"]);
+    // await box.put("user", user);
+    try {
+      user = await PassengerAPIProvider.getPassengerInfo();
+    } catch (e) {
+      print(e);
+      showSnackBar("Error: ", "Something wrong ${e.toString()}");
+    }
     isLoading.value = false;
   }
 
@@ -101,15 +109,14 @@ class UserController extends GetxController {
 
   sendOTP() async {
     var response =
-        await apiHandlerImp.put({"username": user!.phoneNumber!}, "sendOTP");
+        await apiHandlerImp.put({"username": user!.phone!}, "sendOTP");
   }
 
   validateOTP(TextEditingController otpController,
       TextEditingController moneyController, bool type) async {
     buttonLoading.value = true;
     var response = await apiHandlerImp.put(
-        {"username": user!.phoneNumber!, "otp": otpController.text},
-        "validateOTP");
+        {"username": user!.phone!, "otp": otpController.text}, "validateOTP");
     if (response.data["status"]) {
       var response_1 = await apiHandlerImp.put({"money": moneyController.text},
           type ? "user/recharge" : "user/withdraw");

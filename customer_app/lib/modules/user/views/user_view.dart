@@ -86,7 +86,7 @@ class UserView extends GetView<UserController> {
                           width: 20,
                         ))),
                     title: Text(
-                      controller.user?.fullName ?? "Minh Duc",
+                      controller.user?.name ?? "Minh Duc",
                       style: BaseTextStyle.heading4(fontSize: 18),
                     ),
                     horizontalTitleGap: 20,
@@ -98,7 +98,7 @@ class UserView extends GetView<UserController> {
                           style: BaseTextStyle.body2(fontSize: 14),
                         ),
                         Text(
-                          "+84${controller.user?.phoneNumber ?? "0987654981"}",
+                          "+84${controller.user?.phone ?? "0987654981"}",
                           style: BaseTextStyle.body2(fontSize: 14),
                         )
                       ],
@@ -124,7 +124,7 @@ class UserView extends GetView<UserController> {
                         cvvCode: "",
                         cardHolderName:
                             "Balance ${controller.wallet?.balance ?? 0}",
-                        bankName: controller.user?.fullName ?? "",
+                        bankName: controller.user?.name ?? "",
                         isHolderNameVisible: true,
                         showBackView: false,
                         onCreditCardWidgetChange:

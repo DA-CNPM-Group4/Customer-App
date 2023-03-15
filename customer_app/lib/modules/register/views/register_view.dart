@@ -182,10 +182,10 @@ class RegisterView extends GetView<RegisterController> {
               elevation: 0.0,
               backgroundColor: Colors.grey,
               onPressed: () async {
-                // var check = await controller.check();
-                // if (check == true) {
-                Get.toNamed(Routes.PASSWORD);
-                // }
+                var check = await controller.check();
+                if (check == true) {
+                  Get.toNamed(Routes.PASSWORD);
+                }
               },
               child: Obx(
                 () => controller.isLoading.value

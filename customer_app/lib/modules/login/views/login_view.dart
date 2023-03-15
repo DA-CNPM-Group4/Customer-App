@@ -87,7 +87,7 @@ class LoginView extends GetView<LoginController> {
                           FilteringTextInputFormatter.singleLineFormatter
                         ],
                         validator: (value) => controller.emailValidator(value!),
-                        textCapitalization: TextCapitalization.words,
+                        textCapitalization: TextCapitalization.none,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
                             errorText: controller.emailError.value,

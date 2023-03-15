@@ -258,7 +258,7 @@ class MapView extends GetView<MapController> {
                         height: 40,
                       ),
                       title: Text(
-                        "Finding a driver for you",
+                        "Finding a driver for you...",
                         style: BaseTextStyle.heading2(fontSize: 14),
                       ),
                       subtitle: Text(

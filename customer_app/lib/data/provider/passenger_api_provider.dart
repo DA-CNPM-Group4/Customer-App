@@ -97,6 +97,7 @@ class PassengerAPIProvider {
     var response = await APIHandlerImp.instance
         .post(body, '/Trip/TripRequest/SendRequest');
     if (response.data["status"]) {
+      print(response.data['status']);
       return response.data['data'];
     } else {
       return Future.error(response.data['message']);

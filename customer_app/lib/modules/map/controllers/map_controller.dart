@@ -298,6 +298,95 @@ class MapController extends GetxController {
     );
   }
 
+  String getRate(int i) {
+    switch (i) {
+      case 1:
+        return "ONE";
+      case 2:
+        return "TWO";
+      case 3:
+        return "THREE";
+      case 4:
+        return "FOUR";
+      case 5:
+        return "FIVE";
+      default:
+        return "";
+    }
+  }
+
+  Future<void> createMarker() async {
+    mapMarker = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(), "assets/vehicle_icons/car_icon.png");
+  }
+
+  Future<void> handleBackButton() async {
+    Get.defaultDialog(
+        middleText:
+            "You might have to wait longer in next order if you cancel now. Do you still want to cancel?",
+        backgroundColor: Colors.white,
+        titleStyle: const TextStyle(color: Colors.black),
+        middleTextStyle:
+            const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        textConfirm: "Yes",
+        onConfirm: () async {
+          await cancelBooking();
+          Get.close(1);
+        },
+        radius: 10,
+        textCancel: "No");
+  }
+
+  Future<void> cancelBooking() async {
+    EasyLoading.show();
+    isLoading.value = true;
+
+    // await apiHandlerImp.put({}, "user/cancelBooking/$id");
+    // listener!.cancel();
+    status.value = STATUS.SELECTVEHICLE;
+    isLoading.value = false;
+
+    EasyLoading.dismiss();
+  }
+
+  Future<void> handleVoucher() async {
+    isLoading.value = true;
+    var vo = await Get.toNamed(Routes.VOUCHER, arguments: {"voucher": voucher});
+
+    for (Vehicle v in vehicleList) {
+      if (v.priceAfterVoucher != "") {
+        v.price = v.priceAfterVoucher;
+        v.priceAfterVoucher = "";
+      }
+    }
+
+    voucher = vo;
+    status.value = STATUS.HASVOUCHER;
+    if (vo != null) {
+      for (Vehicle v in vehicleList) {
+        Get.log(v.price!);
+        v.priceAfterVoucher = v.price;
+        v.price = (double.parse(v.price!) -
+                double.parse(v.price!) * voucher!.discountPercent!)
+            .toString();
+        Get.log(v.price!);
+      }
+    }
+    isLoading.value = false;
+  }
+
+  Future<void> updatePrice(List<Vehicle> vehicleList, double distance) async {
+    try {
+      var data = await PassengerAPIProvider.getPrice(length: distance);
+
+      vehicleList[0].price = data['motorbike'].toString();
+      vehicleList[1].price = data['car4S'].toString();
+      vehicleList[2].price = data['car7S'].toString();
+    } catch (e) {
+      showSnackBar("Error", e.toString());
+    }
+  }
+
   // Future<void> bookingCar() async {
   //   EasyLoading.show();
   //   isLoading.value = true;
@@ -436,95 +525,6 @@ class MapController extends GetxController {
   //   EasyLoading.dismiss();
   // }
 
-  String getRate(int i) {
-    switch (i) {
-      case 1:
-        return "ONE";
-      case 2:
-        return "TWO";
-      case 3:
-        return "THREE";
-      case 4:
-        return "FOUR";
-      case 5:
-        return "FIVE";
-      default:
-        return "";
-    }
-  }
-
-  Future<void> createMarker() async {
-    mapMarker = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/vehicle_icons/car_icon.png");
-  }
-
-  Future<void> handleBackButton() async {
-    Get.defaultDialog(
-        middleText:
-            "You might have to wait longer in next order if you cancel now. Do you still want to cancel?",
-        backgroundColor: Colors.white,
-        titleStyle: const TextStyle(color: Colors.black),
-        middleTextStyle:
-            const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        textConfirm: "Yes",
-        onConfirm: () async {
-          await cancelBooking();
-          Get.close(1);
-        },
-        radius: 10,
-        textCancel: "No, sir");
-  }
-
-  Future<void> cancelBooking() async {
-    EasyLoading.show();
-    isLoading.value = true;
-
-    await apiHandlerImp.put({}, "user/cancelBooking/$id");
-    listener!.cancel();
-    status.value = STATUS.SELECTVEHICLE;
-    isLoading.value = false;
-
-    EasyLoading.dismiss();
-  }
-
-  Future<void> handleVoucher() async {
-    isLoading.value = true;
-    var vo = await Get.toNamed(Routes.VOUCHER, arguments: {"voucher": voucher});
-
-    for (Vehicle v in vehicleList) {
-      if (v.priceAfterVoucher != "") {
-        v.price = v.priceAfterVoucher;
-        v.priceAfterVoucher = "";
-      }
-    }
-
-    voucher = vo;
-    status.value = STATUS.HASVOUCHER;
-    if (vo != null) {
-      for (Vehicle v in vehicleList) {
-        Get.log(v.price!);
-        v.priceAfterVoucher = v.price;
-        v.price = (double.parse(v.price!) -
-                double.parse(v.price!) * voucher!.discountPercent!)
-            .toString();
-        Get.log(v.price!);
-      }
-    }
-    isLoading.value = false;
-  }
-
-  Future<void> updatePrice(List<Vehicle> vehicleList, double distance) async {
-    try {
-      var data = await PassengerAPIProvider.getPrice(length: distance);
-
-      vehicleList[0].price = data['motorbike'].toString();
-      vehicleList[1].price = data['car4S'].toString();
-      vehicleList[2].price = data['car7S'].toString();
-    } catch (e) {
-      showSnackBar("Error", e.toString());
-    }
-  }
-
   Future<void> sendRequest() async {
     var box = await Hive.openBox("box");
     UserEntity user = box.get("user");
@@ -544,8 +544,7 @@ class MapController extends GetxController {
     try {
       var requestId =
           await PassengerAPIProvider.createRequest(body: requestBody);
-
-      showSnackBar("Hihi", 'CHƯA CÓ MÀN HÌNH CHỜ DRIVER');
+      status.value = STATUS.FINDING;
     } catch (e) {
       showSnackBar("Error", e.toString());
     }

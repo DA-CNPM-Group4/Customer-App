@@ -18,7 +18,7 @@ class CreateTripRequestBody {
   String PassengerNote;
   double Distance;
   String PassengerPhone;
-  double Price;
+  int Price;
   String VehicleType;
 
   CreateTripRequestBody(

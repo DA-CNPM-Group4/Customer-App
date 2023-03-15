@@ -2,12 +2,16 @@ import 'dart:async';
 import 'package:customer_app/data/common/api_handler.dart';
 import 'package:customer_app/data/common/location.dart';
 import 'package:customer_app/data/common/util.dart';
+import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
+import 'package:customer_app/data/models/user/user_entity.dart';
 import 'package:customer_app/data/models/vehicle.dart';
 import 'package:customer_app/data/provider/passenger_api_provider.dart';
 import 'package:customer_app/modules/find_transportation/controllers/find_transportation_controller.dart';
 import 'package:customer_app/modules/search_page/controllers/search_page_controller.dart';
 import 'package:customer_app/modules/user/controllers/user_controller.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -33,6 +37,7 @@ class MapController extends GetxController {
   var isDragging = false.obs;
   var isShow = false;
   var pass = false.obs;
+  var distance = 0.0.obs;
   Rx<STATUS> status = STATUS.SELECTVEHICLE.obs;
   RxString text = "Your current location".obs;
   var selectedIndex = 0.obs;
@@ -43,7 +48,7 @@ class MapController extends GetxController {
   List<Vehicle> vehicleList = [
     Vehicle(
         name: "Motorbike",
-        type: "MOTORBIKE",
+        type: "Motorbike",
         price: "12500",
         duration: "",
         priceAfterVoucher: "",
@@ -51,7 +56,7 @@ class MapController extends GetxController {
         seatNumber: "2"),
     Vehicle(
         name: "Car4S",
-        type: "CAR4S",
+        type: "Car4S",
         price: "29000",
         duration: "",
         priceAfterVoucher: "",
@@ -59,7 +64,7 @@ class MapController extends GetxController {
         seatNumber: "4"),
     Vehicle(
         name: "Car7S",
-        type: "CAR7S",
+        type: "Car7S",
         price: "34000",
         duration: "",
         priceAfterVoucher: "",
@@ -209,6 +214,9 @@ class MapController extends GetxController {
     }
     polyline.refresh();
 
+    distance.value =
+        response["result"]["routes"][0]["legs"][0]["distance"]['value'] / 1000;
+
     // var response1 = await apiHandlerImp.put({
     //   "distance": response["result"]["routes"][0]["legs"][0]["distance"]
     //           ["value"] /
@@ -264,8 +272,10 @@ class MapController extends GetxController {
           "1", from, searchPageController.myLocationController);
       types = TYPES.HASBOTH;
     } else if (types == TYPES.HASBOTH) {
-      route(from, to);
-      updatePrice(vehicleList, 10);
+      await route(from, to);
+
+      await updatePrice(vehicleList, distance.value);
+
       pass.value = true;
       googleMapController.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -502,15 +512,46 @@ class MapController extends GetxController {
     }
     isLoading.value = false;
   }
+
+  Future<void> updatePrice(List<Vehicle> vehicleList, double distance) async {
+    try {
+      var data = await PassengerAPIProvider.getPrice(length: distance);
+
+      vehicleList[0].price = data['motorbike'].toString();
+      vehicleList[1].price = data['car4S'].toString();
+      vehicleList[2].price = data['car7S'].toString();
+    } catch (e) {
+      showSnackBar("Error", e.toString());
+    }
+  }
+
+  Future<void> sendRequest() async {
+    var box = await Hive.openBox("box");
+    UserEntity user = box.get("user");
+
+    var requestBody = CreateTripRequestBody(
+        LatStartAddr: from!.lng!,
+        LongStartAddr: from!.lng!,
+        StartAddress: from!.address!,
+        LongDesAddr: to!.lng!,
+        LatDesAddr: to!.lng!,
+        Destination: to!.address!,
+        Distance: distance.value,
+        PassengerNote: "Fast!!!",
+        PassengerPhone: user.phone!,
+        Price: double.parse(vehicleList[selectedIndex.value].price!).ceil(),
+        VehicleType: vehicleList[selectedIndex.value].type!);
+    try {
+      var requestId =
+          await PassengerAPIProvider.createRequest(body: requestBody);
+
+      showSnackBar("Hihi", 'CHƯA CÓ MÀN HÌNH CHỜ DRIVER');
+    } catch (e) {
+      showSnackBar("Error", e.toString());
+    }
+  }
 }
 
 enum TYPES { SELECTLOCATION, SELECTEVIAMAP, SELECTDESTINATION, HASBOTH }
 
 enum STATUS { SELECTVEHICLE, HASVOUCHER, FINDING, FOUND, COMPLETED, CANCEL }
-
-Future<void> updatePrice(List<Vehicle> vehicleList, double distance) async {
-  var data = await PassengerAPIProvider.getPrice(length: distance);
-  vehicleList[0].price = data['motorbike'];
-  vehicleList[1].price = data['car4S'];
-  vehicleList[2].price = data['car7S'];
-}

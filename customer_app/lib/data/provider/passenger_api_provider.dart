@@ -90,6 +90,10 @@ class PassengerAPIProvider {
 // return requestId
   static Future<String> createRequest(
       {required CreateTripRequestBody body}) async {
+    print(body.toJson());
+    var identity = await APIHandlerImp.instance.getIdentity();
+    body.PassengerId = identity;
+
     var response = await APIHandlerImp.instance
         .post(body, '/Trip/TripRequest/SendRequest');
     if (response.data["status"]) {

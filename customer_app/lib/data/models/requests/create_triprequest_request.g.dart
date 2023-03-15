@@ -18,7 +18,7 @@ CreateTripRequestBody _$CreateTripRequestBodyFromJson(
       LatStartAddr: (json['LatStartAddr'] as num).toDouble(),
       LongStartAddr: (json['LongStartAddr'] as num).toDouble(),
       PassengerPhone: json['PassengerPhone'] as String,
-      Price: (json['Price'] as num).toDouble(),
+      Price: json['Price'] as int,
       VehicleType: json['VehicleType'] as String,
     )
       ..PassengerId = json['PassengerId'] as String?

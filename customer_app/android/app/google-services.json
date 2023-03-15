@@ -1,0 +1,119 @@
+{
+  "project_info": {
+    "project_number": "711824391524",
+    "firebase_url": "https://doancnpmnhom4-6bc5e-default-rtdb.firebaseio.com",
+    "project_id": "doancnpmnhom4-6bc5e",
+    "storage_bucket": "doancnpmnhom4-6bc5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711824391524:android:e438b580941914c2b40e71",
+        "android_client_info": {
+          "package_name": "com.example.customer_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711824391524-9m5fuq9122kcajq7t7vrov5ca7mfd1fq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9y0Pu8TFu7mPZ02Ap1Eem4jQnQ9v9woQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711824391524-9m5fuq9122kcajq7t7vrov5ca7mfd1fq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "711824391524-tii48c4ssqv321kibqeq5t7bfk7s7vag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.driverApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711824391524:android:3b7c102f2f736edbb40e71",
+        "android_client_info": {
+          "package_name": "com.example.driver_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711824391524-9m5fuq9122kcajq7t7vrov5ca7mfd1fq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9y0Pu8TFu7mPZ02Ap1Eem4jQnQ9v9woQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711824391524-9m5fuq9122kcajq7t7vrov5ca7mfd1fq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "711824391524-tii48c4ssqv321kibqeq5t7bfk7s7vag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.driverApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711824391524:android:506300ca10068166b40e71",
+        "android_client_info": {
+          "package_name": "com.example.my_gojek_driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711824391524-9m5fuq9122kcajq7t7vrov5ca7mfd1fq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9y0Pu8TFu7mPZ02Ap1Eem4jQnQ9v9woQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711824391524-9m5fuq9122kcajq7t7vrov5ca7mfd1fq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "711824391524-tii48c4ssqv321kibqeq5t7bfk7s7vag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.driverApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

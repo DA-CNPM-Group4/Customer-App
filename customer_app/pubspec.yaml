@@ -60,6 +60,8 @@ dependencies:
   intl: ^0.18.0
   json_annotation: ^4.8.0
   hive_generator: ^2.0.0
+  firebase_core: ^2.7.1
+  firebase_database: ^10.0.15
 
 dev_dependencies:
   flutter_test:

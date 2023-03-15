@@ -103,4 +103,19 @@ class PassengerAPIProvider {
       return Future.error(response.data['message']);
     }
   }
+
+  static Future<String> getCurrentTrip() async {
+    var identity = await APIHandlerImp.instance.getIdentity();
+
+    var query = {'passengerId': identity};
+    var response = await APIHandlerImp.instance.get(
+      '/Trip/Trip/GetCurrentTripForPassenger',
+      query: query,
+    );
+    if (response.data["status"]) {
+      return response.data['data'];
+    } else {
+      return Future.error(response.data['message']);
+    }
+  }
 }

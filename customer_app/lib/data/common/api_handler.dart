@@ -7,10 +7,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 abstract class APIHandlerInterface {
   init();
 
-  Future<Response> get(String endpoint, Map<String, dynamic> query);
+  Future<Response> get(String endpoint, {Map<String, dynamic>? query});
 
-  Future<Response> post(var body, String endpoint);
-  Future<Response> put(var body, String endpoint);
+  Future<Response> post(var body, String endpoint,
+      {Map<String, dynamic>? query});
+  Future<Response> put(var body, String endpoint,
+      {Map<String, dynamic>? query});
 
   Future<void> storeToken(String token);
 
@@ -94,17 +96,25 @@ class APIHandlerImp implements APIHandlerInterface {
   }
 
   @override
-  Future<Response> post(var body, String endpoint,
-      {bool useToken = false}) async {
+  Future<Response> post(
+    var body,
+    String endpoint, {
+    bool useToken = false,
+    Map<String, dynamic>? query,
+  }) async {
     Response response = await client.post(host + endpoint,
         data: json.encode(body),
+        queryParameters: query,
         options: Options(headers: await _buildHeader(useToken: useToken)));
     return response;
   }
 
   @override
-  Future<Response> get(String endpoint, Map<String, dynamic> query,
-      {bool useToken = false}) async {
+  Future<Response> get(
+    String endpoint, {
+    bool useToken = false,
+    Map<String, dynamic>? query,
+  }) async {
     Response response = await client.get(
       host + endpoint,
       queryParameters: query,
@@ -116,9 +126,15 @@ class APIHandlerImp implements APIHandlerInterface {
   }
 
   @override
-  Future<Response> put(body, String endpoint, {bool useToken = false}) async {
+  Future<Response> put(
+    body,
+    String endpoint, {
+    bool useToken = false,
+    Map<String, dynamic>? query,
+  }) async {
     Response response = await client.put(
       host + endpoint,
+      queryParameters: query,
       data: json.encode(body),
       options: Options(
         headers: await _buildHeader(useToken: useToken),

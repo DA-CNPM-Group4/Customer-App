@@ -3,6 +3,7 @@ import 'package:customer_app/data/common/api_handler.dart';
 import 'package:customer_app/data/common/location.dart';
 import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/vehicle.dart';
+import 'package:customer_app/data/provider/passenger_api_provider.dart';
 import 'package:customer_app/modules/find_transportation/controllers/find_transportation_controller.dart';
 import 'package:customer_app/modules/search_page/controllers/search_page_controller.dart';
 import 'package:customer_app/modules/user/controllers/user_controller.dart';
@@ -64,14 +65,6 @@ class MapController extends GetxController {
         priceAfterVoucher: "",
         picture: "assets/images/car.png",
         seatNumber: "7"),
-    Vehicle(
-        name: "Car16S",
-        type: "CAR16S",
-        price: "52000",
-        duration: "",
-        priceAfterVoucher: "",
-        picture: "assets/images/car.png",
-        seatNumber: "16"),
   ];
 
   //search
@@ -272,6 +265,7 @@ class MapController extends GetxController {
       types = TYPES.HASBOTH;
     } else if (types == TYPES.HASBOTH) {
       route(from, to);
+      updatePrice(vehicleList, 10);
       pass.value = true;
       googleMapController.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -513,3 +507,10 @@ class MapController extends GetxController {
 enum TYPES { SELECTLOCATION, SELECTEVIAMAP, SELECTDESTINATION, HASBOTH }
 
 enum STATUS { SELECTVEHICLE, HASVOUCHER, FINDING, FOUND, COMPLETED, CANCEL }
+
+Future<void> updatePrice(List<Vehicle> vehicleList, double distance) async {
+  var data = await PassengerAPIProvider.getPrice(length: distance);
+  vehicleList[0].price = data['motorbike'];
+  vehicleList[1].price = data['car4S'];
+  vehicleList[2].price = data['car7S'];
+}

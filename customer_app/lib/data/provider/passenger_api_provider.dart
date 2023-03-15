@@ -1,5 +1,6 @@
 import 'package:customer_app/data/common/api_handler.dart';
 import 'package:customer_app/data/models/requests/create_passenger_request.dart';
+import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
 import 'package:customer_app/data/models/requests/get_passenger_request.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
@@ -56,10 +57,6 @@ class PassengerAPIProvider {
       var user = UserEntity.fromJson(data);
       box = await Hive.openBox("box");
       await box.put("user", user);
-
-      UserEntity test = await box.get("user");
-      print(test);
-
       return user;
     } else {
       return Future.error(response.data['message']);
@@ -75,6 +72,28 @@ class PassengerAPIProvider {
         .post(body.toJson(), '/Info/Passenger/UpdateInfo');
     if (response.data["status"]) {
       return;
+    } else {
+      return Future.error(response.data['message']);
+    }
+  }
+
+  static Future<dynamic> getPrice({required double length}) async {
+    var response = await APIHandlerImp.instance
+        .get('/Trip/TripRequest/CalculatePrice', query: {'distance': length});
+    if (response.data["status"]) {
+      return response.data['data'];
+    } else {
+      return Future.error(response.data['message']);
+    }
+  }
+
+// return requestId
+  static Future<String> createRequest(
+      {required CreateTripRequestBody body}) async {
+    var response = await APIHandlerImp.instance
+        .post(body, '/Trip/TripRequest/SendRequest');
+    if (response.data["status"]) {
+      return response.data['data'];
     } else {
       return Future.error(response.data['message']);
     }

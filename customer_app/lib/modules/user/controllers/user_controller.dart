@@ -102,7 +102,7 @@ class UserController extends GetxController {
 
   Future<void> getWallet() async {
     isLoading.value = true;
-    var response_1 = await apiHandlerImp.get("user/getWallet", {});
+    var response_1 = await apiHandlerImp.get("user/getWallet");
     wallet = Wallet.fromJson(response_1.data["data"]);
     isLoading.value = false;
   }

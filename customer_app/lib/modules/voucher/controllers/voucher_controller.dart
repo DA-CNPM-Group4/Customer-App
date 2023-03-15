@@ -23,7 +23,7 @@ class VoucherController extends GetxController {
     });
     selectedVoucher = await Get.arguments["voucher"];
 
-    var response = await apiHandlerImp.get("user/getListDiscount", {});
+    var response = await apiHandlerImp.get("user/getListDiscount");
     for (int i = 0; i < response.data["data"].length; i++) {
       vouchers.add(Voucher.fromJson(response.data["data"][i]));
     }

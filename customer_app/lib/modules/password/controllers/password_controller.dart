@@ -1,6 +1,6 @@
 import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
-import 'package:customer_app/data/provider/passenger_api_provider.dart';
+import 'package:customer_app/data/services/passenger_api_provider.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -56,9 +56,9 @@ class PasswordController extends GetxController {
 
     try {
       print("Request Body ${body.toJson()}");
-      await PassengerAPIProvider.register(body: body);
+      await PassengerAPIService.register(body: body);
       print("Register Done");
-      await PassengerAPIProvider.createPassenger(body: body2);
+      await PassengerAPIService.createPassenger(body: body2);
       print("Create Info Done");
       Get.offAllNamed(Routes.OTP);
       Get.snackbar(

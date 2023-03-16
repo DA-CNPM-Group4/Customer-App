@@ -1,18 +1,23 @@
 import 'dart:async';
+import 'package:customer_app/Data/models/realtime_models/realtime_passenger.dart';
 import 'package:customer_app/data/common/api_handler.dart';
 import 'package:customer_app/data/common/location.dart';
+import 'package:customer_app/data/models/realtime_models/realtime_location.dart';
 import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
 import 'package:customer_app/data/models/user/user_entity.dart';
 import 'package:customer_app/data/models/vehicle.dart';
-import 'package:customer_app/data/provider/passenger_api_provider.dart';
+import 'package:customer_app/data/provider/firestore_realtime_provider.dart';
+import 'package:customer_app/data/services/device_location_service.dart';
+import 'package:customer_app/data/services/passenger_api_provider.dart';
+import 'package:customer_app/data/services/firebase_realtime_service.dart';
 import 'package:customer_app/modules/find_transportation/controllers/find_transportation_controller.dart';
 import 'package:customer_app/modules/search_page/controllers/search_page_controller.dart';
 import 'package:customer_app/modules/user/controllers/user_controller.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -28,10 +33,12 @@ class MapController extends GetxController {
   var id = 0;
   var findTransportationController = Get.find<FindTransportationController>();
   var searchPageController = Get.find<SearchPageController>();
-  var userController = Get.find<UserController>();
+
   TextEditingController feedbackController = TextEditingController();
   var star = 0;
+
   var address = ''.obs;
+
   late GoogleMapController googleMapController;
   var isLoading = false.obs;
   var isDragging = false.obs;
@@ -72,11 +79,13 @@ class MapController extends GetxController {
         seatNumber: "7"),
   ];
 
-  //search
+  //Draw
   RxMap<MarkerId, Marker> markers = <MarkerId, Marker>{}.obs;
   RxList<LatLng> polylinePoints = <LatLng>[].obs;
   List<PointLatLng> searchResult = [];
   final RxList<Polyline> polyline = <Polyline>[].obs;
+
+  // search
   SearchLocation? myLocation;
   SearchLocation? searchingLocation;
   TYPES? types;
@@ -161,40 +170,40 @@ class MapController extends GetxController {
     var temp = await findTransportationController.map
         .getCurrentAddress(location?.lat!, location?.lng!);
     address.value =
-        "${temp.name}, ${temp.subLocality}, ${temp.subAdministrativeArea}, ${temp.locality},  ${temp.country}";
+        '${temp.street}, ${temp.subAdministrativeArea}, ${temp.administrativeArea}, ${temp.country}';
     location?.address = address.value;
   }
 
-  myLocationMarker(String id, Location? l, TextEditingController t) async {
-    await getAddress(l);
-    t.text = address.value;
+  myLocationMarker(String makerId, Location? location,
+      TextEditingController textEditController) async {
+    await getAddress(location);
+    textEditController.text = address.value;
     final Marker marker = Marker(
-        markerId: MarkerId(id),
+        markerId: MarkerId(makerId),
         draggable: true,
         onDrag: (position) {
           isDragging.value = true;
         },
-        icon: id == "2"
+        icon: makerId == "2"
             ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue)
             : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
         onDragEnd: ((newPosition) async {
           isDragging.value = false;
-          l?.setLocation(newPosition);
-          await getAddress(l);
-          t.text = address.value;
+          location?.setLocation(newPosition);
+          await getAddress(location);
+          textEditController.text = address.value;
         }),
         position: LatLng(
-            l?.lat ?? findTransportationController.map.position.latitude,
-            l?.lng ?? findTransportationController.map.position.longitude));
+            location?.lat ?? findTransportationController.map.position.latitude,
+            location?.lng ??
+                findTransportationController.map.position.longitude));
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(target: LatLng(l!.lat!, l.lng!), zoom: 15),
+      CameraPosition(target: LatLng(location!.lat!, location.lng!), zoom: 15),
     ));
-    markers[MarkerId(id)] = marker;
+    markers[MarkerId(makerId)] = marker;
   }
 
   route(Location? from, Location? to) async {
-    EasyLoading.show();
-
     polylinePoints.clear();
     var start = "${from?.lat},${from?.lng}";
     var end = "${to?.lat},${to?.lng}";
@@ -217,34 +226,7 @@ class MapController extends GetxController {
     distance.value =
         response["result"]["routes"][0]["legs"][0]["distance"]['value'] / 1000;
 
-    // var response1 = await apiHandlerImp.put({
-    //   "distance": response["result"]["routes"][0]["legs"][0]["distance"]
-    //           ["value"] /
-    //       1000,
-    //   "timeSecond": response["result"]["routes"][0]["legs"][0]["duration"]
-    //       ["value"],
-    // }, "user/getVehicleAndPrice");
-
-    // for (int i = 0;
-    //     i < response1.data["data"]["vehiclesAndPrices"].length;
-    //     i++) {
-    //   vehicleList[i].price =
-    //       response1.data["data"]["vehiclesAndPrices"][i]["price"].toString();
-    //   vehicleList[i].duration = response["result"]["routes"][0]["legs"][0]
-    //           ["duration"]["text"]
-    //       .toString()
-    //       .replaceFirst("phút", "m")
-    //       .replaceFirst("giờ", "h")
-    //       .replaceFirst("giây", "s");
-    // }
-
-    // request["distance"] =
-    //     response["result"]["routes"][0]["legs"][0]["distance"]["value"] / 1000;
-    // request["timeSecond"] =
-    //     response["result"]["routes"][0]["legs"][0]["duration"]["value"];
-
     isLoading.value = false;
-    EasyLoading.dismiss();
   }
 
   void dragPosition(MarkerId markerId, CameraPosition position) {
@@ -273,7 +255,6 @@ class MapController extends GetxController {
       types = TYPES.HASBOTH;
     } else if (types == TYPES.HASBOTH) {
       await route(from, to);
-
       await updatePrice(vehicleList, distance.value);
 
       pass.value = true;
@@ -349,35 +330,37 @@ class MapController extends GetxController {
     EasyLoading.dismiss();
   }
 
-  Future<void> handleVoucher() async {
-    isLoading.value = true;
-    var vo = await Get.toNamed(Routes.VOUCHER, arguments: {"voucher": voucher});
+  // Future<void> handleVoucher() async {
+  //   isLoading.value = true;
+  //   var vo = await Get.toNamed(Routes.VOUCHER, arguments: {"voucher": voucher});
 
-    for (Vehicle v in vehicleList) {
-      if (v.priceAfterVoucher != "") {
-        v.price = v.priceAfterVoucher;
-        v.priceAfterVoucher = "";
-      }
-    }
+  //   for (Vehicle v in vehicleList) {
+  //     if (v.priceAfterVoucher != "") {
+  //       v.price = v.priceAfterVoucher;
+  //       v.priceAfterVoucher = "";
+  //     }
+  //   }
 
-    voucher = vo;
-    status.value = STATUS.HASVOUCHER;
-    if (vo != null) {
-      for (Vehicle v in vehicleList) {
-        Get.log(v.price!);
-        v.priceAfterVoucher = v.price;
-        v.price = (double.parse(v.price!) -
-                double.parse(v.price!) * voucher!.discountPercent!)
-            .toString();
-        Get.log(v.price!);
-      }
-    }
-    isLoading.value = false;
-  }
+  //   voucher = vo;
+  //   status.value = STATUS.HASVOUCHER;
+  //   if (vo != null) {
+  //     for (Vehicle v in vehicleList) {
+  //       Get.log(v.price!);
+  //       v.priceAfterVoucher = v.price;
+  //       v.price = (double.parse(v.price!) -
+  //               double.parse(v.price!) * voucher!.discountPercent!)
+  //           .toString();
+  //       Get.log(v.price!);
+  //     }
+  //   }
+  //   isLoading.value = false;
+  // }
 
   Future<void> updatePrice(List<Vehicle> vehicleList, double distance) async {
     try {
-      var data = await PassengerAPIProvider.getPrice(length: distance);
+      EasyLoading.show();
+      isLoading.value = true;
+      var data = await PassengerAPIService.getPrice(length: distance);
 
       vehicleList[0].price = data['motorbike'].toString();
       vehicleList[1].price = data['car4S'].toString();
@@ -385,149 +368,78 @@ class MapController extends GetxController {
     } catch (e) {
       showSnackBar("Error", e.toString());
     }
+    EasyLoading.dismiss();
+    isLoading.value = false;
   }
 
-  // Future<void> bookingCar() async {
-  //   EasyLoading.show();
-  //   isLoading.value = true;
-  //   var response = await apiHandlerImp.put({
-  //     "startAddress": {
-  //       "address": from?.address,
-  //       "longitude": from?.lng,
-  //       "latitude": from?.lat
-  //     },
-  //     "destination": {
-  //       "address": to?.address,
-  //       "longitude": to?.lng,
-  //       "latitude": to?.lat
-  //     },
-  //     "vehicleAndPrice": {
-  //       "vehicleType": vehicleList[selectedIndex.value].type,
-  //       "price": vehicleList[selectedIndex.value].price
-  //     },
-  //     "paymentType": groupValue.value,
-  //     "createdTime":
-  //         DateFormat("yyyy-MM-dd HH:mm").format(DateTime.now().toLocal()),
-  //     "distanceAndTime": {
-  //       "distance": request["distance"],
-  //       "timeSecond": request["timeSecond"],
-  //     },
-  //     "discountId": voucher?.discountId,
-  //     "note": null
-  //   }, "user/booking");
+  void rateDialog() {
+    Get.dialog(
+            AlertDialog(
+              title: const Center(child: Text('Rate your driver')),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CircleAvatar(
+                    backgroundImage: AssetImage("assets/icon/face_icon.png"),
+                  ),
+                  const Text("Tran Van Tuan"),
+                  RatingBar.builder(
+                    initialRating: 1,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: false,
+                    itemCount: 5,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      // star = rating as int;
+                      // print(rating);
+                    },
+                  ),
+                  TextFormField(
+                    controller: feedbackController,
+                  )
+                ],
+              ),
+              actions: [
+                Center(
+                  child: TextButton(
+                    child: const Text("Send"),
+                    onPressed: () async {
+                      print({
+                        "rateStar": "FIVE",
+                        "note": feedbackController.text
+                      });
+                      await apiHandlerImp.post(
+                          {"rateStar": "FIVE", "note": feedbackController.text},
+                          "user/feedback");
+                    },
+                  ),
+                ),
+              ],
+            ),
+            useSafeArea: true)
+        .then((value) {
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        Get.back();
+      });
+    });
+  }
 
-  //   if (response.data["status"]) {
-  //     var path = response.data["data"].toString().split("/");
-  //     id = int.parse(path.last);
-  //     status.value = STATUS.FINDING;
-  //     listener = FirebaseDatabase.instance
-  //         .ref(response.data["data"])
-  //         .limitToFirst(1)
-  //         .onChildRemoved
-  //         .listen((event) async {
-  //       var response_2 = await apiHandlerImp
-  //           .get("user/getLinkAfterBooking/${id.toString()}", {});
-  //       var data = await FirebaseDatabase.instance
-  //           .ref(response_2.data["data"])
-  //           .child("DriverAccept")
-  //           .get();
-  //       driver = Driver.fromJson(data.value as Map);
-  //       status.value = STATUS.FOUND;
-  //       listener?.cancel();
-  //       listener1 = FirebaseDatabase.instance
-  //           .ref(response_2.data["data"])
-  //           .onChildChanged
-  //           .listen((event) async {
-  //             print(event.snapshot.value);
-  //         if (event.snapshot.exists) {
-  //           var data = event.snapshot.value as Map;
-  //           if (to!.lat!.toStringAsFixed(3) ==
-  //               data["position"]["latitude"].toStringAsFixed(3) &&
-  //               to!.lng!.toStringAsFixed(3) ==
-  //                   data["position"]["longitude"].toStringAsFixed(3)) {
-  //             listener1!.cancel();
-  //             Get.dialog(
-  //                 AlertDialog(
-  //                   title:
-  //                   const Center(child: Text('Rate your driver')),
-  //                   content: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.center,
-  //                     mainAxisSize: MainAxisSize.min,
-  //                     children: [
-  //                       const CircleAvatar(
-  //                         backgroundImage:
-  //                         AssetImage("assets/face.png"),
-  //                       ),
-  //                       const Text("Tran Van Tuan"),
-  //                       RatingBar.builder(
-  //                         initialRating: 1,
-  //                         minRating: 1,
-  //                         direction: Axis.horizontal,
-  //                         allowHalfRating: false,
-  //                         itemCount: 5,
-  //                         itemPadding: const EdgeInsets.symmetric(
-  //                             horizontal: 4.0),
-  //                         itemBuilder: (context, _) => const Icon(
-  //                           Icons.star,
-  //                           color: Colors.amber,
-  //                         ),
-  //                         onRatingUpdate: (rating) {
-  //                           // star = rating as int;
-  //                           // print(rating);
-  //                         },
-  //                       ),
-  //                       TextFormField(
-  //                         controller: feedbackController,
-  //                       )
-  //                     ],
-  //                   ),
-  //                   actions: [
-  //                     Center(
-  //                       child: TextButton(
-  //                         child: const Text("Send"),
-  //                         onPressed: () async{
-  //                           print({
-  //                             "rateStar": "FIVE",
-  //                             "note": feedbackController.text
-  //                           });
-  //                           await apiHandlerImp.post({
-  //                             "rateStar": "FIVE",
-  //                             "note": feedbackController.text
-  //                           }, "user/feedback");
-  //                         },
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //                 useSafeArea: true
-  //             ).then((value){
-  //               Future.delayed(const Duration(milliseconds: 1500),(){
-  //                 Get.back();
-  //               });
-  //             });
-  //           }
-  //           final Marker marker = Marker(
-  //               markerId: const MarkerId("3"),
-  //               icon: mapMarker!,
-  //               position:
-  //               LatLng(
-  //                   data["position"]["latitude"], data["position"]["longitude"]));
-  //           markers[const MarkerId("3")] = marker;
-  //         }
-  //       });
-  //     });
-  //   } else {
-  //     Get.snackbar("Order was failed", "Your balance is insufficient",
-  //         backgroundColor: Colors.grey[100]);
-  //   }
-
-  //   isLoading.value = false;
-  //   EasyLoading.dismiss();
-  // }
+  StreamSubscription? requestListener;
+  StreamSubscription? driverListener;
+  StreamSubscription? tripListener;
 
   Future<void> sendRequest() async {
+    isLoading.value = true;
+
     var box = await Hive.openBox("box");
     UserEntity user = box.get("user");
+    var accountId = await APIHandlerImp.instance.getIdentity();
 
     var requestBody = CreateTripRequestBody(
         LatStartAddr: from!.lng!,
@@ -542,13 +454,99 @@ class MapController extends GetxController {
         Price: double.parse(vehicleList[selectedIndex.value].price!).ceil(),
         VehicleType: vehicleList[selectedIndex.value].type!);
     try {
+      await FirestoreRealtimeService.instance.setPassengerNode(
+        passenger: RealtimePassenger(
+          info: RealtimePassengerInfo(
+            name: user.name!,
+            phone: user.phone!,
+          ),
+          location: RealtimeLocation(
+            address: from!.address!,
+            lat: from!.lat!,
+            long: from!.lng!,
+          ),
+        ),
+        passengerId: accountId ?? "fake-passenger-id",
+      );
       var requestId =
-          await PassengerAPIProvider.createRequest(body: requestBody);
+          await PassengerAPIService.createRequest(body: requestBody);
+      isLoading.value = false;
+
       status.value = STATUS.FINDING;
-    } catch (e) {
-      showSnackBar("Error", e.toString());
-    }
+
+      FirebaseDatabase.instance
+          .ref(FirebaseRealtimePaths.REQUESTS)
+          .child(requestId)
+          .once(DatabaseEventType.childRemoved)
+          .then((value) async {
+        var tripInfo = await PassengerAPIService.getCurrentTrip();
+        var tripId = tripInfo['tripId'] as String;
+        var driverId = tripInfo['driverId'] as String;
+
+        status.value = STATUS.FOUND;
+        polylinePoints.clear();
+
+        await enableRealtimeLocator();
+
+        driverListener = FirebaseDatabase.instance
+            .ref(FirebaseRealtimePaths.DRIVERS)
+            .child('testDriverId')
+            .child("location")
+            .onValue
+            .listen(
+          (event) async {
+            final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+            var driverLocation = RealtimeLocation.fromJson(data);
+
+            markers[const MarkerId("1")] = Marker(
+              markerId: const MarkerId("1"),
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueGreen),
+              infoWindow: const InfoWindow(title: "Driver Location"),
+              position: LatLng(
+                driverLocation.lat,
+                driverLocation.long,
+              ),
+            );
+          },
+        );
+
+        FirebaseDatabase.instance
+            .ref(FirebaseRealtimePaths.TRIPS)
+            .child(tripId)
+            .once(DatabaseEventType.childRemoved)
+            .then((value) async {
+          await driverListener?.cancel();
+          await disableRealtimeLocator();
+          print("CompleteTrip");
+
+          rateDialog();
+
+          print("Delete");
+        });
+      });
+    } catch (e) {}
+    isLoading.value = false;
   }
+}
+
+StreamSubscription? gpsStreamSubscription;
+Future<void> enableRealtimeLocator() async {
+  var passengerId = await APIHandlerImp.instance.getIdentity();
+
+  var stream = await DeviceLocationService.instance.getLocationStream();
+  gpsStreamSubscription = stream.listen((value) async {
+    var address =
+        await DeviceLocationService.instance.getAddressFromLatLang(value);
+    var position = RealtimeLocation(
+        lat: value.latitude, long: value.longitude, address: address);
+    await FirestoreRealtimeService.instance
+        .updatePassengerNode(passengerId ?? "fake-passenger-id", position);
+  });
+}
+
+Future<void> disableRealtimeLocator() async {
+  await gpsStreamSubscription?.cancel();
 }
 
 enum TYPES { SELECTLOCATION, SELECTEVIAMAP, SELECTDESTINATION, HASBOTH }

@@ -180,7 +180,8 @@ class MapView extends GetView<MapController> {
                                   child: SizedBox.fromSize(
                                     size: const Size.fromRadius(
                                         30), // Image radius
-                                    child: Image.asset("assets/face.png",
+                                    child: Image.asset(
+                                        "assets/icons/face_icon.png",
                                         fit: BoxFit.cover),
                                   ),
                                 ),
@@ -502,7 +503,7 @@ class MapView extends GetView<MapController> {
                             primary: Colors.white,
                             elevation: 0),
                         onPressed: () async {
-                          await controller.handleVoucher();
+                          // await controller.handleVoucher();
                         },
                         child: Text("Voucher",
                             style: BaseTextStyle.body1(fontSize: 12))))

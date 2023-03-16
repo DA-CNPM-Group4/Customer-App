@@ -102,10 +102,10 @@ class PassengerAPIService {
     }
   }
 
-  static Future<Map<String, dynamic>> getCurrentTrip() async {
+  static Future<Map<String, dynamic>> getCurrentTrip(String requestId) async {
     var identity = await APIHandlerImp.instance.getIdentity();
 
-    var query = {'passengerId': identity};
+    var query = {'passengerId': identity, "requestId": requestId};
     var response = await APIHandlerImp.instance.get(
       '/Trip/Trip/GetCurrentTripForPassenger',
       query: query,

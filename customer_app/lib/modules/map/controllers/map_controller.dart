@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:customer_app/Data/models/realtime_models/realtime_passenger.dart';
 import 'package:customer_app/data/common/api_handler.dart';
 import 'package:customer_app/data/common/location.dart';
+import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_location.dart';
 import 'package:customer_app/data/common/util.dart';
+import 'package:customer_app/data/models/realtime_models/realtime_trip.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
 import 'package:customer_app/data/models/user/user_entity.dart';
 import 'package:customer_app/data/models/vehicle.dart';
@@ -13,7 +15,6 @@ import 'package:customer_app/data/services/passenger_api_provider.dart';
 import 'package:customer_app/data/services/firebase_realtime_service.dart';
 import 'package:customer_app/modules/find_transportation/controllers/find_transportation_controller.dart';
 import 'package:customer_app/modules/search_page/controllers/search_page_controller.dart';
-import 'package:customer_app/modules/user/controllers/user_controller.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geolocator/geolocator.dart';
@@ -25,9 +26,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../data/common/network_handler.dart';
 import '../../../data/common/search_location.dart';
-import '../../../data/models/driver.dart';
 import '../../../data/models/voucher/voucher.dart';
-import '../../../routes/app_pages.dart';
 
 class MapController extends GetxController {
   var id = 0;
@@ -45,6 +44,7 @@ class MapController extends GetxController {
   var isShow = false;
   var pass = false.obs;
   var distance = 0.0.obs;
+
   Rx<STATUS> status = STATUS.SELECTVEHICLE.obs;
   RxString text = "Your current location".obs;
   var selectedIndex = 0.obs;
@@ -98,10 +98,10 @@ class MapController extends GetxController {
 
   Map<dynamic, dynamic> request = {};
 
-  Driver? driver;
-
   StreamSubscription? listener;
   StreamSubscription? listener1;
+
+  RealtimeDriver? driver;
 
   @override
   void onInit() async {
@@ -383,7 +383,7 @@ class MapController extends GetxController {
                   const CircleAvatar(
                     backgroundImage: AssetImage("assets/icon/face_icon.png"),
                   ),
-                  const Text("Tran Van Tuan"),
+                  Text(driver?.info.name ?? "Driver Name"),
                   RatingBar.builder(
                     initialRating: 1,
                     minRating: 1,
@@ -433,6 +433,7 @@ class MapController extends GetxController {
   StreamSubscription? requestListener;
   StreamSubscription? driverListener;
   StreamSubscription? tripListener;
+  RxString tripStatus = "Đang đón khách".obs;
 
   Future<void> sendRequest() async {
     isLoading.value = true;
@@ -479,14 +480,29 @@ class MapController extends GetxController {
           .child(requestId)
           .once(DatabaseEventType.childRemoved)
           .then((value) async {
-        var tripInfo = await PassengerAPIService.getCurrentTrip();
+        var tripInfo = await PassengerAPIService.getCurrentTrip(requestId);
         var tripId = tripInfo['tripId'] as String;
-        var driverId = tripInfo['driverId'] as String;
+
+        print("tripid " + tripId);
+        driver = (await FirestoreRealtimeService.instance
+            .readDriverNode("driverId")) as RealtimeDriver?;
 
         status.value = STATUS.FOUND;
         polylinePoints.clear();
 
         await enableRealtimeLocator();
+
+        tripListener = FirebaseDatabase.instance
+            .ref(FirebaseRealtimePaths.TRIPS)
+            .child(tripId)
+            .onValue
+            .listen((event) {
+          if (!event.snapshot.exists) return;
+          final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+          final trip = RealtimeTripRequest.fromJson(data);
+          tripStatus.value = trip.TripStatus!;
+          print(tripStatus.value);
+        });
 
         driverListener = FirebaseDatabase.instance
             .ref(FirebaseRealtimePaths.DRIVERS)
@@ -518,11 +534,9 @@ class MapController extends GetxController {
             .then((value) async {
           await driverListener?.cancel();
           await disableRealtimeLocator();
-          print("CompleteTrip");
 
+          print("Trigger delete");
           rateDialog();
-
-          print("Delete");
         });
       });
     } catch (e) {}

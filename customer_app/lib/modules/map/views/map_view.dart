@@ -185,7 +185,7 @@ class MapView extends GetView<MapController> {
                                         fit: BoxFit.cover),
                                   ),
                                 ),
-                                Text(controller.driver?.fullname ?? "",
+                                Text(controller.driver?.info.name ?? "",
                                     style:
                                         BaseTextStyle.heading2(fontSize: 12)),
                               ],
@@ -197,18 +197,15 @@ class MapView extends GetView<MapController> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  controller.driver?.vehicleList?.first
-                                          .licensePlateNum ??
-                                      "",
+                                  controller.driver?.vehicle.name ?? "",
                                   style: BaseTextStyle.heading2(fontSize: 16),
                                 ),
                                 Text(
-                                  controller.driver?.vehicleList?.first.brand ??
-                                      "",
+                                  controller.driver?.vehicle.brand ?? "",
                                   style: BaseTextStyle.heading2(fontSize: 16),
                                 ),
                                 Text(
-                                  controller.driver?.phone ?? "",
+                                  controller.driver?.info.phone ?? "",
                                   style: BaseTextStyle.heading2(fontSize: 16),
                                 ),
                               ],
@@ -224,7 +221,7 @@ class MapView extends GetView<MapController> {
                         style: ElevatedButton.styleFrom(primary: Colors.green),
                         onPressed: () async {
                           await FlutterPhoneDirectCaller.callNumber(
-                              controller.driver?.phone.toString() ?? "113");
+                              controller.driver?.info.phone ?? "115");
                         },
                         child: const Text("Call driver")),
                   )
@@ -300,7 +297,8 @@ class MapView extends GetView<MapController> {
                           const EdgeInsets.only(left: 10, right: 10, top: 30),
                       width: double.infinity,
                       child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(primary: Colors.red),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red),
                           onPressed: () async {
                             await controller.cancelBooking();
                           },
@@ -341,7 +339,8 @@ class MapView extends GetView<MapController> {
                     onPressed: () async {
                       controller.handleSearch();
                     },
-                    style: ElevatedButton.styleFrom(primary: Colors.green),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     child: Text(
                       "Next",
                       style: BaseTextStyle.body1(
@@ -357,7 +356,6 @@ class MapView extends GetView<MapController> {
 
   Widget selectVehicle(
       {required BuildContext context, required TextTheme textTheme}) {
-    print("isLoading value: ${controller.isLoading.value}");
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Obx(
@@ -500,7 +498,7 @@ class MapView extends GetView<MapController> {
                                 color: Colors.green,
                               ),
                             ),
-                            primary: Colors.white,
+                            backgroundColor: Colors.white,
                             elevation: 0),
                         onPressed: () async {
                           // await controller.handleVoucher();
@@ -516,7 +514,8 @@ class MapView extends GetView<MapController> {
                 child: IgnorePointer(
                   ignoring: controller.isLoading.value,
                   child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.green),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
                       onPressed: () async {
                         // await controller.bookingCar();
 

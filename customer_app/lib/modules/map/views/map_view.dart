@@ -167,7 +167,7 @@ class MapView extends GetView<MapController> {
                         BaseTextStyle.body1(fontSize: 11, color: Colors.grey),
                   ),
                   SizedBox(
-                    height: 100,
+                    height: 102,
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),

@@ -166,6 +166,7 @@ class MapView extends GetView<MapController> {
                     style:
                         BaseTextStyle.body1(fontSize: 11, color: Colors.grey),
                   ),
+                  const SizedBox(height: 12),
                   SizedBox(
                     height: 102,
                     child: Card(
@@ -180,7 +181,7 @@ class MapView extends GetView<MapController> {
                           children: [
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 ClipOval(
                                   child: SizedBox.fromSize(
@@ -203,16 +204,16 @@ class MapView extends GetView<MapController> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  "Name: ${driver?.vehicle.name ?? "Vehicle name"}",
+                                  driver?.vehicle.name ?? "Vehicle name",
                                   style: BaseTextStyle.heading2(fontSize: 16),
                                 ),
                                 Text(
-                                  "Brand: ${driver?.vehicle.brand ?? ""}",
-                                  style: BaseTextStyle.heading2(fontSize: 16),
+                                  driver?.vehicle.brand ?? "Honda",
+                                  style: BaseTextStyle.heading2(fontSize: 15),
                                 ),
                                 Text(
-                                  "Phone: ${driver?.info.phone ?? ""}",
-                                  style: BaseTextStyle.heading2(fontSize: 16),
+                                  driver?.info.phone ?? "0931328047",
+                                  style: BaseTextStyle.heading2(fontSize: 15),
                                 ),
                               ],
                             ),
@@ -221,6 +222,7 @@ class MapView extends GetView<MapController> {
                       ),
                     ),
                   ),
+                  const Spacer(),
                   SizedBox(
                     width: Get.width,
                     child: ElevatedButton(

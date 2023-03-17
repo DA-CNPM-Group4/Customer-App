@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:customer_app/Data/models/realtime_models/realtime_driver.dart';
 import 'package:customer_app/Data/models/realtime_models/realtime_passenger.dart';
+import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_location.dart';
 import 'package:customer_app/data/models/realtime_models/trip_request.dart';
 import 'package:customer_app/data/provider/firestore_realtime_provider.dart';
@@ -31,8 +31,9 @@ class FirestoreRealtimeService {
 
     if (snapshot.exists) {
       try {
-        final data = Map<String, dynamic>.from(snapshot.value as Map);
-        return RealtimeDriver.fromMap(data);
+        final json = Map<String, dynamic>.from(snapshot.value as Map);
+        var driver = RealtimeDriver.fromMap(json);
+        return driver;
       } catch (e) {
         return null;
       }
@@ -110,6 +111,11 @@ class FirestoreRealtimeService {
 
   Future<void> deleteDriverNode(String driverId) async {
     var ref = database.ref(FirebaseRealtimePaths.DRIVERS).child(driverId);
+    await ref.remove();
+  }
+
+  Future<void> deletePassengerNode(String passengerId) async {
+    var ref = database.ref(FirebaseRealtimePaths.PASSENGERS).child(passengerId);
     await ref.remove();
   }
 

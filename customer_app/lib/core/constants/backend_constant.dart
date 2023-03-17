@@ -1,3 +1,3 @@
 class BackendConstant {
-  static const host = "https://dacnpmbe10.azurewebsites.net/api";
+  static const host = "https://dacnpmbe11.azurewebsites.net/api";
 }

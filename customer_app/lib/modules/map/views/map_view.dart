@@ -1,5 +1,6 @@
 import 'package:customer_app/data/common/bottom_sheets.dart';
 import 'package:customer_app/data/common/util.dart';
+import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -130,7 +131,9 @@ class MapView extends GetView<MapController> {
                                         context: context, textTheme: textTheme)
                                     : controller.status.value == STATUS.FINDING
                                         ? findingDriver(textTheme: textTheme)
-                                        : foundDriver(textTheme: textTheme))
+                                        : foundDriver(
+                                            textTheme: textTheme,
+                                            driver: controller.driver.value))
                                 : searchContainer(textTheme)),
                   )
                 ],
@@ -140,7 +143,8 @@ class MapView extends GetView<MapController> {
         ]));
   }
 
-  Widget foundDriver({required TextTheme textTheme}) {
+  Widget foundDriver(
+      {required TextTheme textTheme, required RealtimeDriver? driver}) {
     return Obx(
       () => controller.isLoading.value
           ? const Center(
@@ -152,8 +156,10 @@ class MapView extends GetView<MapController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Your driver is coming",
-                    style: BaseTextStyle.heading2(fontSize: 13),
+                    controller.isChangeState.value
+                        ? "On the way"
+                        : "Your driver is coming",
+                    style: BaseTextStyle.heading2(fontSize: 16),
                   ),
                   Text(
                     "Never go on a bike which doesn't match the information",
@@ -185,7 +191,7 @@ class MapView extends GetView<MapController> {
                                         fit: BoxFit.cover),
                                   ),
                                 ),
-                                Text(controller.driver?.info.name ?? "",
+                                Text(driver?.info.name ?? "Driver name",
                                     style:
                                         BaseTextStyle.heading2(fontSize: 12)),
                               ],
@@ -197,15 +203,15 @@ class MapView extends GetView<MapController> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  controller.driver?.vehicle.name ?? "",
+                                  "Name: ${driver?.vehicle.name ?? "Vehicle name"}",
                                   style: BaseTextStyle.heading2(fontSize: 16),
                                 ),
                                 Text(
-                                  controller.driver?.vehicle.brand ?? "",
+                                  "Brand: ${driver?.vehicle.brand ?? ""}",
                                   style: BaseTextStyle.heading2(fontSize: 16),
                                 ),
                                 Text(
-                                  controller.driver?.info.phone ?? "",
+                                  "Phone: ${driver?.info.phone ?? ""}",
                                   style: BaseTextStyle.heading2(fontSize: 16),
                                 ),
                               ],
@@ -218,10 +224,11 @@ class MapView extends GetView<MapController> {
                   SizedBox(
                     width: Get.width,
                     child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.green),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
                         onPressed: () async {
                           await FlutterPhoneDirectCaller.callNumber(
-                              controller.driver?.info.phone ?? "115");
+                              driver?.info.phone ?? "115");
                         },
                         child: const Text("Call driver")),
                   )

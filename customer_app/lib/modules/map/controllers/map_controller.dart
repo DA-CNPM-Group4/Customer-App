@@ -29,6 +29,8 @@ import '../../../data/common/search_location.dart';
 import '../../../data/models/voucher/voucher.dart';
 
 class MapController extends GetxController {
+  String? passengerId;
+
   var id = 0;
   var findTransportationController = Get.find<FindTransportationController>();
   var searchPageController = Get.find<SearchPageController>();
@@ -101,12 +103,13 @@ class MapController extends GetxController {
   StreamSubscription? listener;
   StreamSubscription? listener1;
 
-  RealtimeDriver? driver;
+  Rxn<RealtimeDriver> driver = Rxn<RealtimeDriver>();
 
   @override
   void onInit() async {
     super.onInit();
     isLoading.value = true;
+    passengerId = await APIHandlerImp.instance.getIdentity();
 
     await getCurrentPosition();
 
@@ -325,8 +328,8 @@ class MapController extends GetxController {
     // await apiHandlerImp.put({}, "user/cancelBooking/$id");
     // listener!.cancel();
     status.value = STATUS.SELECTVEHICLE;
-    isLoading.value = false;
 
+    isLoading.value = false;
     EasyLoading.dismiss();
   }
 
@@ -383,7 +386,7 @@ class MapController extends GetxController {
                   const CircleAvatar(
                     backgroundImage: AssetImage("assets/icon/face_icon.png"),
                   ),
-                  Text(driver?.info.name ?? "Driver Name"),
+                  Text(driver.value?.info.name ?? "Driver Name"),
                   RatingBar.builder(
                     initialRating: 1,
                     minRating: 1,
@@ -433,7 +436,7 @@ class MapController extends GetxController {
   StreamSubscription? requestListener;
   StreamSubscription? driverListener;
   StreamSubscription? tripListener;
-  RxString tripStatus = "Đang đón khách".obs;
+  var isChangeState = false.obs;
 
   Future<void> sendRequest() async {
     isLoading.value = true;
@@ -482,31 +485,28 @@ class MapController extends GetxController {
           .then((value) async {
         var tripInfo = await PassengerAPIService.getCurrentTrip(requestId);
         var tripId = tripInfo['tripId'] as String;
+        var driverId = "testDriverId" ?? tripInfo['driverId'] as String;
 
-        print("tripid " + tripId);
-        driver = (await FirestoreRealtimeService.instance
-            .readDriverNode("driverId")) as RealtimeDriver?;
-
-        status.value = STATUS.FOUND;
         polylinePoints.clear();
+
+        driver.value =
+            await FirestoreRealtimeService.instance.readDriverNode(driverId);
+        status.value = STATUS.FOUND;
 
         await enableRealtimeLocator();
 
         tripListener = FirebaseDatabase.instance
             .ref(FirebaseRealtimePaths.TRIPS)
             .child(tripId)
-            .onValue
+            .onChildChanged
             .listen((event) {
           if (!event.snapshot.exists) return;
-          final data = Map<String, dynamic>.from(event.snapshot.value as Map);
-          final trip = RealtimeTripRequest.fromJson(data);
-          tripStatus.value = trip.TripStatus!;
-          print(tripStatus.value);
+          isChangeState.value = true;
         });
 
         driverListener = FirebaseDatabase.instance
             .ref(FirebaseRealtimePaths.DRIVERS)
-            .child('testDriverId')
+            .child(driverId)
             .child("location")
             .onValue
             .listen(
@@ -534,33 +534,31 @@ class MapController extends GetxController {
             .then((value) async {
           await driverListener?.cancel();
           await disableRealtimeLocator();
-
-          print("Trigger delete");
           rateDialog();
         });
       });
     } catch (e) {}
     isLoading.value = false;
   }
-}
 
-StreamSubscription? gpsStreamSubscription;
-Future<void> enableRealtimeLocator() async {
-  var passengerId = await APIHandlerImp.instance.getIdentity();
+  StreamSubscription? gpsStreamSubscription;
+  Future<void> enableRealtimeLocator() async {
+    var stream = await DeviceLocationService.instance.getLocationStream();
+    gpsStreamSubscription = stream.listen((value) async {
+      var address =
+          await DeviceLocationService.instance.getAddressFromLatLang(value);
+      var position = RealtimeLocation(
+          lat: value.latitude, long: value.longitude, address: address);
+      await FirestoreRealtimeService.instance
+          .updatePassengerNode(passengerId ?? "fake-passenger-id", position);
+    });
+  }
 
-  var stream = await DeviceLocationService.instance.getLocationStream();
-  gpsStreamSubscription = stream.listen((value) async {
-    var address =
-        await DeviceLocationService.instance.getAddressFromLatLang(value);
-    var position = RealtimeLocation(
-        lat: value.latitude, long: value.longitude, address: address);
+  Future<void> disableRealtimeLocator() async {
+    await gpsStreamSubscription?.cancel();
     await FirestoreRealtimeService.instance
-        .updatePassengerNode(passengerId ?? "fake-passenger-id", position);
-  });
-}
-
-Future<void> disableRealtimeLocator() async {
-  await gpsStreamSubscription?.cancel();
+        .deletePassengerNode(passengerId ?? "fake-passenger-id");
+  }
 }
 
 enum TYPES { SELECTLOCATION, SELECTEVIAMAP, SELECTDESTINATION, HASBOTH }

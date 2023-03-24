@@ -5,49 +5,42 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract class APIHandlerInterface {
-  init();
-
   Future<Response> get(String endpoint, {Map<String, dynamic>? query});
-
   Future<Response> post(var body, String endpoint,
       {Map<String, dynamic>? query});
   Future<Response> put(var body, String endpoint,
       {Map<String, dynamic>? query});
 
-  Future<void> storeToken(String token);
-
-  Future<String?> getToken();
-
+  Future<void> storeRefreshToken(String token);
+  Future<void> storeAccessToken(String token);
   Future<void> storeIdentity(String token);
 
+  Future<String?> getRefreshToken();
+  Future<String?> getAccessToken();
   Future<String?> getIdentity();
 
   Future<void> deleteToken();
 }
 
 class APIHandlerImp implements APIHandlerInterface {
-  static var host = BackendConstant.host;
+  static String host = BackendConstant.host;
   static const _storage = FlutterSecureStorage();
-  static final APIHandlerImp _singleton = APIHandlerImp._internal();
-
-  static APIHandlerImp get instance => _singleton;
-
   static final client = Dio();
 
-  @override
-  init() {}
-
-  APIHandlerImp._internal(
-      // init here
-      );
+  static final APIHandlerImp _singleton = APIHandlerImp._internal();
+  static APIHandlerImp get instance => _singleton;
 
   factory APIHandlerImp() {
     return _singleton;
   }
 
+  APIHandlerImp._internal(
+      // init here
+      );
+
   Future<Map<String, String>> _buildHeader({
     bool useToken = false,
-    bool refreshToken = false,
+    bool useRefereshToken = false,
   }) async {
     var baseHeader = {
       HttpHeaders.dateHeader: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -56,7 +49,8 @@ class APIHandlerImp implements APIHandlerInterface {
       "device": "app"
     };
     if (useToken) {
-      String? token = await getToken();
+      String? token =
+          useRefereshToken ? await getAccessToken() : await getRefreshToken();
       if (token != "") {
         baseHeader["Authorization"] = "Bearer $token";
       }
@@ -68,31 +62,6 @@ class APIHandlerImp implements APIHandlerInterface {
     return query.isEmpty
         ? Uri.parse(host + endpoint).replace(queryParameters: query)
         : Uri.parse(host + endpoint);
-  }
-
-  @override
-  Future<String?> getToken() async {
-    return await _storage.read(key: "token");
-  }
-
-  @override
-  Future<void> deleteToken() async {
-    await _storage.delete(key: "token");
-  }
-
-  @override
-  Future<void> storeToken(String token) async {
-    await _storage.write(key: "token", value: token);
-  }
-
-  @override
-  Future<void> storeIdentity(String id) async {
-    await _storage.write(key: "id", value: id);
-  }
-
-  @override
-  Future<String?> getIdentity() async {
-    return await _storage.read(key: "id");
   }
 
   @override
@@ -141,5 +110,40 @@ class APIHandlerImp implements APIHandlerInterface {
       ),
     );
     return response;
+  }
+
+  @override
+  Future<String?> getAccessToken() async {
+    return await _storage.read(key: "accessToken");
+  }
+
+  @override
+  Future<void> storeAccessToken(String token) async {
+    return await _storage.write(key: "accessToken", value: token);
+  }
+
+  @override
+  Future<String?> getRefreshToken() async {
+    return await _storage.read(key: "refreshToken");
+  }
+
+  @override
+  Future<void> storeRefreshToken(String token) async {
+    await _storage.write(key: "token", value: token);
+  }
+
+  @override
+  Future<void> storeIdentity(String id) async {
+    await _storage.write(key: "id", value: id);
+  }
+
+  @override
+  Future<String?> getIdentity() async {
+    return await _storage.read(key: "id");
+  }
+
+  @override
+  Future<void> deleteToken() async {
+    await _storage.deleteAll();
   }
 }

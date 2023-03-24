@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:customer_app/data/common/api_handler.dart';
+import 'package:customer_app/data/provider/api_provider.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';

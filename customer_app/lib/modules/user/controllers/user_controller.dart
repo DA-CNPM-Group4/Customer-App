@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:customer_app/data/common/api_handler.dart';
 import 'package:customer_app/data/common/util.dart';
-import 'package:customer_app/data/models/user/user_entity.dart';
+import 'package:customer_app/data/models/local_entity/user_entity.dart';
+import 'package:customer_app/data/provider/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -1,12 +1,11 @@
 import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
+import 'package:customer_app/data/provider/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_provider.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../data/common/api_handler.dart';
 
 class PasswordController extends GetxController {
   var registerController = Get.find<RegisterController>();

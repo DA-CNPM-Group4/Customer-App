@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'package:customer_app/Data/models/realtime_models/realtime_passenger.dart';
-import 'package:customer_app/data/common/api_handler.dart';
 import 'package:customer_app/data/common/location.dart';
+import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_location.dart';
 import 'package:customer_app/data/common/util.dart';
-import 'package:customer_app/data/models/realtime_models/realtime_trip.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
-import 'package:customer_app/data/models/user/user_entity.dart';
 import 'package:customer_app/data/models/vehicle.dart';
+import 'package:customer_app/data/provider/api_provider.dart';
 import 'package:customer_app/data/provider/firestore_realtime_provider.dart';
 import 'package:customer_app/data/services/device_location_service.dart';
 import 'package:customer_app/data/services/passenger_api_provider.dart';
@@ -17,7 +16,6 @@ import 'package:customer_app/modules/find_transportation/controllers/find_transp
 import 'package:customer_app/modules/search_page/controllers/search_page_controller.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -485,7 +483,7 @@ class MapController extends GetxController {
           .then((value) async {
         var tripInfo = await PassengerAPIService.getCurrentTrip(requestId);
         var tripId = tripInfo['tripId'] as String;
-        var driverId = "testDriverId" ?? tripInfo['driverId'] as String;
+        var driverId = tripInfo['driverId'] ?? "testDriverId";
 
         polylinePoints.clear();
 

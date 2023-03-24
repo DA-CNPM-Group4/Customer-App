@@ -1,19 +1,18 @@
 import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
+import 'package:customer_app/data/provider/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../../data/common/api_handler.dart';
 import '../../../routes/app_pages.dart';
 import '../../login/controllers/login_controller.dart';
 
 class PasswordLoginController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   var loginController = Get.find<LoginController>();
-  APIHandlerImp apiHandler = APIHandlerImp();
   TextEditingController passwordController = TextEditingController();
   var isLoading = false.obs;
 
@@ -44,7 +43,6 @@ class PasswordLoginController extends GetxController {
       email: loginController.emailController.text,
       phone: loginController.phoneNumberController.text,
       password: passwordController.text,
-      role: "Passenger",
     );
 
     try {

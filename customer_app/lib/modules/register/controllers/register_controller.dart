@@ -1,4 +1,4 @@
-import 'package:customer_app/data/common/api_handler.dart';
+import 'package:customer_app/data/provider/api_provider.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,7 +8,6 @@ class RegisterController extends GetxController {
   var emailError = ''.obs;
   var phoneNumberError = ''.obs;
   var isLoading = false.obs;
-  APIHandlerImp apiHandlerImp = APIHandlerImp();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -16,7 +15,7 @@ class RegisterController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    await apiHandlerImp.deleteToken();
+    await APIHandlerImp.instance.deleteToken();
   }
 
   String? nameValidator(String value) {

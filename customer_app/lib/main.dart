@@ -1,4 +1,4 @@
-import 'package:customer_app/data/models/user/user_entity.dart';
+import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/firebase_options.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';

@@ -1,14 +1,19 @@
-import 'package:customer_app/data/common/api_handler.dart';
+import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
 import 'package:customer_app/data/models/requests/get_passenger_request.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
-import 'package:customer_app/data/models/user/user_entity.dart';
+import 'package:customer_app/data/provider/api_provider.dart';
+import 'package:customer_app/data/services/general_api_service.dart';
+import 'package:customer_app/data/services/trip_api_service.dart';
 import 'package:customer_app/main.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class PassengerAPIService {
+  static GeneralAPIService authApi = GeneralAPIService();
+  static TripApiService tripApi = TripApiService();
+
   static Future<void> login({required LoginRequestBody body}) async {
     var response = await APIHandlerImp.instance
         .post(body.toJson(), '/Authentication/Login');
@@ -87,7 +92,6 @@ class PassengerAPIService {
     }
   }
 
-// return requestId
   static Future<String> createRequest(
       {required CreateTripRequestBody body}) async {
     var identity = await APIHandlerImp.instance.getIdentity();

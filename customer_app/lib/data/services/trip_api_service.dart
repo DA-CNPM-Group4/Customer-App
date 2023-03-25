@@ -1,3 +1,4 @@
+import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/core/exceptions/unexpected_exception.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
 import 'package:customer_app/data/models/requests/trip_response.dart';
@@ -37,7 +38,7 @@ class TripApiService {
       }
     } catch (e) {
       return Future.error(UnexpectedException(
-          context: "get-trip-info", debugMessage: e.toString()));
+          context: "get-trips-info", debugMessage: e.toString()));
     }
   }
 
@@ -52,30 +53,55 @@ class TripApiService {
   }
 
   Future<String> createRequest({required CreateTripRequestBody body}) async {
-    var identity = await APIHandlerImp.instance.getIdentity();
-    body.PassengerId = identity;
+    try {
+      var identity = await APIHandlerImp.instance.getIdentity();
+      body.PassengerId = identity;
 
-    var response = await APIHandlerImp.instance
-        .post(body, '/Trip/TripRequest/SendRequest');
-    if (response.data["status"]) {
-      return response.data['data'];
-    } else {
-      return Future.error(response.data['message']);
+      var response = await APIHandlerImp.instance
+          .post(body, '/Trip/TripRequest/SendRequest');
+      if (response.data["status"]) {
+        return response.data['data'];
+      } else {
+        return Future.error(IBussinessException(response.data['message']));
+      }
+    } catch (e) {
+      return Future.error(UnexpectedException(
+          context: "create-trip-request", debugMessage: e.toString()));
+    }
+  }
+
+  Future<void> cancelRequest({required String requestId}) async {
+    try {
+      var query = {"requestId": requestId};
+      var response = await APIHandlerImp.instance
+          .get('/Trip/TripRequest/CancelRequest', query: query);
+      if (response.data["status"]) {
+      } else {
+        return Future.error(IBussinessException(response.data['message']));
+      }
+    } catch (e) {
+      return Future.error(UnexpectedException(
+          context: "cancel-trip-request", debugMessage: e.toString()));
     }
   }
 
   Future<Map<String, dynamic>> getCurrentTrip(String requestId) async {
-    var identity = await APIHandlerImp.instance.getIdentity();
+    try {
+      var identity = await APIHandlerImp.instance.getIdentity();
 
-    var query = {'passengerId': identity, "requestId": requestId};
-    var response = await APIHandlerImp.instance.get(
-      '/Trip/Trip/GetCurrentTripForPassenger',
-      query: query,
-    );
-    if (response.data["status"]) {
-      return response.data['data'];
-    } else {
-      return Future.error(response.data['message']);
+      var query = {'passengerId': identity, "requestId": requestId};
+      var response = await APIHandlerImp.instance.get(
+        '/Trip/Trip/GetCurrentTripForPassenger',
+        query: query,
+      );
+      if (response.data["status"]) {
+        return response.data['data'];
+      } else {
+        return Future.error(IBussinessException(response.data['message']));
+      }
+    } catch (e) {
+      return Future.error(UnexpectedException(
+          context: "get-current-trip", debugMessage: e.toString()));
     }
   }
 }

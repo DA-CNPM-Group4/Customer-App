@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:customer_app/core/constants/backend_constant.dart';
+import 'package:customer_app/core/constants/backend_enviroment.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -23,7 +23,7 @@ abstract class APIHandlerInterface {
 }
 
 class APIHandlerImp implements APIHandlerInterface {
-  static String host = BackendConstant.host;
+  static String host = BackendEnviroment.host;
   static const _storage = FlutterSecureStorage();
   static final client = Dio();
 

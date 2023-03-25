@@ -1,3 +1,4 @@
+import 'package:customer_app/core/constants/backend_enviroment.dart';
 import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/firebase_options.dart';
 import 'package:customer_app/routes/app_pages.dart';
@@ -11,17 +12,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 late Box box;
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  if (!Hive.isAdapterRegistered(0)) {
-    Hive.registerAdapter(UserEntityAdapter());
-  }
-  await Hive.initFlutter();
-  box = await Hive.openBox("box");
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
+  BackendEnviroment.checkDevelopmentMode();
+  await setup();
   runApp(
     GetMaterialApp(
       title: "Application",
@@ -37,11 +29,11 @@ void main() async {
 Future<void> setup() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Hive.initFlutter();
-  await Hive.openBox("box");
   if (!Hive.isAdapterRegistered(0)) {
     Hive.registerAdapter(UserEntityAdapter());
   }
+  await Hive.initFlutter();
+  box = await Hive.openBox("box");
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

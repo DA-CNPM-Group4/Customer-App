@@ -38,7 +38,6 @@ class AppPages {
     GetPage(
       name: _Paths.WELCOME,
       page: () => const WelcomeView(),
-      binding: WelcomeBinding(),
     ),
     GetPage(
       name: _Paths.REGISTER,

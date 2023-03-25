@@ -1,6 +1,6 @@
 import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
-import 'package:customer_app/data/provider/api_provider.dart';
+import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_provider.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
@@ -54,11 +54,8 @@ class PasswordController extends GetxController {
         Gender: false);
 
     try {
-      print("Request Body ${body.toJson()}");
-      await PassengerAPIService.register(body: body);
-      print("Register Done");
+      await PassengerAPIService.authApi.register(body);
       await PassengerAPIService.createPassenger(body: body2);
-      print("Create Info Done");
       Get.offAllNamed(Routes.OTP);
       Get.snackbar(
           "Register successfully", "Enter your OTP to active this account",

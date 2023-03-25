@@ -4,7 +4,7 @@ import 'package:customer_app/data/models/requests/create_triprequest_request.dar
 import 'package:customer_app/data/models/requests/get_passenger_request.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
-import 'package:customer_app/data/provider/api_provider.dart';
+import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/general_api_service.dart';
 import 'package:customer_app/data/services/trip_api_service.dart';
 import 'package:customer_app/main.dart';
@@ -13,30 +13,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 class PassengerAPIService {
   static GeneralAPIService authApi = GeneralAPIService();
   static TripApiService tripApi = TripApiService();
-
-  static Future<void> login({required LoginRequestBody body}) async {
-    var response = await APIHandlerImp.instance
-        .post(body.toJson(), '/Authentication/Login');
-
-    if (response.data["status"]) {
-      var identity = response.data["data"]['accountId'];
-      await APIHandlerImp.instance.storeIdentity(identity);
-    } else {
-      return Future.error(response.data['message']);
-    }
-  }
-
-  static Future<void> register({required RegisterRequestBody body}) async {
-    var response = await APIHandlerImp.instance
-        .post(body.toJson(), '/Authentication/Register');
-    if (response.data["status"]) {
-      var identity = response.data["data"]['accountId'];
-
-      await APIHandlerImp.instance.storeIdentity(identity);
-    } else {
-      return Future.error(response.data['message']);
-    }
-  }
 
   static Future<void> createPassenger(
       {required CreatePassengerRequestBody body}) async {
@@ -53,15 +29,12 @@ class PassengerAPIService {
 
   static Future<UserEntity> getPassengerInfo() async {
     var identity = await APIHandlerImp.instance.getIdentity();
-    var body = GetPassengerRequestBody(accountId: identity);
+    var body = {"accountId": identity};
 
     var response = await APIHandlerImp.instance
-        .post(body.toJson(), '/Info/Passenger/GetPassengerInfoById');
+        .post(body, '/Info/Passenger/GetPassengerInfoById');
     if (response.data["status"]) {
-      var data = response.data['data'];
-      var user = UserEntity.fromJson(data);
-      box = await Hive.openBox("box");
-      await box.put("user", user);
+      var user = UserEntity.fromJson(response.data['data']);
       return user;
     } else {
       return Future.error(response.data['message']);
@@ -77,45 +50,6 @@ class PassengerAPIService {
         .post(body.toJson(), '/Info/Passenger/UpdateInfo');
     if (response.data["status"]) {
       return;
-    } else {
-      return Future.error(response.data['message']);
-    }
-  }
-
-  static Future<dynamic> getPrice({required double length}) async {
-    var response = await APIHandlerImp.instance
-        .get('/Trip/TripRequest/CalculatePrice', query: {'distance': length});
-    if (response.data["status"]) {
-      return response.data['data'];
-    } else {
-      return Future.error(response.data['message']);
-    }
-  }
-
-  static Future<String> createRequest(
-      {required CreateTripRequestBody body}) async {
-    var identity = await APIHandlerImp.instance.getIdentity();
-    body.PassengerId = identity;
-
-    var response = await APIHandlerImp.instance
-        .post(body, '/Trip/TripRequest/SendRequest');
-    if (response.data["status"]) {
-      return response.data['data'];
-    } else {
-      return Future.error(response.data['message']);
-    }
-  }
-
-  static Future<Map<String, dynamic>> getCurrentTrip(String requestId) async {
-    var identity = await APIHandlerImp.instance.getIdentity();
-
-    var query = {'passengerId': identity, "requestId": requestId};
-    var response = await APIHandlerImp.instance.get(
-      '/Trip/Trip/GetCurrentTripForPassenger',
-      query: query,
-    );
-    if (response.data["status"]) {
-      return response.data['data'];
     } else {
       return Future.error(response.data['message']);
     }

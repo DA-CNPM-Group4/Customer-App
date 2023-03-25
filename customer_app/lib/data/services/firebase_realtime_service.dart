@@ -4,7 +4,7 @@ import 'package:customer_app/Data/models/realtime_models/realtime_passenger.dart
 import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_location.dart';
 import 'package:customer_app/data/models/realtime_models/trip_request.dart';
-import 'package:customer_app/data/provider/firestore_realtime_provider.dart';
+import 'package:customer_app/data/providers/firestore_realtime_provider.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 

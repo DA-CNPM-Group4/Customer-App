@@ -1,4 +1,4 @@
-import 'package:customer_app/data/provider/api_provider.dart';
+import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

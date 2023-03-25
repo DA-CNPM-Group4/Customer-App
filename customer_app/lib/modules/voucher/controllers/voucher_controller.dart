@@ -1,4 +1,4 @@
-import 'package:customer_app/data/provider/api_provider.dart';
+import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import '../../../data/models/voucher/voucher.dart';

@@ -1,16 +1,16 @@
 import 'package:customer_app/core/exceptions/unexpected_exception.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
-import 'package:customer_app/data/provider/api_provider.dart';
+import 'package:customer_app/data/models/requests/trip_response.dart';
+import 'package:customer_app/data/providers/api_provider.dart';
 
 class TripApiService {
-  //  TODO: HANDLE RESPONSE
-  static Future<String> getTrip(String tripId) async {
+  Future<TripResponse> getTrip(String tripId) async {
     try {
       var query = {'tripId': tripId};
       var response = await APIHandlerImp.instance
           .get('/Trip/Trip/GetCurrentTrip', query: query);
       if (response.data["status"]) {
-        return response.data['data'];
+        return TripResponse.fromJson(response.data['data']);
       } else {
         return Future.error(response.data['message']);
       }
@@ -20,8 +20,7 @@ class TripApiService {
     }
   }
 
-  //  TODO: HANDLE RESPONSE
-  static Future<String> getPassengerTrips() async {
+  Future<List<TripResponse>> getPassengerTrips() async {
     try {
       var passengerId = await APIHandlerImp.instance.getIdentity();
       var query = {'passengerId': passengerId};
@@ -29,7 +28,10 @@ class TripApiService {
       var response = await APIHandlerImp.instance
           .get('/Trip/Trip/GetDriverTrips', query: query);
       if (response.data["status"]) {
-        return response.data['data'];
+        var listTripJson = response.data['data'] as List;
+        return listTripJson
+            .map((tripJson) => TripResponse.fromJson(tripJson))
+            .toList();
       } else {
         return Future.error(response.data['message']);
       }
@@ -39,7 +41,7 @@ class TripApiService {
     }
   }
 
-  static Future<dynamic> getPrice({required double length}) async {
+  Future<dynamic> getPrice({required double length}) async {
     var response = await APIHandlerImp.instance
         .get('/Trip/TripRequest/CalculatePrice', query: {'distance': length});
     if (response.data["status"]) {
@@ -49,8 +51,7 @@ class TripApiService {
     }
   }
 
-  static Future<String> createRequest(
-      {required CreateTripRequestBody body}) async {
+  Future<String> createRequest({required CreateTripRequestBody body}) async {
     var identity = await APIHandlerImp.instance.getIdentity();
     body.PassengerId = identity;
 
@@ -63,7 +64,7 @@ class TripApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> getCurrentTrip(String requestId) async {
+  Future<Map<String, dynamic>> getCurrentTrip(String requestId) async {
     var identity = await APIHandlerImp.instance.getIdentity();
 
     var query = {'passengerId': identity, "requestId": requestId};

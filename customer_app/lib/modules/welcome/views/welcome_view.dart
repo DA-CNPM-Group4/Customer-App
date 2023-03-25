@@ -1,14 +1,11 @@
-import 'package:customer_app/modules/login/views/login_view.dart';
-import 'package:customer_app/modules/register/views/register_view.dart';
 import 'package:customer_app/modules/welcome/controllers/welcome_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
-import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:get/get.dart';
 
-class WelcomeView extends GetView<WelcomeController> {
+class WelcomeView extends StatelessWidget {
   const WelcomeView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {

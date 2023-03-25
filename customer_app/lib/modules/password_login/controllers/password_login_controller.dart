@@ -1,6 +1,6 @@
 import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
-import 'package:customer_app/data/provider/api_provider.dart';
+import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -46,7 +46,7 @@ class PasswordLoginController extends GetxController {
     );
 
     try {
-      await PassengerAPIService.login(body: body);
+      await PassengerAPIService.authApi.login(body: body);
       await box.put("notFirstTime", false);
       Get.offNamedUntil(Routes.HOME, ModalRoute.withName(Routes.HOME));
     } catch (e) {

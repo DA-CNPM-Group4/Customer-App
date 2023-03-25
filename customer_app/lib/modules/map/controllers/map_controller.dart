@@ -7,8 +7,8 @@ import 'package:customer_app/data/models/realtime_models/realtime_location.dart'
 import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
 import 'package:customer_app/data/models/vehicle.dart';
-import 'package:customer_app/data/provider/api_provider.dart';
-import 'package:customer_app/data/provider/firestore_realtime_provider.dart';
+import 'package:customer_app/data/providers/api_provider.dart';
+import 'package:customer_app/data/providers/firestore_realtime_provider.dart';
 import 'package:customer_app/data/services/device_location_service.dart';
 import 'package:customer_app/data/services/passenger_api_provider.dart';
 import 'package:customer_app/data/services/firebase_realtime_service.dart';
@@ -361,7 +361,7 @@ class MapController extends GetxController {
     try {
       EasyLoading.show();
       isLoading.value = true;
-      var data = await PassengerAPIService.getPrice(length: distance);
+      var data = await PassengerAPIService.tripApi.getPrice(length: distance);
 
       vehicleList[0].price = data['motorbike'].toString();
       vehicleList[1].price = data['car4S'].toString();
@@ -471,7 +471,7 @@ class MapController extends GetxController {
         passengerId: accountId ?? "fake-passenger-id",
       );
       var requestId =
-          await PassengerAPIService.createRequest(body: requestBody);
+          await PassengerAPIService.tripApi.createRequest(body: requestBody);
       isLoading.value = false;
 
       status.value = STATUS.FINDING;
@@ -481,7 +481,8 @@ class MapController extends GetxController {
           .child(requestId)
           .once(DatabaseEventType.childRemoved)
           .then((value) async {
-        var tripInfo = await PassengerAPIService.getCurrentTrip(requestId);
+        var tripInfo =
+            await PassengerAPIService.tripApi.getCurrentTrip(requestId);
         var tripId = tripInfo['tripId'] as String;
         var driverId = tripInfo['driverId'] ?? "testDriverId";
 

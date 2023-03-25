@@ -6,7 +6,7 @@ class RegisterRequestBody {
   String email;
   String phone;
   String password;
-  String role;
+  String role = "Passenger";
   String name;
 
   RegisterRequestBody(

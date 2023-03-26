@@ -1,3 +1,4 @@
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -105,7 +106,9 @@ class UserView extends GetView<UserController> {
                     ),
                     trailing: IconButton(
                       icon: const Icon(Icons.auto_fix_normal),
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.toNamed(Routes.EDIT_USER);
+                      },
                     ),
                   )),
           ),

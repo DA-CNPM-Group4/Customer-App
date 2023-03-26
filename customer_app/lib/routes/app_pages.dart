@@ -1,3 +1,5 @@
+import 'package:customer_app/modules/edit_profile/edit_profile_binding.dart';
+import 'package:customer_app/modules/edit_profile/edit_profile_view.dart';
 import 'package:customer_app/modules/find_transportation/bindings/find_transportation_binding.dart';
 import 'package:customer_app/modules/find_transportation/views/find_transportation_view.dart';
 import 'package:customer_app/modules/home/bindings/home_binding.dart';
@@ -32,7 +34,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SPLASH;
+  static const INITIAL = Routes.EDIT_PROFILE;
 
   static final routes = [
     GetPage(
@@ -64,6 +66,11 @@ class AppPages {
         page: () => const SplashView(),
         binding: SplashBinding(),
         bindings: [HomeBinding()]),
+    GetPage(
+      name: _Paths.EDIT_PROFILE,
+      page: () => const EditProfileView(),
+      binding: EditProfileBinding(),
+    ),
     GetPage(
         name: _Paths.HOME,
         page: () => const HomeView(),

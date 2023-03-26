@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -30,7 +30,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -49,6 +48,8 @@ dependencies:
   sticky_headers: ^0.3.0+2
   shimmer: ^2.0.0
   ticket_widget: ^0.0.1
+  google_sign_in: ^6.0.2
+  firebase_auth: ^4.2.2
   # firebase_database: ^10.0.15
   # firebase_core: ^2.7.1
   flutter_credit_card: ^3.0.3
@@ -82,7 +83,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -105,12 +105,12 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-  - family: Roboto
-    fonts:
-      - asset: assets/fonts/Roboto/Roboto-Bold.ttf
-      - asset: assets/fonts/Roboto/Roboto-Light.ttf
-      - asset: assets/fonts/Roboto/Roboto-Medium.ttf
-      - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto/Roboto-Bold.ttf
+        - asset: assets/fonts/Roboto/Roboto-Light.ttf
+        - asset: assets/fonts/Roboto/Roboto-Medium.ttf
+        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

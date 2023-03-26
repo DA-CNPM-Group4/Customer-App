@@ -5,6 +5,8 @@ import 'package:customer_app/core/exceptions/unexpected_exception.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class GeneralAPIService {
   Future<void> login({required LoginRequestBody body}) async {
@@ -70,6 +72,36 @@ class GeneralAPIService {
           UnexpectedException(context: "logout", debugMessage: e.toString()));
     } finally {
       await APIHandlerImp.instance.deleteToken();
+    }
+  }
+
+  Future<void> loginByGoogle() async {
+    try {
+      // begin sign in process
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+
+      // obtain auth detail from request
+      final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+
+      // create a new credential for user
+      final credential = GoogleAuthProvider.credential(
+          accessToken: gAuth.accessToken, idToken: gAuth.idToken);
+
+      // actually sign in
+
+      // await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      return Future.error(UnexpectedException(
+          context: "Google Login", debugMessage: e.toString()));
+    }
+  }
+
+  Future<void> googleSignout() async {
+    try {
+      await GoogleSignIn().signOut();
+    } catch (e) {
+      return Future.error(UnexpectedException(
+          context: "Logout-google", debugMessage: e.toString()));
     }
   }
 }

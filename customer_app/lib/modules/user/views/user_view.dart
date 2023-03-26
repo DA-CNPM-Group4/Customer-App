@@ -154,12 +154,10 @@ class UserView extends GetView<UserController> {
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
                             return ListTile(
-                              onTap: () {
+                              onTap: () async {
                                 if (controller.settings[index].name ==
                                     "Log out") {
-                                  Get.offAllNamed(
-                                      controller.settings[index].page);
-                                  controller.logout();
+                                  await controller.lifeCycleController.logout();
                                 }
                               },
                               leading: Image.asset(

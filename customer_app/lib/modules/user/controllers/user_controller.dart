@@ -76,11 +76,6 @@ class UserController extends GetxController {
     super.onClose();
   }
 
-  void logout() async {
-    await APIHandlerImp.instance.deleteToken();
-    lifeCycleController.logout();
-  }
-
   Future<void> getUserData() async {
     isLoading.value = true;
     try {

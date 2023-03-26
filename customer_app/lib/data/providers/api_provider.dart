@@ -50,7 +50,7 @@ class APIHandlerImp implements APIHandlerInterface {
     };
     if (useToken) {
       String? token =
-          useRefereshToken ? await getAccessToken() : await getRefreshToken();
+          !useRefereshToken ? await getAccessToken() : await getRefreshToken();
       if (token != "") {
         baseHeader["Authorization"] = "Bearer $token";
       }

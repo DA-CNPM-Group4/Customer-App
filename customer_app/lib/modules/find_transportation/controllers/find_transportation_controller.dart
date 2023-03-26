@@ -1,18 +1,18 @@
-import 'package:customer_app/modules/user/controllers/user_controller.dart';
+import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import '../../../data/common/google_map.dart';
 
 class FindTransportationController extends GetxController {
-  //TODO: Implement FindTransportationController
+  var lifeCycleController = Get.find<LifeCycleController>();
+
   final count = 0.obs;
   Rx<double> scrollPosition = 0.0.obs;
   var position = {}.obs;
   var showMap = false.obs;
   var isLoading = false.obs;
   Maps map = Maps();
-  var userController = Get.find<UserController>();
   ScrollController scrollController = ScrollController(initialScrollOffset: 1);
 
   @override
@@ -29,16 +29,4 @@ class FindTransportationController extends GetxController {
     }
     isLoading.value = false;
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }

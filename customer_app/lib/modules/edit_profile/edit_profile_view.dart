@@ -99,9 +99,9 @@ class EditProfileView extends GetView<EditProfileController> {
                       contentPadding: EdgeInsets.zero,
                       leading: Radio(
                         value: true,
-                        groupValue: controller.defaultGender.value,
+                        groupValue: controller.gender.value,
                         onChanged: (value) {
-                          controller.defaultGender.value = value as bool;
+                          controller.gender.value = value as bool;
                         },
                       ),
                     ),
@@ -113,9 +113,9 @@ class EditProfileView extends GetView<EditProfileController> {
                       title: const Text("Female"),
                       leading: Radio(
                         value: false,
-                        groupValue: controller.defaultGender.value,
+                        groupValue: controller.gender.value,
                         onChanged: (value) {
-                          controller.defaultGender.value = value as bool;
+                          controller.gender.value = value as bool;
                         },
                       ),
                     ),
@@ -134,23 +134,6 @@ class EditProfileView extends GetView<EditProfileController> {
                       controller: controller.addressController,
                       validator: (value) => controller.addressValidator(value!),
                       textTheme: textTheme),
-                  h_20,
-                  titleAndText(
-                      title: "Phone Number",
-                      // Nếu không cho sửa phone thì thay hint value thành driver.phone và thêm thuộc tính enable = false
-                      hint: "Enter your phone number",
-                      controller: controller.phoneController,
-                      validator: (value) =>
-                          controller.phoneNumberValidator(value!),
-                      textTheme: textTheme),
-                  h_20,
-                  titleAndText(
-                      title: "Email",
-                      // Nếu không cho sửa email thì thay hint value thành driver.email và thêm thuộc tính enable = false
-                      hint: "Enter your email",
-                      controller: controller.emailController,
-                      validator: (value) => controller.emailValidator(value!),
-                      textTheme: textTheme),
                 ],
               ),
             ),
@@ -160,7 +143,7 @@ class EditProfileView extends GetView<EditProfileController> {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           child: ElevatedButton(
             onPressed: () async {
-              // var check = await controller.validateAndSave();
+              await controller.validateAndSave();
             },
             style: ElevatedButton.styleFrom(
               primary: Colors.green,
@@ -200,7 +183,7 @@ class EditProfileView extends GetView<EditProfileController> {
           controller: controller,
           validator: (value) => validator != null ? validator(value) : null,
           onSaved: (value) {},
-          inputFormatters: [],
+          inputFormatters: const [],
           enabled: enable ?? true,
           decoration: InputDecoration(hintText: hint),
         ),

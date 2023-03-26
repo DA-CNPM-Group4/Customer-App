@@ -2,6 +2,7 @@ import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/core/exceptions/unexpected_exception.dart';
 import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/models/requests/create_passenger_request.dart';
+import 'package:customer_app/data/models/requests/update_passenger_request.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/general_api_service.dart';
 import 'package:customer_app/data/services/trip_api_service.dart';
@@ -48,7 +49,7 @@ class PassengerAPIService {
   }
 
   static Future<void> updatePassenger(
-      {required CreatePassengerRequestBody body}) async {
+      {required UpdatePassengerRequestBody body}) async {
     try {
       var identity = await APIHandlerImp.instance.getIdentity();
       body.AccountId = identity;

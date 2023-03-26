@@ -133,10 +133,7 @@ class LoginView extends GetView<LoginController> {
             elevation: 0.0,
             backgroundColor: Colors.grey,
             onPressed: () async {
-              // var check = await controller.check();
-              // if (check) {
-              Get.toNamed(Routes.PASSWORD_LOGIN);
-              // }
+              await controller.validateAndSave();
             },
             child: Obx(
               () => controller.isLoading.value

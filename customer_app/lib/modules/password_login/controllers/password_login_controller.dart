@@ -1,18 +1,20 @@
+import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/data/common/util.dart';
+import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
-import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_provider.dart';
+import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../routes/app_pages.dart';
-import '../../login/controllers/login_controller.dart';
 
 class PasswordLoginController extends GetxController {
+  final LifeCycleController lifeCycleController =
+      Get.find<LifeCycleController>();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  var loginController = Get.find<LoginController>();
   TextEditingController passwordController = TextEditingController();
   var isLoading = false.obs;
 
@@ -36,36 +38,48 @@ class PasswordLoginController extends GetxController {
 
   Future<void> login() async {
     isLoading.value = true;
-    var box = await Hive.openBox("box");
-    await box.clear();
 
     LoginRequestBody body = LoginRequestBody(
-      email: loginController.emailController.text,
-      phone: loginController.phoneNumberController.text,
+      email: lifeCycleController.email,
+      phone: lifeCycleController.phone,
       password: passwordController.text,
     );
 
     try {
       await PassengerAPIService.authApi.login(body: body);
-      await box.put("notFirstTime", false);
-      Get.offNamedUntil(Routes.HOME, ModalRoute.withName(Routes.HOME));
+    } catch (e) {
+      showSnackBar("Error", e.toString());
+      isLoading.value = false;
+      return;
+    }
+
+    try {
+      await getPassengerInfoAndRoutingHome();
+    } on IBussinessException catch (_) {
+      await createPassengerInfo();
     } catch (e) {
       showSnackBar("Error", e.toString());
     }
     isLoading.value = false;
+  }
 
-    // var response = await apiHandler.post({
-    //   "username": '0${loginController.phoneNumberController.text}',
-    //   "password": passwordController.text
-    // }, "user/login");
+  Future<void> createPassengerInfo() async {
+    var body2 = CreatePassengerRequestBody(
+        Email: lifeCycleController.email,
+        Phone: lifeCycleController.phone,
+        Name: lifeCycleController.name.isEmpty
+            ? lifeCycleController.name
+            : "Unknown",
+        Gender: false);
+    PassengerAPIService.createPassenger(body: body2);
 
-    // if (response.data["status"]) {
-    //   await box.put("notFirstTime", false);
-    //   Get.offNamedUntil(Routes.HOME, ModalRoute.withName(Routes.HOME));
-    //   apiHandler.storeToken(response.data["data"]);
-    // } else {
-    //   showSnackBar("Lỗi", "Mật khẩu không đúng");
-    // }
+    await getPassengerInfoAndRoutingHome();
+  }
+
+  Future<void> getPassengerInfoAndRoutingHome() async {
+    lifeCycleController.passenger =
+        await PassengerAPIService.getPassengerInfo();
+    Get.offNamedUntil(Routes.HOME, ModalRoute.withName(Routes.HOME));
   }
 
   @override

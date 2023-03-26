@@ -8,6 +8,7 @@ class RegisterController extends GetxController {
   var emailError = ''.obs;
   var phoneNumberError = ''.obs;
   var isLoading = false.obs;
+
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -15,7 +16,6 @@ class RegisterController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    await APIHandlerImp.instance.deleteToken();
   }
 
   String? nameValidator(String value) {
@@ -51,30 +51,14 @@ class RegisterController extends GetxController {
       return false;
     }
     isLoading.value = true;
-
-    // var emailResponse = await apiHandlerImp
-    //     .post({"email": emailController.text}, "user/checkEmail");
-
-    // if (emailResponse.data["status"]) {
-    //   emailError.value = "Email is existed, try another one";
-    //   isLoading.value = false;
-    //   return false;
-    // }
+    // check email exist
     emailError.value = '';
 
-    // var phoneResponse = await apiHandlerImp.post(
-    //     {"phoneNumber": '0${phoneNumberController.text}'},
-    //     "user/checkPhonenumber");
-
-    // if (phoneResponse.data["status"]) {
-    //   phoneNumberError.value = "Phone number is existed, try another one";
-    //   isLoading.value = false;
-    //   return false;
-    // }
+    // check phone exist
+    phoneNumberError.value = '';
 
     formKey.currentState!.save();
     isLoading.value = false;
-    phoneNumberError.value = '';
     return true;
   }
 

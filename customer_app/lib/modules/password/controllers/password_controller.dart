@@ -2,12 +2,16 @@ import 'package:customer_app/data/models/requests/create_passenger_request.dart'
 import 'package:customer_app/data/models/requests/register_request.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_provider.dart';
+import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PasswordController extends GetxController {
+  final LifeCycleController lifeCycleController =
+      Get.find<LifeCycleController>();
+
   var registerController = Get.find<RegisterController>();
   var isLoading = false.obs;
   APIHandlerImp apiHandlerImp = APIHandlerImp();
@@ -47,16 +51,10 @@ class PasswordController extends GetxController {
         role: "Passenger",
         name: registerController.nameController.text);
 
-    var body2 = CreatePassengerRequestBody(
-        Email: registerController.emailController.text,
-        Phone: registerController.phoneNumberController.text,
-        Name: registerController.nameController.text,
-        Gender: false);
-
     try {
       await PassengerAPIService.authApi.register(body);
-      await PassengerAPIService.createPassenger(body: body2);
-      Get.offAllNamed(Routes.OTP);
+
+      Get.offAllNamed(Routes.WELCOME);
       Get.snackbar(
           "Register successfully", "Enter your OTP to active this account",
           colorText: Colors.black, backgroundColor: Colors.grey[200]);

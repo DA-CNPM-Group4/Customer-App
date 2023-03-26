@@ -7,15 +7,15 @@ part 'user_entity.g.dart';
 @JsonSerializable()
 class UserEntity extends HiveObject {
   @HiveField(0)
-  String? accountId;
+  String accountId;
   @HiveField(1)
-  String? name;
+  String name = 'Unknown';
   @HiveField(2)
-  dynamic gender;
+  bool gender = true;
   @HiveField(3)
-  String? phone;
+  String phone;
   @HiveField(4)
-  String? email;
+  String email;
 
   UserEntity({
     required this.accountId,

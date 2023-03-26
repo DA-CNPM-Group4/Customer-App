@@ -50,10 +50,10 @@ class FindTransportationView extends GetView<FindTransportationController> {
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       Obx(
-                        () => controller.userController.isLoading.value
+                        () => controller.isLoading.value
                             ? const Center(child: CircularProgressIndicator())
                             : Text(
-                                "Up for an adventure,${controller.userController.user?.name}?",
+                                "Up for an adventure,${controller.lifeCycleController.passenger?.name}?",
                                 style: BaseTextStyle.body1(
                                     fontSize: 13, color: Colors.white)),
                       ),

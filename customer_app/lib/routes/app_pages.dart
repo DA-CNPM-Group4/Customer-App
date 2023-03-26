@@ -34,7 +34,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.EDIT_PROFILE;
+  static const INITIAL = Routes.WELCOME;
 
   static final routes = [
     GetPage(

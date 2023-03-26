@@ -13,7 +13,9 @@ import 'package:customer_app/data/services/device_location_service.dart';
 import 'package:customer_app/data/services/passenger_api_provider.dart';
 import 'package:customer_app/data/services/firebase_realtime_service.dart';
 import 'package:customer_app/modules/find_transportation/controllers/find_transportation_controller.dart';
+import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:customer_app/modules/search_page/controllers/search_page_controller.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -27,7 +29,8 @@ import '../../../data/common/search_location.dart';
 import '../../../data/models/voucher/voucher.dart';
 
 class MapController extends GetxController {
-  String? passengerId;
+  LifeCycleController lifeCycleController = Get.find<LifeCycleController>();
+  late UserEntity user;
 
   var id = 0;
   var findTransportationController = Get.find<FindTransportationController>();
@@ -106,9 +109,17 @@ class MapController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    isLoading.value = true;
-    passengerId = await APIHandlerImp.instance.getIdentity();
 
+    try {
+      lifeCycleController.passenger ??=
+          await PassengerAPIService.getPassengerInfo();
+      user = lifeCycleController.passenger!;
+    } catch (e) {
+      showSnackBar("Error", e.toString());
+      Get.offAllNamed(Routes.WELCOME);
+    }
+
+    isLoading.value = true;
     await getCurrentPosition();
 
     from = Location(
@@ -439,8 +450,6 @@ class MapController extends GetxController {
   Future<void> sendRequest() async {
     isLoading.value = true;
 
-    var box = await Hive.openBox("box");
-    UserEntity user = box.get("user");
     var accountId = await APIHandlerImp.instance.getIdentity();
 
     var requestBody = CreateTripRequestBody(
@@ -452,15 +461,15 @@ class MapController extends GetxController {
         Destination: to!.address!,
         Distance: distance.value,
         PassengerNote: "Fast!!!",
-        PassengerPhone: user.phone!,
+        PassengerPhone: user.phone,
         Price: double.parse(vehicleList[selectedIndex.value].price!).ceil(),
         VehicleType: vehicleList[selectedIndex.value].type!);
     try {
       await FirestoreRealtimeService.instance.setPassengerNode(
         passenger: RealtimePassenger(
           info: RealtimePassengerInfo(
-            name: user.name!,
-            phone: user.phone!,
+            name: user.name,
+            phone: user.phone,
           ),
           location: RealtimeLocation(
             address: from!.address!,
@@ -549,14 +558,13 @@ class MapController extends GetxController {
       var position = RealtimeLocation(
           lat: value.latitude, long: value.longitude, address: address);
       await FirestoreRealtimeService.instance
-          .updatePassengerNode(passengerId ?? "fake-passenger-id", position);
+          .updatePassengerNode(user.accountId, position);
     });
   }
 
   Future<void> disableRealtimeLocator() async {
     await gpsStreamSubscription?.cancel();
-    await FirestoreRealtimeService.instance
-        .deletePassengerNode(passengerId ?? "fake-passenger-id");
+    await FirestoreRealtimeService.instance.deletePassengerNode(user.accountId);
   }
 }
 

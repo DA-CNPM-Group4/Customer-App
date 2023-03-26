@@ -73,7 +73,6 @@ class UserView extends GetView<UserController> {
                 ? userLoading()
                 : ListTile(
                     leading: Container(
-                        margin: const EdgeInsets.only(right: 12),
                         width: 50,
                         height: 50,
                         alignment: Alignment.center,
@@ -87,19 +86,18 @@ class UserView extends GetView<UserController> {
                           width: 20,
                         ))),
                     title: Text(
-                      controller.user?.name ?? "Minh Duc",
-                      style: BaseTextStyle.heading4(fontSize: 18),
+                      controller.user?.name ?? "Unknown",
+                      style: BaseTextStyle.heading2(fontSize: 18),
                     ),
-                    horizontalTitleGap: 20,
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          controller.user?.email ?? "minhduc@gmail.com",
+                          controller.user?.email ?? "Unknown",
                           style: BaseTextStyle.body2(fontSize: 14),
                         ),
                         Text(
-                          "+84${controller.user?.phone ?? "0987654981"}",
+                          "+84 ${controller.user?.phone ?? "Unknown"}",
                           style: BaseTextStyle.body2(fontSize: 14),
                         )
                       ],
@@ -107,7 +105,7 @@ class UserView extends GetView<UserController> {
                     trailing: IconButton(
                       icon: const Icon(Icons.auto_fix_normal),
                       onPressed: () {
-                        Get.toNamed(Routes.EDIT_USER);
+                        Get.toNamed(Routes.EDIT_PROFILE);
                       },
                     ),
                   )),

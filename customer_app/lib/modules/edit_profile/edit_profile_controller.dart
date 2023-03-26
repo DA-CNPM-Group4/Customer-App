@@ -1,11 +1,23 @@
+import 'package:customer_app/core/utils/widgets.dart';
+import 'package:customer_app/data/models/local_entity/user_entity.dart';
+import 'package:customer_app/data/models/requests/update_passenger_request.dart';
+import 'package:customer_app/data/services/passenger_api_provider.dart';
+import 'package:customer_app/modules/lifecycle_controller.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pinput/pinput.dart';
 
 class EditProfileController extends GetxController {
+  final LifeCycleController lifeCycleController =
+      Get.find<LifeCycleController>();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   var isLoading = false.obs;
 
-  RxBool defaultGender = true.obs;
+  RxBool gender = true.obs;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
 
   String? nameValidator(String value) {
     if (value.isEmpty) {
@@ -18,28 +30,7 @@ class EditProfileController extends GetxController {
         : "Name can't contains special characters or number";
   }
 
-  String? phoneNumberValidator(String value) {
-    if (value.isEmpty) {
-      return "This field must be filled";
-    }
-    return value.isPhoneNumber ? null : "You must enter a right phone number";
-  }
-
-  String? emailValidator(String value) {
-    if (value.isEmpty) {
-      return "This field must be filled";
-    }
-    return value.isEmail ? null : "You must enter a right email";
-  }
-
   String? idValidator(String value) {
-    if (value.isEmpty) {
-      return "This field must be filled";
-    }
-    return value.length >= 12 ? null : "ID length can't be lower than 12";
-  }
-
-  String? driverLicenseValidator(String value) {
     if (value.isEmpty) {
       return "This field must be filled";
     }
@@ -53,71 +44,45 @@ class EditProfileController extends GetxController {
     return null;
   }
 
-  var selectedIndex = 0.obs;
+  Future<void> validateAndSave() async {
+    try {
+      isLoading.value = true;
+      final isValid = formKey.currentState!.validate();
+      if (!isValid) {
+        isLoading.value = false;
+      }
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-
-  // Future<bool> validateAndSave() async {
-  //   isLoading.value = true;
-  //   final isValid = formKey.currentState!.validate();
-  //   if (!isValid) {
-  //     isLoading.value = false;
-  //     return false;
-  //   }
-
-  //   // var response = await apiHandlerImp.post({
-  //   //   "phoneNumber": phoneNumberController.text,
-  //   //   "email": emailController.text,
-  //   //   "driverName": nameController.text,
-  //   //   "gender": defaultGender.value ? "Male" : "Female",
-  //   //   "driverAddress": addressController.text,
-  //   //   "citizenId": idController.text,
-  //   //   "driverLicenseId": driverLicenseController.text
-  //   // }, "driver/checkDriverInfo");
-
-  //   // if (!response.data["status"]) {
-  //   //   print(response.data["data"]);
-  //   //   isLoading.value = false;
-  //   //   return false;
-  //   // }
-
-  //   var body = CreateDriverRequestBody(
-  //     Address: addressController.text,
-  //     AverageRate: 0,
-  //     NumberOfRate: 0,
-  //     NumberOfTrip: 0,
-  //     Email: registerController.emailController.text,
-  //     Gender: defaultGender.value,
-  //     IdentityNumber: idController.text,
-  //     Name: nameController.text,
-  //     Phone: registerController.phoneNumberController.text,
-  //   );
-
-  //   try {
-  //     await DriverAPIService.createDriver(body: body);
-  //     isLoading.value = false;
-  //     Get.toNamed(Routes.VEHICLE_REGISTRATION);
-  //   } catch (e) {
-  //     showSnackBar("Oh no", e.toString());
-  //   }
-
-  //   isLoading.value = false;
-  //   return false;
-  // }
-
-  @override
-  void onInit() {
-    super.onInit();
+      var body = UpdatePassengerRequestBody(
+        Gender: lifeCycleController.passenger!.gender,
+        Name: nameController.text,
+        Email: lifeCycleController.passenger!.email,
+        Phone: lifeCycleController.passenger!.phone,
+      );
+      await PassengerAPIService.updatePassenger(body: body);
+      showSnackBar("Edit Profile Success", "Your profile have been updated");
+    } catch (e) {
+      showSnackBar("Error", e.toString());
+    }
+    isLoading.value = false;
   }
 
   @override
-  void onReady() {
-    super.onReady();
+  void onInit() async {
+    try {
+      lifeCycleController.passenger ??=
+          await PassengerAPIService.getPassengerInfo();
+
+      gender.value = lifeCycleController.passenger!.gender;
+      nameController.setText(lifeCycleController.passenger!.name);
+      addressController.setText("Actually this field don't exist");
+    } catch (e) {
+      showSnackBar("Error", e.toString());
+      Get.offAllNamed(Routes.WELCOME);
+    }
   }
+
+  @override
+  void onReady() {}
 
   @override
   void onClose() {

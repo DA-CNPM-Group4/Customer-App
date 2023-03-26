@@ -4,6 +4,7 @@ import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_provider.dart';
+import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -12,9 +13,8 @@ import '../../../data/models/wallet.dart';
 import '../../../routes/app_pages.dart';
 
 class UserController extends GetxController {
-  //TODO: Implement UserController
-  APIHandlerImp apiHandlerImp = APIHandlerImp();
-  var box;
+  LifeCycleController lifeCycleController = Get.find<LifeCycleController>();
+
   UserEntity? user;
   var isLoading = false.obs;
   Wallet? wallet;
@@ -64,37 +64,29 @@ class UserController extends GetxController {
   }
 
   Future<void> init() async {
-    box = await Hive.openBox("box");
-    if (box.isOpen) {
-      if (!box.containsKey("user")) {
-        await getUserData();
-      } else {
-        user = await box.get("user");
-      }
+    if (lifeCycleController.passenger == null) {
+      await getUserData();
     }
+    user = lifeCycleController.passenger;
     // await getWallet();
   }
 
   @override
   void onClose() async {
     super.onClose();
-    await box.close();
   }
 
   void logout() async {
-    await box.clear();
-    await apiHandlerImp.deleteToken();
+    await APIHandlerImp.instance.deleteToken();
+    lifeCycleController.logout();
   }
 
   Future<void> getUserData() async {
     isLoading.value = true;
-    // var response = await apiHandlerImp.get("user/getInforByToken", {});
-    // user = UserEntity.fromJson(response.data["data"]);
-    // await box.put("user", user);
     try {
-      user = await PassengerAPIService.getPassengerInfo();
+      lifeCycleController.passenger =
+          await PassengerAPIService.getPassengerInfo();
     } catch (e) {
-      print(e);
       showSnackBar("Error: ", "Something wrong ${e.toString()}");
     }
     isLoading.value = false;
@@ -102,23 +94,26 @@ class UserController extends GetxController {
 
   Future<void> getWallet() async {
     isLoading.value = true;
-    var response_1 = await apiHandlerImp.get("user/getWallet");
+    var response_1 = await APIHandlerImp.instance.get("user/getWallet");
     wallet = Wallet.fromJson(response_1.data["data"]);
     isLoading.value = false;
   }
 
   sendOTP() async {
-    var response =
-        await apiHandlerImp.put({"username": user!.phone!}, "sendOTP");
+    var response = await APIHandlerImp.instance
+        .put({"username": lifeCycleController.passenger?.phone}, "sendOTP");
   }
 
   validateOTP(TextEditingController otpController,
       TextEditingController moneyController, bool type) async {
     buttonLoading.value = true;
-    var response = await apiHandlerImp.put(
-        {"username": user!.phone!, "otp": otpController.text}, "validateOTP");
+    var response = await APIHandlerImp.instance.put({
+      "username": lifeCycleController.passenger?.phone,
+      "otp": otpController.text
+    }, "validateOTP");
     if (response.data["status"]) {
-      var response_1 = await apiHandlerImp.put({"money": moneyController.text},
+      var response_1 = await APIHandlerImp.instance.put(
+          {"money": moneyController.text},
           type ? "user/recharge" : "user/withdraw");
       if (response_1.data["status"]) {
         isLoading.value = true;

@@ -3,7 +3,7 @@ class BackendEnviroment {
 
   static checkDevelopmentMode() {
     assert(() {
-      host = "http://localhost:8001/api";
+      host = "http://192.168.100.9:8001/api";
       return true;
     }());
   }

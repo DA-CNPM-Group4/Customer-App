@@ -17,11 +17,11 @@ class UserEntityAdapter extends TypeAdapter<UserEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserEntity(
-      accountId: fields[0] as String?,
-      name: fields[1] as String?,
-      gender: fields[2] as dynamic,
-      phone: fields[3] as String?,
-      email: fields[4] as String?,
+      accountId: fields[0] as String,
+      name: fields[1] as String,
+      gender: fields[2] as bool,
+      phone: fields[3] as String,
+      email: fields[4] as String,
     );
   }
 
@@ -57,11 +57,11 @@ class UserEntityAdapter extends TypeAdapter<UserEntity> {
 // **************************************************************************
 
 UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => UserEntity(
-      accountId: json['accountId'] as String?,
-      name: json['name'] as String?,
-      gender: json['gender'],
-      phone: json['phone'] as String?,
-      email: json['email'] as String?,
+      accountId: json['accountId'] as String,
+      name: json['name'] as String,
+      gender: json['gender'] as bool,
+      phone: json['phone'] as String,
+      email: json['email'] as String,
     );
 
 Map<String, dynamic> _$UserEntityToJson(UserEntity instance) =>

@@ -1,9 +1,12 @@
 import 'package:customer_app/data/providers/api_provider.dart';
+import 'package:customer_app/modules/lifecycle_controller.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
-  //TODO: Implement LoginController
+  LifeCycleController lifeCycleController = Get.find<LifeCycleController>();
+
   final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> phoneFormKey = GlobalKey<FormState>();
 
@@ -32,19 +35,22 @@ class LoginController extends GetxController {
     return null;
   }
 
-  Future<bool> validateAndSave() async {
+  Future<void> validateAndSave() async {
     isLoading.value = true;
     final isPhoneValid = phoneFormKey.currentState!.validate();
     final isEmailValid = emailFormKey.currentState!.validate();
     if (!isPhoneValid || !isEmailValid) {
       isLoading.value = false;
-      return false;
     }
     // call api to check
     phoneFormKey.currentState!.save();
     emailFormKey.currentState!.save();
     isLoading.value = false;
-    return true;
+
+    lifeCycleController.email = emailController.text;
+    lifeCycleController.phone = phoneNumberController.text;
+
+    Get.toNamed(Routes.PASSWORD_LOGIN);
   }
 
   @override

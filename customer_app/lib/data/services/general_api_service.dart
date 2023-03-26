@@ -14,7 +14,6 @@ class GeneralAPIService {
 
       if (response.data["status"]) {
         var body = LoginResponseBody.fromJson(response.data['data']);
-        print("Login Result: " + body.toJson().toString());
         await _storeAllIdentity(body);
       } else {
         return Future.error(IBussinessException(response.data['message']));

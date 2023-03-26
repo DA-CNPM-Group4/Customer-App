@@ -60,6 +60,9 @@ class EditProfileController extends GetxController {
       );
       await PassengerAPIService.updatePassenger(body: body);
       showSnackBar("Edit Profile Success", "Your profile have been updated");
+
+      lifeCycleController.passenger =
+          await PassengerAPIService.getPassengerInfo();
     } catch (e) {
       showSnackBar("Error", e.toString());
     }

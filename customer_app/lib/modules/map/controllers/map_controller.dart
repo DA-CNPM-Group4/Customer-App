@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:customer_app/Data/models/realtime_models/realtime_passenger.dart';
+import 'package:customer_app/core/constants/common_object.dart';
 import 'package:customer_app/data/common/location.dart';
 import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
@@ -18,7 +19,6 @@ import 'package:customer_app/modules/search_page/controllers/search_page_control
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -32,63 +32,36 @@ class MapController extends GetxController {
   LifeCycleController lifeCycleController = Get.find<LifeCycleController>();
   late UserEntity user;
 
-  var id = 0;
-  var findTransportationController = Get.find<FindTransportationController>();
-  var searchPageController = Get.find<SearchPageController>();
-
-  TextEditingController feedbackController = TextEditingController();
-  var star = 0;
-
-  var address = ''.obs;
-
-  late GoogleMapController googleMapController;
   var isLoading = false.obs;
   var isDragging = false.obs;
   var isShow = false;
   var pass = false.obs;
   var distance = 0.0.obs;
+  var address = ''.obs;
+  var selectedIndex = 0.obs;
+  String tripId = "";
+  String requestId = "";
+// feedback
+  TextEditingController feedbackController = TextEditingController();
+  var star = 0;
 
   Rx<STATUS> status = STATUS.SELECTVEHICLE.obs;
   RxString text = "Your current location".obs;
-  var selectedIndex = 0.obs;
-  BitmapDescriptor? mapMarker;
   Voucher? voucher;
   var groupValue = "CASH".obs;
 
-  List<Vehicle> vehicleList = [
-    Vehicle(
-        name: "Motorbike",
-        type: "Motorbike",
-        price: "12500",
-        duration: "",
-        priceAfterVoucher: "",
-        picture: "assets/images/motorcycle.png",
-        seatNumber: "2"),
-    Vehicle(
-        name: "Car4S",
-        type: "Car4S",
-        price: "29000",
-        duration: "",
-        priceAfterVoucher: "",
-        picture: "assets/images/car.png",
-        seatNumber: "4"),
-    Vehicle(
-        name: "Car7S",
-        type: "Car7S",
-        price: "34000",
-        duration: "",
-        priceAfterVoucher: "",
-        picture: "assets/images/car.png",
-        seatNumber: "7"),
-  ];
+  // Map
+  late GoogleMapController googleMapController;
+  BitmapDescriptor? mapMarker;
+  List<PointLatLng> searchResult = [];
 
-  //Draw
   RxMap<MarkerId, Marker> markers = <MarkerId, Marker>{}.obs;
   RxList<LatLng> polylinePoints = <LatLng>[].obs;
-  List<PointLatLng> searchResult = [];
   final RxList<Polyline> polyline = <Polyline>[].obs;
 
   // search
+  var findTransportationController = Get.find<FindTransportationController>();
+  var searchPageController = Get.find<SearchPageController>();
   SearchLocation? myLocation;
   SearchLocation? searchingLocation;
   TYPES? types;
@@ -97,14 +70,13 @@ class MapController extends GetxController {
   Location? from;
   Location? to;
 
-  APIHandlerImp apiHandlerImp = APIHandlerImp();
-
   Map<dynamic, dynamic> request = {};
-
-  StreamSubscription? listener;
-  StreamSubscription? listener1;
-
   Rxn<RealtimeDriver> driver = Rxn<RealtimeDriver>();
+
+  Future<DatabaseEvent>? requestListener;
+  StreamSubscription? driverListener;
+  StreamSubscription? tripListener;
+  var isChangeState = false.obs;
 
   @override
   void onInit() async {
@@ -267,7 +239,7 @@ class MapController extends GetxController {
       types = TYPES.HASBOTH;
     } else if (types == TYPES.HASBOTH) {
       await route(from, to);
-      await updatePrice(vehicleList, distance.value);
+      await updatePrice(CommonObject.vehicleList, distance.value);
 
       pass.value = true;
       googleMapController.animateCamera(CameraUpdate.newCameraPosition(
@@ -334,8 +306,9 @@ class MapController extends GetxController {
     EasyLoading.show();
     isLoading.value = true;
 
-    // await apiHandlerImp.put({}, "user/cancelBooking/$id");
-    // listener!.cancel();
+    requestListener?.ignore();
+    PassengerAPIService.tripApi.cancelRequest(requestId: requestId);
+
     status.value = STATUS.SELECTVEHICLE;
 
     isLoading.value = false;
@@ -384,73 +357,10 @@ class MapController extends GetxController {
     isLoading.value = false;
   }
 
-  void rateDialog() {
-    Get.dialog(
-            AlertDialog(
-              title: const Center(child: Text('Rate your driver')),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const CircleAvatar(
-                    backgroundImage: AssetImage("assets/icon/face_icon.png"),
-                  ),
-                  Text(driver.value?.info.name ?? "Driver Name"),
-                  RatingBar.builder(
-                    initialRating: 1,
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: false,
-                    itemCount: 5,
-                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (rating) {
-                      // star = rating as int;
-                      // print(rating);
-                    },
-                  ),
-                  TextFormField(
-                    controller: feedbackController,
-                  )
-                ],
-              ),
-              actions: [
-                Center(
-                  child: TextButton(
-                    child: const Text("Send"),
-                    onPressed: () async {
-                      print({
-                        "rateStar": "FIVE",
-                        "note": feedbackController.text
-                      });
-                      await apiHandlerImp.post(
-                          {"rateStar": "FIVE", "note": feedbackController.text},
-                          "user/feedback");
-                    },
-                  ),
-                ),
-              ],
-            ),
-            useSafeArea: true)
-        .then((value) {
-      Future.delayed(const Duration(milliseconds: 1500), () {
-        Get.back();
-      });
-    });
-  }
-
-  StreamSubscription? requestListener;
-  StreamSubscription? driverListener;
-  StreamSubscription? tripListener;
-  var isChangeState = false.obs;
-
   Future<void> sendRequest() async {
     isLoading.value = true;
 
-    var accountId = await APIHandlerImp.instance.getIdentity();
+    var accountId = user.accountId;
 
     var requestBody = CreateTripRequestBody(
         LatStartAddr: from!.lng!,
@@ -462,8 +372,11 @@ class MapController extends GetxController {
         Distance: distance.value,
         PassengerNote: "Fast!!!",
         PassengerPhone: user.phone,
-        Price: double.parse(vehicleList[selectedIndex.value].price!).ceil(),
-        VehicleType: vehicleList[selectedIndex.value].type!);
+        Price:
+            double.parse(CommonObject.vehicleList[selectedIndex.value].price!)
+                .ceil(),
+        VehicleType: CommonObject.vehicleList[selectedIndex.value].type!);
+
     try {
       await FirestoreRealtimeService.instance.setPassengerNode(
         passenger: RealtimePassenger(
@@ -477,22 +390,24 @@ class MapController extends GetxController {
             long: from!.lng!,
           ),
         ),
-        passengerId: accountId ?? "fake-passenger-id",
+        passengerId: accountId,
       );
-      var requestId =
+
+      requestId =
           await PassengerAPIService.tripApi.createRequest(body: requestBody);
       isLoading.value = false;
 
       status.value = STATUS.FINDING;
 
-      FirebaseDatabase.instance
+      requestListener = FirebaseDatabase.instance
           .ref(FirebaseRealtimePaths.REQUESTS)
           .child(requestId)
-          .once(DatabaseEventType.childRemoved)
-          .then((value) async {
+          .once(DatabaseEventType.childRemoved);
+
+      requestListener?.then((value) async {
         var tripInfo =
             await PassengerAPIService.tripApi.getCurrentTrip(requestId);
-        var tripId = tripInfo['tripId'] as String;
+        tripId = tripInfo['tripId'] as String;
         var driverId = tripInfo['driverId'] ?? "testDriverId";
 
         polylinePoints.clear();
@@ -565,6 +480,64 @@ class MapController extends GetxController {
   Future<void> disableRealtimeLocator() async {
     await gpsStreamSubscription?.cancel();
     await FirestoreRealtimeService.instance.deletePassengerNode(user.accountId);
+  }
+
+  void rateDialog() {
+    Get.dialog(
+            AlertDialog(
+              title: const Center(child: Text('Rate your driver')),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CircleAvatar(
+                    backgroundImage: AssetImage("assets/icon/face_icon.png"),
+                  ),
+                  Text(driver.value?.info.name ?? "Driver Name"),
+                  RatingBar.builder(
+                    initialRating: 1,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: false,
+                    itemCount: 5,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      // star = rating as int;
+                      // print(rating);
+                    },
+                  ),
+                  TextFormField(
+                    controller: feedbackController,
+                  )
+                ],
+              ),
+              actions: [
+                Center(
+                  child: TextButton(
+                    child: const Text("Send"),
+                    onPressed: () async {
+                      print({
+                        "rateStar": "FIVE",
+                        "note": feedbackController.text
+                      });
+                      await APIHandlerImp.instance.post(
+                          {"rateStar": "FIVE", "note": feedbackController.text},
+                          "user/feedback");
+                    },
+                  ),
+                ),
+              ],
+            ),
+            useSafeArea: true)
+        .then((value) {
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        Get.back();
+      });
+    });
   }
 }
 

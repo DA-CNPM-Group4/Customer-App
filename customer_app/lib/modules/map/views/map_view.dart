@@ -1,3 +1,4 @@
+import 'package:customer_app/core/constants/common_object.dart';
 import 'package:customer_app/data/common/bottom_sheets.dart';
 import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
@@ -260,7 +261,7 @@ class MapView extends GetView<MapController> {
                     ),
                     child: ListTile(
                       leading: Image.asset(
-                        controller.vehicleList[controller.selectedIndex.value]
+                        CommonObject.vehicleList[controller.selectedIndex.value]
                             .picture!,
                         height: 40,
                       ),
@@ -294,7 +295,7 @@ class MapView extends GetView<MapController> {
                         style: BaseTextStyle.body1(fontSize: 14),
                       ),
                       trailing: Text(
-                        "${formatBalance.format(double.parse(controller.vehicleList[controller.selectedIndex.value].price!))}đ",
+                        "${formatBalance.format(double.parse(CommonObject.vehicleList[controller.selectedIndex.value].price!))}đ",
                         style: BaseTextStyle.body1(fontSize: 14),
                       ),
                     ),
@@ -374,7 +375,7 @@ class MapView extends GetView<MapController> {
                 child: CircularProgressIndicator(),
               )
             : ListView.builder(
-                itemCount: controller.vehicleList.length,
+                itemCount: CommonObject.vehicleList.length,
                 padding: const EdgeInsets.only(bottom: 150),
                 itemBuilder: (context, itemBuilder) {
                   return Obx(
@@ -383,25 +384,25 @@ class MapView extends GetView<MapController> {
                           ? Colors.grey[100]
                           : Colors.white,
                       leading: Image.asset(
-                        controller.vehicleList[itemBuilder].picture!,
+                        CommonObject.vehicleList[itemBuilder].picture!,
                         height: 30,
                       ),
                       title: Row(
                         children: [
                           Text(
-                            controller.vehicleList[itemBuilder].name!,
+                            CommonObject.vehicleList[itemBuilder].name!,
                             style: BaseTextStyle.heading2(fontSize: 13),
                           ),
                           const Spacer(),
                           Text(
-                            "${formatBalance.format(double.parse(controller.vehicleList[itemBuilder].price!))}đ",
+                            "${formatBalance.format(double.parse(CommonObject.vehicleList[itemBuilder].price!))}đ",
                             style: BaseTextStyle.heading2(fontSize: 16),
                           ),
                         ],
                       ),
                       subtitle: Row(
                         children: [
-                          Text(controller.vehicleList[itemBuilder].duration!),
+                          Text(CommonObject.vehicleList[itemBuilder].duration!),
                           const SizedBox(
                             width: 5,
                           ),
@@ -414,20 +415,20 @@ class MapView extends GetView<MapController> {
                             width: 5,
                           ),
                           Text(
-                            "${controller.vehicleList[itemBuilder].seatNumber!} seaters",
+                            "${CommonObject.vehicleList[itemBuilder].seatNumber!} seaters",
                           ),
                           const Spacer(),
                           Visibility(
-                            visible: controller.vehicleList[itemBuilder]
+                            visible: CommonObject.vehicleList[itemBuilder]
                                         .priceAfterVoucher !=
                                     ""
                                 ? true
                                 : false,
                             child: Text(
-                              controller.vehicleList[itemBuilder]
+                              CommonObject.vehicleList[itemBuilder]
                                           .priceAfterVoucher !=
                                       ""
-                                  ? "${formatBalance.format(double.parse(controller.vehicleList[itemBuilder].priceAfterVoucher!))}đ"
+                                  ? "${formatBalance.format(double.parse(CommonObject.vehicleList[itemBuilder].priceAfterVoucher!))}đ"
                                   : "",
                               style: const TextStyle(
                                   fontSize: 12,

@@ -75,7 +75,9 @@ class MapController extends GetxController {
 
   Future<DatabaseEvent>? requestListener;
   StreamSubscription? driverListener;
-  StreamSubscription? tripListener;
+  StreamSubscription? tripChangeStatusListener;
+  StreamSubscription? tripDeleteListener;
+
   var isChangeState = false.obs;
 
   @override
@@ -418,7 +420,7 @@ class MapController extends GetxController {
 
         await enableRealtimeLocator();
 
-        tripListener = FirebaseDatabase.instance
+        tripChangeStatusListener = FirebaseDatabase.instance
             .ref(FirebaseRealtimePaths.TRIPS)
             .child(tripId)
             .onChildChanged
@@ -455,9 +457,12 @@ class MapController extends GetxController {
             .child(tripId)
             .once(DatabaseEventType.childRemoved)
             .then((value) async {
+          print(value);
           await driverListener?.cancel();
           await disableRealtimeLocator();
-          rateDialog();
+          if (isChangeState.value) {
+            rateDialog();
+          }
         });
       });
     } catch (e) {}

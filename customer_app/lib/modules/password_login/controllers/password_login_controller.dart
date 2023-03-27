@@ -53,6 +53,7 @@ class PasswordLoginController extends GetxController {
       return;
     }
 
+
     try {
       await getPassengerInfoAndRoutingHome();
     } on IBussinessException catch (_) {
@@ -71,7 +72,7 @@ class PasswordLoginController extends GetxController {
             ? lifeCycleController.name
             : "Unknown",
         Gender: false);
-    PassengerAPIService.createPassenger(body: body2);
+    await PassengerAPIService.createPassenger(body: body2);
 
     await getPassengerInfoAndRoutingHome();
   }

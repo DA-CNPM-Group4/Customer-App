@@ -1,9 +1,11 @@
-import 'package:driver_app/Data/models/requests/change_password_request.dart';
-import 'package:driver_app/Data/services/driver_api_service.dart';
-import 'package:driver_app/core/utils/widgets.dart';
-import 'package:driver_app/modules/lifecycle_controller.dart';
+import 'package:customer_app/Data/models/requests/change_password_request.dart';
+import 'package:customer_app/core/utils/widgets.dart';
+import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../data/services/passenger_api_provider.dart';
+import '../lifecycle_controller.dart';
 
 class ChangePasswordController extends GetxController {
   final LifeCycleController lifeCycleController =
@@ -28,7 +30,7 @@ class ChangePasswordController extends GetxController {
     );
 
     try {
-      await DriverAPIService.authApi.changePassword(body);
+      await PassengerAPIService.authApi.changePassword(body);
       showSnackBar("Success", "Change Password Success");
     } catch (e) {
       showSnackBar("Error", e.toString());

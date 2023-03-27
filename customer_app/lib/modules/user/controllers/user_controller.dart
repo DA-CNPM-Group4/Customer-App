@@ -35,9 +35,9 @@ class UserController extends GetxController {
         icons: "assets/icons/my_orders.png",
         page: Routes.HOME),
     UserSettings(
-        name: "My Orders",
+        name: "Change Password",
         icons: "assets/icons/my_orders.png",
-        page: Routes.HOME),
+        page: Routes.CHANGE_PASSWORD),
     UserSettings(
         name: "My Orders",
         icons: "assets/icons/my_orders.png",
@@ -135,6 +135,14 @@ class UserController extends GetxController {
           backgroundColor: Colors.grey[100]);
     }
     buttonLoading.value = false;
+  }
+
+  void goToProfileView() {
+    Get.toNamed(Routes.EDIT_PROFILE);
+  }
+
+  void goToChangePasswordView() {
+    Get.toNamed(Routes.CHANGE_PASSWORD);
   }
 
   Future<void> startTimer() async {

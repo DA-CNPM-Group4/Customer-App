@@ -1,3 +1,5 @@
+import 'package:customer_app/modules/change_password/change_password_binding.dart';
+import 'package:customer_app/modules/change_password/change_password_view.dart.dart';
 import 'package:customer_app/modules/edit_profile/edit_profile_binding.dart';
 import 'package:customer_app/modules/edit_profile/edit_profile_view.dart';
 import 'package:customer_app/modules/find_transportation/bindings/find_transportation_binding.dart';
@@ -98,6 +100,11 @@ class AppPages {
       name: _Paths.USER,
       page: () => const UserView(),
       binding: UserBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHANGE_PASSWORD,
+      page: () => const ChangePasswordView(),
+      binding: ChangePasswordBinding(),
     ),
     GetPage(
       name: _Paths.VOUCHER,

@@ -158,6 +158,9 @@ class UserView extends GetView<UserController> {
                                 if (controller.settings[index].name ==
                                     "Log out") {
                                   await controller.lifeCycleController.logout();
+                                } else if (controller.settings[index].name ==
+                                    "Change Password") {
+                                  controller.goToChangePasswordView();
                                 }
                               },
                               leading: Image.asset(

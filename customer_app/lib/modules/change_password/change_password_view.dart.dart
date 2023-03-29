@@ -9,7 +9,6 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     const h_10 = SizedBox(
       height: 10,
     );

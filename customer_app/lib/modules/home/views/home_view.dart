@@ -53,7 +53,6 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     const h = SizedBox(
       height: 10,
     );

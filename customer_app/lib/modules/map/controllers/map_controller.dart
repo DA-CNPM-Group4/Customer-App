@@ -457,9 +457,6 @@ class MapController extends GetxController {
             .child(tripId)
             .once(DatabaseEventType.childRemoved)
             .then((value) async {
-          final data = Map<String, dynamic>.from(value.snapshot.value as Map);
-          print(data);
-
           await driverListener?.cancel();
           await disableRealtimeLocator();
           if (isChangeState.value) {

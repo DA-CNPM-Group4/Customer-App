@@ -1,4 +1,3 @@
-import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +9,6 @@ class PasswordLoginView extends GetView<PasswordLoginController> {
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
     const h = SizedBox(
       height: 10,
     );
@@ -78,7 +76,6 @@ class PasswordLoginView extends GetView<PasswordLoginController> {
               backgroundColor: Colors.grey,
               onPressed: () async {
                 if (controller.check()) {
-                  print("valid");
                   await controller.login();
                 }
                 // Get.offNamedUntil(

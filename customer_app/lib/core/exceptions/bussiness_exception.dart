@@ -22,6 +22,13 @@ class TripNotFoundException extends IBussinessException {
       : super(message, debugMessage: "Trip $tripId not found", place: place);
 }
 
+class AccountNotActiveException extends IBussinessException {
+  const AccountNotActiveException(String accountId,
+      {String? message = "Account Not Activate", String? place})
+      : super(message,
+            debugMessage: "This $accountId not active", place: place);
+}
+
 class PassengerNotFoundException extends IBussinessException {
   const PassengerNotFoundException(
       {String? message = "Passenger Not Found",

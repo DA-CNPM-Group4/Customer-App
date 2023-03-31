@@ -16,109 +16,132 @@ class OtpView extends GetView<OtpController> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Get.back();
-              },
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
             ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.info,
-                    color: Colors.black,
-                  ),
-                ),
-              )
-            ],
-          ),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 64),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      "assets/images/img.png",
-                      height: 80,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "You're almost there!",
-                      style: BaseTextStyle.heading1(),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "You must enter OTP which we sent you earlier",
-                      style: BaseTextStyle.body1(),
-                    ),
-                    const SizedBox(height: 32),
-                    Form(
-                      key: controller.formKey,
-                      child: Pinput(
-                        length: 6,
-                        controller: controller.otpController,
-                        // validator: (value) => controller.validator(),
-                        errorText: controller.error.value,
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 60,
-                      child: Obx(
-                        () => ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green),
-                            onPressed: controller.isClicked.value
-                                ? null
-                                : () {
-                                    controller.startTimer();
-                                  },
-                            child: controller.isClicked.value
-                                ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const CircularProgressIndicator(
-                                        color: Colors.white,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        "${controller.start.value}s",
-                                        style: const TextStyle(fontSize: 20),
-                                      ),
-                                    ],
-                                  )
-                                : const Text("Resend")),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            elevation: 0.0,
-            backgroundColor: Colors.grey,
             onPressed: () {
-              Get.toNamed(Routes.WELCOME);
+              Get.back();
             },
-            child: const Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.info,
+                  color: Colors.black,
+                ),
+              ),
+            )
+          ],
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 64),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    "assets/images/img.png",
+                    height: 80,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "You're almost there!",
+                    style: BaseTextStyle.heading1(),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "You must enter OTP which we sent you earlier",
+                    style: BaseTextStyle.body1(),
+                  ),
+                  const SizedBox(height: 32),
+                  Form(
+                    key: controller.formKey,
+                    child: Pinput(
+                      length: 6,
+                      controller: controller.otpController,
+                      // validator: (value) => controller.validator(),
+                      errorText: controller.error.value,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 60,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red),
+                        onPressed: () async {
+                          await controller.startTimer();
+                        },
+                        child: controller.isLoading2.value
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text("Resend")),
+                  ),
+
+                  // SizedBox(
+                  //   width: double.infinity,
+                  //   height: 60,
+                  //   child: Obx(
+                  //     () => ElevatedButton(
+                  //         style: ElevatedButton.styleFrom(
+                  //             backgroundColor: Colors.green),
+                  //         onPressed: controller.isClicked.value
+                  //             ? null
+                  //             : () {
+                  //                 controller.startTimer();
+                  //               },
+                  //         child: controller.isClicked.value
+                  //             ? Row(
+                  //                 mainAxisAlignment: MainAxisAlignment.center,
+                  //                 children: [
+                  //                   const CircularProgressIndicator(
+                  //                     color: Colors.white,
+                  //                   ),
+                  //                   const SizedBox(
+                  //                     width: 10,
+                  //                   ),
+                  //                   Text(
+                  //                     "${controller.start.value}s",
+                  //                     style: const TextStyle(fontSize: 20),
+                  //                   ),
+                  //                 ],
+                  //               )
+                  //             : const Text("Resend")),
+                  //   ),
+                  // )
+                ],
+              ),
             ),
-          )),
+          ),
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          child: ElevatedButton(
+            onPressed: () async {
+              await controller.confirmOTP();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: Obx(() => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: controller.isLoading.value
+                      ? const CircularProgressIndicator(
+                          color: Colors.white,
+                        )
+                      : const Text("Continue"),
+                )),
+          ),
+        ),
+      ),
     );
   }
 }

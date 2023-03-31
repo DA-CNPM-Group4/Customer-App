@@ -1,6 +1,11 @@
 import 'dart:async';
 
+import 'package:customer_app/core/exceptions/bussiness_exception.dart';
+import 'package:customer_app/data/common/util.dart';
+import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
+import 'package:customer_app/data/services/passenger_api_service.dart';
+import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -8,14 +13,18 @@ import 'package:get/get.dart';
 
 class OtpController extends GetxController {
   //TODO: Implement OtpController
+  final lifeCycleController = Get.find<LifeCycleController>();
+
   var isLoading = false.obs;
-  final count = 0.obs;
+  var isLoading2 = false.obs;
   var isClicked = true.obs;
   TextEditingController otpController = TextEditingController();
+
   Timer? timer;
   APIHandlerImp apiHandlerImp = APIHandlerImp();
-  var start = 30.obs;
+  var start = 15.obs;
   var registerController = Get.find<RegisterController>();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   var error = ''.obs;
 
@@ -34,54 +43,88 @@ class OtpController extends GetxController {
     return null;
   }
 
-  validateOTP() async {
-    isLoading.value = true;
-    var response = await apiHandlerImp.put({
-      "username": "0${registerController.phoneNumberController.text}",
-      "otp": otpController.text
-    }, "validateOTP");
-    if (response.data["status"]) {
-      error.value = '';
-      Get.toNamed(Routes.WELCOME);
-    } else {
-      // error.value = "OTP doesn't match what we sent. Try again";
-      Get.snackbar("Fail", "OTP doesn't match what we sent. Try again",
-          backgroundColor: Colors.grey[100]!);
-    }
-    isLoading.value = false;
-  }
-
-  bool check() {
-    final isValid = formKey.currentState!.validate();
-    if (!isValid) {
-      return false;
-    }
-    formKey.currentState!.save();
+  Future<bool> validateOTP() async {
     return true;
   }
 
-  sendOTP() async {
-    var response = await apiHandlerImp.put(
-        {"username": "0${registerController.phoneNumberController.text}"},
-        "sendOTP");
+  Future<void> confirmOTP() async {
+    isLoading.value = true;
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    formKey.currentState!.save();
+
+    try {
+      if (lifeCycleController.isActiveOTP) {
+        await PassengerAPIService.authApi
+            .activeAccountByOTP(lifeCycleController.email, otpController.text);
+        try {
+          await getPassengerInfoAndRoutingHome();
+        } on IBussinessException catch (_) {
+          await createPassengerInfo();
+        } catch (e) {
+          showSnackBar("Error", e.toString());
+        }
+      } else {
+        await PassengerAPIService.authApi.resetPassword(
+            lifeCycleController.email, "123123", otpController.text);
+      }
+    } catch (e) {
+      showSnackBar("Error", e.toString());
+    }
+    isLoading.value = false;
+    return;
+  }
+
+  Future<void> createPassengerInfo() async {
+    var body2 = CreatePassengerRequestBody(
+        Email: lifeCycleController.email,
+        Phone: lifeCycleController.phone,
+        Name: lifeCycleController.name.isEmpty
+            ? lifeCycleController.name
+            : "Unknown",
+        Gender: false);
+    await PassengerAPIService.createPassenger(body: body2);
+
+    await getPassengerInfoAndRoutingHome();
+  }
+
+  Future<void> getPassengerInfoAndRoutingHome() async {
+    lifeCycleController.passenger =
+        await PassengerAPIService.getPassengerInfo();
+    Get.offNamedUntil(Routes.HOME, ModalRoute.withName(Routes.HOME));
   }
 
   Future<void> startTimer() async {
-    isClicked.value = true;
-    const oneSec = Duration(seconds: 1);
-    await sendOTP();
-    timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (start.value == 0) {
-          start.value = 30;
-          isClicked.value = false;
-          timer.cancel();
-        } else {
-          start.value -= 1;
-        }
-      },
-    );
+    await handleSendOTP();
+    // isClicked.value = true;
+    // const oneSec = Duration(seconds: 1);
+
+    // timer = Timer.periodic(
+    //   oneSec,
+    //   (Timer timer) {
+    //     if (start.value == 0) {
+    //       start.value = 30;
+    //       isClicked.value = false;
+    //       timer.cancel();
+    //     } else {
+    //       start.value -= 1;
+    //     }
+    //   },
+    // );
+  }
+
+  Future<void> handleSendOTP() async {
+    isLoading2.value = true;
+    if (lifeCycleController.isActiveOTP) {
+      PassengerAPIService.authApi
+          .requestActiveAccountOTP(lifeCycleController.email);
+    } else {
+      PassengerAPIService.authApi
+          .requestResetPassword(lifeCycleController.email);
+    }
+    isLoading2.value = false;
   }
 
   @override
@@ -93,6 +136,4 @@ class OtpController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

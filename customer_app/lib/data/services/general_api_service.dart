@@ -17,6 +17,10 @@ class GeneralAPIService {
       if (response.data["status"]) {
         var body = LoginResponseBody.fromJson(response.data['data']);
         await _storeAllIdentity(body);
+        if (body.isEmailValidated == false) {
+          return Future.error(
+              const AccountNotActiveException("This Account is not actived"));
+        }
       } else {
         return Future.error(IBussinessException(response.data['message']));
       }
@@ -102,6 +106,123 @@ class GeneralAPIService {
     } catch (e) {
       return Future.error(UnexpectedException(
           context: "Logout-google", debugMessage: e.toString()));
+    }
+  }
+
+  Future<void> refreshToken() async {
+    try {
+      var accessToken = await APIHandlerImp.instance.getAccessToken();
+      var refreshToken = await APIHandlerImp.instance.getRefreshToken();
+
+      var response = await APIHandlerImp.instance.post(
+        {
+          'AccessToken': accessToken,
+          'RefreshToken': refreshToken,
+        },
+        "/Authentication/RetriveTokens",
+      );
+      if (response.data['status']) {
+        var body = LoginResponseBody.fromJson(response.data['data']);
+        await _storeAllIdentity(body);
+      } else {
+        return Future.error(UnexpectedException(
+          message: "Something Happend Please Login Again",
+          context: "Refresh Token",
+          debugMessage: response.data['message'],
+        ));
+      }
+    } catch (e) {
+      await APIHandlerImp.instance.deleteToken();
+      return Future.error(UnexpectedException(
+          context: "Refresh Token", debugMessage: e.toString()));
+    }
+  }
+
+  Future<void> requestActiveAccountOTP(String email) async {
+    try {
+      var accountId = await APIHandlerImp.instance.getIdentity();
+      var body = {
+        'email': email,
+        'accountId': accountId,
+      };
+      var response = await APIHandlerImp.instance
+          .post(body, "/Authentication/SendEmailActivateAccount");
+      if (response.data['status']) {
+      } else {
+        return Future.error(UnexpectedException(
+          context: "Active OTP",
+          debugMessage: response.data['message'],
+        ));
+      }
+    } catch (e) {
+      return Future.error(UnexpectedException(
+          context: "Request OTP", debugMessage: e.toString()));
+    }
+  }
+
+  Future<void> activeAccountByOTP(String email, String activeOTP) async {
+    try {
+      var body = {
+        'email': email,
+        'OTP': activeOTP,
+      };
+      var response = await APIHandlerImp.instance
+          .post(body, "/Authentication/ActivateAccount");
+      if (response.data['status']) {
+      } else {
+        return Future.error(IBussinessException(
+          response.data['message'],
+          place: "Active OTP",
+          debugMessage: response.data['message'],
+        ));
+      }
+    } catch (e) {
+      return Future.error(UnexpectedException(
+          context: "Active OTP", debugMessage: e.toString()));
+    }
+  }
+
+  Future<void> requestResetPassword(String email) async {
+    try {
+      var body = {
+        'email': email,
+      };
+      var response = await APIHandlerImp.instance
+          .post(body, "/Authentication/GetResetPasswordOTP");
+      if (response.data['status']) {
+      } else {
+        return Future.error(UnexpectedException(
+          context: "Request Resetpassword OTP",
+          debugMessage: response.data['message'],
+        ));
+      }
+    } catch (e) {
+      return Future.error(UnexpectedException(
+          context: "Request Resetpassword OTP", debugMessage: e.toString()));
+    }
+  }
+
+  Future<void> resetPassword(
+      String email, String newPassword, String otp) async {
+    try {
+      var body = {
+        'email': email,
+        'newPassword': newPassword,
+        'OTP': otp,
+      };
+      var response = await APIHandlerImp.instance
+          .post(body, "/Authentication/ResetPassword");
+      if (response.data['status']) {
+      } else {
+        return Future.error(IBussinessException(
+          response.data['message'],
+          place: "Reset Password",
+          debugMessage: response.data['message'],
+        ));
+      }
+    } catch (e) {
+      return Future.error(UnexpectedException(
+          context: "Reset Password", debugMessage: e.toString()));
     }
   }
 }

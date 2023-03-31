@@ -11,6 +11,7 @@ LoginResponseBody _$LoginResponseBodyFromJson(Map<String, dynamic> json) =>
       accessToken: json['accessToken'] as String,
       refreshToken: json['refreshToken'] as String,
       accountId: json['accountId'] as String,
+      isEmailValidated: json['isEmailValidated'] as bool?,
     );
 
 Map<String, dynamic> _$LoginResponseBodyToJson(LoginResponseBody instance) =>
@@ -18,4 +19,5 @@ Map<String, dynamic> _$LoginResponseBodyToJson(LoginResponseBody instance) =>
       'accessToken': instance.accessToken,
       'refreshToken': instance.refreshToken,
       'accountId': instance.accountId,
+      'isEmailValidated': instance.isEmailValidated,
     };

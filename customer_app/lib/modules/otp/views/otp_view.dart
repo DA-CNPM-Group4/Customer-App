@@ -1,6 +1,4 @@
 import 'package:customer_app/modules/otp/controllers/otp_controller.dart';
-import 'package:customer_app/modules/password/views/password_view.dart';
-import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -63,7 +61,7 @@ class OtpView extends GetView<OtpController> {
                   ),
                   const SizedBox(height: 32),
                   Form(
-                    key: controller.formKey,
+                    key: controller.otpFormKey,
                     child: Pinput(
                       length: 6,
                       controller: controller.otpController,
@@ -77,13 +75,14 @@ class OtpView extends GetView<OtpController> {
                           height: 160,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Password",
+                                "Enter your new password",
                                 style: BaseTextStyle.heading3(fontSize: 18),
                               ),
                               Form(
-                                key: controller.formKey,
+                                key: controller.passwordFormKey,
                                 child: TextFormField(
                                   obscureText: true,
                                   controller: controller.passwordController,
@@ -96,7 +95,6 @@ class OtpView extends GetView<OtpController> {
                           ),
                         )
                       : Container(),
-
                   SizedBox(
                     width: double.infinity,
                     height: 60,
@@ -112,38 +110,6 @@ class OtpView extends GetView<OtpController> {
                               )
                             : const Text("Resend")),
                   ),
-
-                  // SizedBox(
-                  //   width: double.infinity,
-                  //   height: 60,
-                  //   child: Obx(
-                  //     () => ElevatedButton(
-                  //         style: ElevatedButton.styleFrom(
-                  //             backgroundColor: Colors.green),
-                  //         onPressed: controller.isClicked.value
-                  //             ? null
-                  //             : () {
-                  //                 controller.startTimer();
-                  //               },
-                  //         child: controller.isClicked.value
-                  //             ? Row(
-                  //                 mainAxisAlignment: MainAxisAlignment.center,
-                  //                 children: [
-                  //                   const CircularProgressIndicator(
-                  //                     color: Colors.white,
-                  //                   ),
-                  //                   const SizedBox(
-                  //                     width: 10,
-                  //                   ),
-                  //                   Text(
-                  //                     "${controller.start.value}s",
-                  //                     style: const TextStyle(fontSize: 20),
-                  //                   ),
-                  //                 ],
-                  //               )
-                  //             : const Text("Resend")),
-                  //   ),
-                  // )
                 ],
               ),
             ),

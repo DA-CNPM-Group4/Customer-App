@@ -47,9 +47,12 @@ class LoginController extends GetxController {
     emailFormKey.currentState!.save();
     isLoading.value = false;
 
+    toPasswordLoginPage();
+  }
+
+  void toPasswordLoginPage() {
     lifeCycleController.email = emailController.text;
     lifeCycleController.phone = phoneNumberController.text;
-
     Get.toNamed(Routes.PASSWORD_LOGIN);
   }
 

@@ -12,28 +12,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OtpController extends GetxController {
-  //TODO: Implement OtpController
   final lifeCycleController = Get.find<LifeCycleController>();
 
   var isLoading = false.obs;
   var isLoading2 = false.obs;
   var isClicked = true.obs;
+
+  final GlobalKey<FormState> otpFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> passwordFormKey = GlobalKey<FormState>();
   TextEditingController otpController = TextEditingController();
-
-  Timer? timer;
-  APIHandlerImp apiHandlerImp = APIHandlerImp();
-  var start = 15.obs;
-  var registerController = Get.find<RegisterController>();
   TextEditingController passwordController = TextEditingController();
+  var start = 15.obs;
+  Timer? timer;
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   var error = ''.obs;
-
-  @override
-  void onInit() async {
-    super.onInit();
-    await startTimer();
-  }
 
   String? validator() {
     if (otpController.text.isEmpty) {
@@ -59,20 +51,27 @@ class OtpController extends GetxController {
 
   Future<void> confirmOTP() async {
     isLoading.value = true;
-    final isValid = formKey.currentState!.validate();
-    if (!isValid) {
+    final isOTPValid = otpFormKey.currentState!.validate();
+
+    if (!lifeCycleController.isActiveOTP) {
+      if (!passwordFormKey.currentState!.validate()) {
+        return;
+      }
+    }
+
+    if (!isOTPValid) {
       return;
     }
-    formKey.currentState!.save();
-
+    otpFormKey.currentState?.save();
+    passwordFormKey.currentState?.save();
     try {
       if (lifeCycleController.isActiveOTP) {
         await PassengerAPIService.authApi
             .activeAccountByOTP(lifeCycleController.email, otpController.text);
         try {
-          await getPassengerInfoAndRoutingHome();
+          await lifeCycleController.getPassengerInfoAndRoutingHome();
         } on IBussinessException catch (_) {
-          await createPassengerInfo();
+          await lifeCycleController.createPassengerInfo();
         } catch (e) {
           showSnackBar("Error", e.toString());
         }
@@ -81,7 +80,7 @@ class OtpController extends GetxController {
             lifeCycleController.email,
             passwordController.text,
             otpController.text);
-        Get.offNamedUntil(Routes.WELCOME, ModalRoute.withName(Routes.WELCOME));
+        Get.offAllNamed(Routes.WELCOME);
         showSnackBar("Reset Password", "Reset Password Successfully!");
       }
     } catch (e) {
@@ -89,25 +88,6 @@ class OtpController extends GetxController {
     }
     isLoading.value = false;
     return;
-  }
-
-  Future<void> createPassengerInfo() async {
-    var body2 = CreatePassengerRequestBody(
-        Email: lifeCycleController.email,
-        Phone: lifeCycleController.phone,
-        Name: lifeCycleController.name.isEmpty
-            ? lifeCycleController.name
-            : "Unknown",
-        Gender: false);
-    await PassengerAPIService.createPassenger(body: body2);
-
-    await getPassengerInfoAndRoutingHome();
-  }
-
-  Future<void> getPassengerInfoAndRoutingHome() async {
-    lifeCycleController.passenger =
-        await PassengerAPIService.getPassengerInfo();
-    Get.offNamedUntil(Routes.HOME, ModalRoute.withName(Routes.HOME));
   }
 
   Future<void> startTimer() async {

@@ -87,9 +87,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                           horizontal: 15, vertical: 15),
                       child: ElevatedButton(
                         onPressed: () async {
-                          if (controller.formKey.currentState!.validate()) {
-                            await controller.sendResetPasswordOTP();
-                          }
+                          await controller.sendResetPasswordOTP();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
@@ -122,36 +120,6 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget titleAndText(
-      {required String title,
-      required String hint,
-      required TextTheme textTheme,
-      TextEditingController? controller,
-      bool? enable,
-      String? Function(String?)? validator}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Text(
-          title,
-          style: BaseTextStyle.heading1(fontSize: 14),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        TextFormField(
-          controller: controller,
-          validator: (value) => validator != null ? validator(value) : null,
-          onSaved: (value) {},
-          inputFormatters: [],
-          enabled: enable ?? true,
-          decoration: InputDecoration(hintText: hint),
-        ),
-      ],
     );
   }
 }

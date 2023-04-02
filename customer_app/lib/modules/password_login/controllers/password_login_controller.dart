@@ -1,12 +1,10 @@
 import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/data/common/util.dart';
-import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../routes/app_pages.dart';
 
@@ -46,32 +44,39 @@ class PasswordLoginController extends GetxController {
       );
 
       await PassengerAPIService.authApi.login(body: requestBody);
+
+      try {
+        await lifeCycleController.getPassengerInfoAndRoutingHome();
+      } on IBussinessException catch (_) {
+        await lifeCycleController.createPassengerInfo();
+      } catch (e) {
+        showSnackBar("Error", e.toString());
+      }
     } on IBussinessException catch (e) {
       if (e is AccountNotActiveException) {
         showSnackBar("Active Account", "Check your Email To Get OTP");
-        lifeCycleController.isActiveOTP = true;
-        Get.toNamed(Routes.OTP);
+        await handleSendActiveAccountOTP();
       } else {
         showSnackBar("Login Failed", e.toString());
-        isLoading.value = false;
       }
-      return;
     }
     isLoading.value = false;
   }
 
-  @override
-  void onInit() {
-    super.onInit();
+  void toOTPPage() {
+    lifeCycleController.isActiveOTP = true;
+    Get.toNamed(Routes.OTP);
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
+  Future<void> handleSendActiveAccountOTP() async {
+    lifeCycleController.isActiveOTP = true;
+    try {
+      await PassengerAPIService.authApi
+          .requestActiveAccountOTP(lifeCycleController.email);
+    } catch (e) {
+      showSnackBar("Send OTP Failed", e.toString());
+    }
 
-  @override
-  void onClose() {
-    super.onClose();
+    Get.toNamed(Routes.OTP);
   }
 }

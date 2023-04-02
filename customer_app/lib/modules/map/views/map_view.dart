@@ -301,18 +301,26 @@ class MapView extends GetView<MapController> {
                     ),
                   ),
                   const Spacer(),
-                  Container(
-                      height: 80,
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 30),
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red),
-                          onPressed: () async {
-                            await controller.cancelBooking();
-                          },
-                          child: const Text("Cancel order"))),
+                  Column(
+                    children: [
+                      Obx(() => Text(
+                          style: BaseTextStyle.body1(),
+                          "${(controller.waitingSecond.value / 60).floor().toString()} : ${(controller.waitingSecond.value % 60).toString()} ")),
+                      Container(
+                        height: 80,
+                        padding:
+                            const EdgeInsets.only(left: 10, right: 10, top: 30),
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red),
+                            onPressed: () async {
+                              await controller.handleBackButton();
+                            },
+                            child: const Text("Cancel order")),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

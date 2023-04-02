@@ -7,6 +7,7 @@ import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_location.dart';
 import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
+import 'package:customer_app/data/models/requests/rate_trip_request.dart';
 import 'package:customer_app/data/models/vehicle.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/providers/firestore_realtime_provider.dart';
@@ -32,6 +33,13 @@ class MapController extends GetxController {
   LifeCycleController lifeCycleController = Get.find<LifeCycleController>();
   late UserEntity user;
 
+  final waitingSecond = 0.obs;
+  var waitingMultipy = 1;
+  var isShowCancel = false;
+
+  late Timer _timer;
+  bool isPressCancel = false;
+
   var isLoading = false.obs;
   var isDragging = false.obs;
   var isShow = false;
@@ -43,7 +51,7 @@ class MapController extends GetxController {
   String requestId = "";
 // feedback
   TextEditingController feedbackController = TextEditingController();
-  var star = 0;
+  double star = 5;
 
   Rx<STATUS> status = STATUS.SELECTVEHICLE.obs;
   RxString text = "Your current location".obs;
@@ -288,9 +296,9 @@ class MapController extends GetxController {
   }
 
   Future<void> handleBackButton() async {
+    isShowCancel = true;
     Get.defaultDialog(
-        middleText:
-            "You might have to wait longer in next order if you cancel now. Do you still want to cancel?",
+        middleText: "You are waiting pretty long, do you want cancel request?",
         backgroundColor: Colors.white,
         titleStyle: const TextStyle(color: Colors.black),
         middleTextStyle:
@@ -298,7 +306,11 @@ class MapController extends GetxController {
         textConfirm: "Yes",
         onConfirm: () async {
           await cancelBooking();
+          isShowCancel = false;
           Get.close(1);
+        },
+        onCancel: () {
+          isShowCancel = false;
         },
         radius: 10,
         textCancel: "No");
@@ -310,6 +322,10 @@ class MapController extends GetxController {
 
     requestListener?.ignore();
     PassengerAPIService.tripApi.cancelRequest(requestId: requestId);
+
+    waitingSecond.value = 0;
+    waitingMultipy = 1;
+    _timer.cancel();
 
     status.value = STATUS.SELECTVEHICLE;
 
@@ -400,6 +416,7 @@ class MapController extends GetxController {
       isLoading.value = false;
 
       status.value = STATUS.FINDING;
+      startTimer();
 
       requestListener = FirebaseDatabase.instance
           .ref(FirebaseRealtimePaths.REQUESTS)
@@ -460,7 +477,7 @@ class MapController extends GetxController {
           await driverListener?.cancel();
           await disableRealtimeLocator();
           if (isChangeState.value) {
-            rateDialog();
+            rateDialog(tripId);
           } else {
             Get.back();
           }
@@ -488,62 +505,70 @@ class MapController extends GetxController {
     await FirestoreRealtimeService.instance.deletePassengerNode(user.accountId);
   }
 
-  void rateDialog() {
+  void startTimer() {
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (Timer timer) async {
+        waitingSecond.value += 1;
+        if (waitingSecond.value > 30 * waitingMultipy) {
+          waitingMultipy += 1;
+          isShowCancel ? null : await handleBackButton();
+        }
+      },
+    );
+  }
+
+  void rateDialog(String tripId) {
     Get.dialog(
-            AlertDialog(
-              title: const Center(child: Text('Rate your driver')),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const CircleAvatar(
-                    backgroundImage: AssetImage("assets/icon/face_icon.png"),
-                  ),
-                  Text(driver.value?.info.name ?? "Driver Name"),
-                  RatingBar.builder(
-                    initialRating: 1,
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: false,
-                    itemCount: 5,
-                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (rating) {
-                      // star = rating as int;
-                      // print(rating);
-                    },
-                  ),
-                  TextFormField(
-                    controller: feedbackController,
-                  )
-                ],
-              ),
-              actions: [
-                Center(
-                  child: TextButton(
-                    child: const Text("Send"),
-                    onPressed: () async {
-                      print({
-                        "rateStar": "FIVE",
-                        "note": feedbackController.text
-                      });
-                      await APIHandlerImp.instance.post(
-                          {"rateStar": "FIVE", "note": feedbackController.text},
-                          "user/feedback");
-                    },
-                  ),
-                ),
-              ],
+      AlertDialog(
+        title: const Center(child: Text('Rate your driver')),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircleAvatar(
+              backgroundImage: AssetImage("assets/icon/face_icon.png"),
             ),
-            useSafeArea: true)
-        .then((value) {
-      Future.delayed(const Duration(milliseconds: 1500), () {
-        Get.back();
-      });
-    });
+            Text(driver.value?.info.name ?? "Driver Name"),
+            RatingBar.builder(
+              initialRating: 1,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: false,
+              itemCount: 5,
+              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => const Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+                star = rating;
+              },
+            ),
+            TextFormField(
+              controller: feedbackController,
+            )
+          ],
+        ),
+        actions: [
+          Center(
+            child: TextButton(
+              child: const Text("Send"),
+              onPressed: () async {
+                await PassengerAPIService.tripApi.rateTrip(
+                  requestBody: RateTripRequestBody(
+                    tripId: tripId,
+                    rate: star,
+                    description: feedbackController.text,
+                  ),
+                );
+                Get.back(closeOverlays: true);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

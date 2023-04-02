@@ -27,14 +27,21 @@ class ForgotPasswordController extends GetxController {
     }
 
     try {
-      lifeCycleController.isActiveOTP = false;
-      lifeCycleController.email = emailController.text;
-      Get.toNamed(Routes.OTP);
+      await PassengerAPIService.authApi
+          .requestResetPassword(emailController.text);
+
+      toOTPPage();
     } catch (e) {
       showSnackBar("Error", e.toString());
     }
 
     isLoading.value = false;
+  }
+
+  void toOTPPage() {
+    lifeCycleController.isActiveOTP = false;
+    lifeCycleController.email = emailController.text;
+    Get.toNamed(Routes.OTP);
   }
 
   String? emailValidator(String value) {

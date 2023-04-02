@@ -86,7 +86,11 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 15),
                       child: ElevatedButton(
-                        onPressed: () async {},
+                        onPressed: () async {
+                          if (controller.formKey.currentState!.validate()) {
+                            await controller.sendResetPasswordOTP();
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                         ),

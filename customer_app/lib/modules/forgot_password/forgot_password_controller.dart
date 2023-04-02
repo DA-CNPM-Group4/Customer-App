@@ -1,6 +1,8 @@
 import 'package:customer_app/Data/models/requests/change_password_request.dart';
+import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/core/utils/widgets.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,27 +19,24 @@ class ForgotPasswordController extends GetxController {
 
   TextEditingController emailController = TextEditingController();
 
-  // Future<void> validateAndSave() async {
-  //   isLoading.value = true;
-  //   final isValid = formKey.currentState!.validate();
-  //   if (!isValid) {
-  //     isLoading.value = false;
-  //   }
+  Future<void> sendResetPasswordOTP() async {
+    isLoading.value = true;
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) {
+      isLoading.value = false;
+    }
 
-  //   // ChangePasswordRequest body = ChangePasswordRequest(
-  //   //   currentPassword: emailController.text,
-  //   //   newPassword: newPasswordController.text,
-  //   // );
+    try {
+      await PassengerAPIService.authApi
+          .requestResetPassword(emailController.text);
+      showSnackBar("Reset Password OTP", "Please check your email to get OTP");
+      Get.toNamed(Routes.OTP);
+    } catch (e) {
+      showSnackBar("Error", e.toString());
+    }
 
-  //   try {
-  //     await PassengerAPIService.authApi.changePassword(body);
-  //     showSnackBar("Success", "Change Password Success");
-  //   } catch (e) {
-  //     showSnackBar("Error", e.toString());
-  //   }
-
-  //   isLoading.value = false;
-  // }
+    isLoading.value = false;
+  }
 
   String? emailValidator(String value) {
     if (value.isEmpty) {

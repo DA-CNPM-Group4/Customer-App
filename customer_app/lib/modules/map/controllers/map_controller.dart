@@ -89,6 +89,12 @@ class MapController extends GetxController {
   var isChangeState = false.obs;
 
   @override
+  void onClose() {
+    _timer.cancel();
+    super.onClose();
+  }
+
+  @override
   void onInit() async {
     super.onInit();
 

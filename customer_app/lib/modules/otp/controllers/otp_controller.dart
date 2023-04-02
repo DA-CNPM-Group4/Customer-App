@@ -24,6 +24,7 @@ class OtpController extends GetxController {
   APIHandlerImp apiHandlerImp = APIHandlerImp();
   var start = 15.obs;
   var registerController = Get.find<RegisterController>();
+  TextEditingController passwordController = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   var error = ''.obs;
@@ -39,6 +40,15 @@ class OtpController extends GetxController {
       return "OTP can't be empty";
     } else if (otpController.text.length < 6) {
       return "Please fill all the numbers";
+    }
+    return null;
+  }
+
+  String? passwordValidator(String value) {
+    if (value.isEmpty) {
+      return "This field is required";
+    } else if (value.length < 6) {
+      return "Password length must be longer than 6 digits";
     }
     return null;
   }
@@ -68,7 +78,11 @@ class OtpController extends GetxController {
         }
       } else {
         await PassengerAPIService.authApi.resetPassword(
-            lifeCycleController.email, "123123", otpController.text);
+            lifeCycleController.email,
+            passwordController.text,
+            otpController.text);
+        Get.offNamedUntil(Routes.WELCOME, ModalRoute.withName(Routes.WELCOME));
+        showSnackBar("Reset Password", "Reset Password Successfully!");
       }
     } catch (e) {
       showSnackBar("Error", e.toString());

@@ -27,9 +27,8 @@ class ForgotPasswordController extends GetxController {
     }
 
     try {
-      await PassengerAPIService.authApi
-          .requestResetPassword(emailController.text);
-      showSnackBar("Reset Password OTP", "Please check your email to get OTP");
+      lifeCycleController.isActiveOTP = false;
+      lifeCycleController.email = emailController.text;
       Get.toNamed(Routes.OTP);
     } catch (e) {
       showSnackBar("Error", e.toString());

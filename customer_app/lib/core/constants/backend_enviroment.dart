@@ -3,7 +3,7 @@ class BackendEnviroment {
 
   static checkDevelopmentMode() {
     assert(() {
-      host = "http://172.20.10.4/api";
+      host = "http://192.168.50.255/api";
       return true;
     }());
   }

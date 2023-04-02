@@ -68,6 +68,7 @@ class PasswordLoginView extends GetView<PasswordLoginController> {
                     decoration: const InputDecoration(),
                   ),
                 )
+              
               ],
             ),
           ),

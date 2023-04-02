@@ -72,6 +72,31 @@ class OtpView extends GetView<OtpController> {
                     ),
                   ),
                   const SizedBox(height: 32),
+                  controller.lifeCycleController.isActiveOTP == false
+                      ? SizedBox(
+                          height: 160,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Password",
+                                style: BaseTextStyle.heading3(fontSize: 18),
+                              ),
+                              Form(
+                                key: controller.formKey,
+                                child: TextFormField(
+                                  obscureText: true,
+                                  controller: controller.passwordController,
+                                  validator: (value) =>
+                                      controller.passwordValidator(value!),
+                                  decoration: const InputDecoration(),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : Container(),
+
                   SizedBox(
                     width: double.infinity,
                     height: 60,

@@ -4,6 +4,8 @@ import 'package:customer_app/modules/edit_profile/edit_profile_binding.dart';
 import 'package:customer_app/modules/edit_profile/edit_profile_view.dart';
 import 'package:customer_app/modules/find_transportation/bindings/find_transportation_binding.dart';
 import 'package:customer_app/modules/find_transportation/views/find_transportation_view.dart';
+import 'package:customer_app/modules/forgot_password/forgot_password_binding.dart';
+import 'package:customer_app/modules/forgot_password/forgot_password_view.dart.dart';
 import 'package:customer_app/modules/home/bindings/home_binding.dart';
 import 'package:customer_app/modules/home/views/home_view.dart';
 import 'package:customer_app/modules/map/bindings/map_binding.dart';
@@ -47,6 +49,11 @@ class AppPages {
       name: _Paths.REGISTER,
       page: () => const RegisterView(),
       binding: RegisterBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORGOT_PASSWORD,
+      page: () => const ForgotPasswordView(),
+      binding: ForgotPasswordBinding(),
     ),
     GetPage(
       name: _Paths.LOGIN,

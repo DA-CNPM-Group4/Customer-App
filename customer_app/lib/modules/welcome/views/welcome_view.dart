@@ -39,7 +39,7 @@ class WelcomeView extends StatelessWidget {
           child: SafeArea(
             child: SingleChildScrollView(
                 child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
                   height: 400,
@@ -65,8 +65,8 @@ class WelcomeView extends StatelessWidget {
                         },
                         child: const Text("Log in"))),
                 Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 16),
+                    padding:
+                        const EdgeInsets.only(left: 16, top: 10, right: 16),
                     width: double.infinity,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -84,6 +84,15 @@ class WelcomeView extends StatelessWidget {
                           "I'm new, sign me up",
                           style: BaseTextStyle.body1(color: BaseColor.green),
                         ))),
+                TextButton(
+                    onPressed: () {
+                      Get.toNamed(Routes.FORGOT_PASSWORD);
+                    },
+                    child: Text(
+                      "Forgot password?",
+                      style: BaseTextStyle.subtitle3(
+                          fontSize: 14, color: Colors.blue),
+                    )),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 16),

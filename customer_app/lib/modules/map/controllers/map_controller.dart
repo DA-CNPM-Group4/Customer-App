@@ -9,7 +9,6 @@ import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
 import 'package:customer_app/data/models/requests/rate_trip_request.dart';
 import 'package:customer_app/data/models/vehicle.dart';
-import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/providers/firestore_realtime_provider.dart';
 import 'package:customer_app/data/services/device_location_service.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';
@@ -86,7 +85,7 @@ class MapController extends GetxController {
   StreamSubscription? tripChangeStatusListener;
   StreamSubscription? tripDeleteListener;
 
-  var isChangeState = false.obs;
+  var isStateChanged = false.obs;
 
   @override
   void onClose() {
@@ -97,7 +96,6 @@ class MapController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-
     try {
       lifeCycleController.passenger ??=
           await PassengerAPIService.getPassengerInfo();
@@ -453,31 +451,11 @@ class MapController extends GetxController {
             .onChildChanged
             .listen((event) {
           if (!event.snapshot.exists) return;
-          isChangeState.value = true;
+          isStateChanged.value = true;
+          print("haha");
         });
 
-        driverListener = FirebaseDatabase.instance
-            .ref(FirebaseRealtimePaths.DRIVERS)
-            .child(driverId)
-            .child("location")
-            .onValue
-            .listen(
-          (event) async {
-            final data = Map<String, dynamic>.from(event.snapshot.value as Map);
-            var driverLocation = RealtimeLocation.fromJson(data);
-
-            markers[const MarkerId("1")] = Marker(
-              markerId: const MarkerId("1"),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueGreen),
-              infoWindow: const InfoWindow(title: "Driver Location"),
-              position: LatLng(
-                driverLocation.lat,
-                driverLocation.long,
-              ),
-            );
-          },
-        );
+        assignDriverListener(driverId);
 
         FirebaseDatabase.instance
             .ref(FirebaseRealtimePaths.TRIPS)
@@ -486,15 +464,43 @@ class MapController extends GetxController {
             .then((value) async {
           await driverListener?.cancel();
           await disableRealtimeLocator();
-          if (isChangeState.value) {
+          if (isStateChanged.value) {
             rateDialog(tripId);
+            showSnackBar("Trip Completed", "Trip Completed");
           } else {
-            Get.back();
+            showSnackBar("Trip Cancel", "Your trip have been cancel by driver");
+            status.value = STATUS.SELECTVEHICLE;
           }
+          isStateChanged.value = false;
         });
       });
     } catch (e) {}
     isLoading.value = false;
+  }
+
+  void assignDriverListener(driverId) {
+    driverListener = FirebaseDatabase.instance
+        .ref(FirebaseRealtimePaths.DRIVERS)
+        .child(driverId)
+        .child("location")
+        .onValue
+        .listen(
+      (event) async {
+        final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+        var driverLocation = RealtimeLocation.fromJson(data);
+
+        markers[const MarkerId("1")] = Marker(
+          markerId: const MarkerId("1"),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          infoWindow: const InfoWindow(title: "Driver Location"),
+          position: LatLng(
+            driverLocation.lat,
+            driverLocation.long,
+          ),
+        );
+      },
+    );
   }
 
   StreamSubscription? gpsStreamSubscription;
@@ -565,14 +571,23 @@ class MapController extends GetxController {
             child: TextButton(
               child: const Text("Send"),
               onPressed: () async {
-                await PassengerAPIService.tripApi.rateTrip(
-                  requestBody: RateTripRequestBody(
-                    tripId: tripId,
-                    rate: star,
-                    description: feedbackController.text,
-                  ),
-                );
-                Get.back(closeOverlays: true);
+                try {
+                  EasyLoading.show();
+                  await PassengerAPIService.tripApi.rateTrip(
+                    requestBody: RateTripRequestBody(
+                      tripId: tripId,
+                      rate: star,
+                      description: feedbackController.text,
+                    ),
+                  );
+                  showSnackBar("Rate Success", "Rating Driver sucessfully");
+                } catch (e) {
+                  //
+                  showSnackBar("Rate failed", "Rating Driver sucessfully");
+                } finally {
+                  EasyLoading.dismiss();
+                  Get.back(closeOverlays: true);
+                }
               },
             ),
           ),

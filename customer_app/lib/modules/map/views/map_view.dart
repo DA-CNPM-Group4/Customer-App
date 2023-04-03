@@ -157,7 +157,7 @@ class MapView extends GetView<MapController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    controller.isChangeState.value
+                    controller.isStateChanged.value
                         ? "On the way"
                         : "Your driver is coming",
                     style: BaseTextStyle.heading2(fontSize: 16),

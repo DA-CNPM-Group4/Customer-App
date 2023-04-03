@@ -3,18 +3,18 @@ import 'dart:async';
 import 'package:customer_app/data/common/network_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../data/common/location.dart';
 import '../../../data/common/search_location.dart';
 import '../../find_transportation/controllers/find_transportation_controller.dart';
 
 class SearchPageController extends GetxController
     with GetSingleTickerProviderStateMixin {
-  final count = 0.obs;
   late AnimationController animationController;
   late Animation animation;
+
   FocusNode myLocation = FocusNode();
   FocusNode destination = FocusNode();
+
   var isMyLocationFocused = false.obs;
   var isDestinationFocused = false.obs;
   var findTransportationController = Get.find<FindTransportationController>();
@@ -27,7 +27,6 @@ class SearchPageController extends GetxController
   var isLoading = false.obs;
 
   String text = "";
-
   Timer? _debounce;
 
   @override
@@ -95,16 +94,4 @@ class SearchPageController extends GetxController
     }
     isLoading.value = false;
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }

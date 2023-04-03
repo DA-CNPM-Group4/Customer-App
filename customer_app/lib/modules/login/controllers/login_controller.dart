@@ -41,6 +41,7 @@ class LoginController extends GetxController {
     final isEmailValid = emailFormKey.currentState!.validate();
     if (!isPhoneValid || !isEmailValid) {
       isLoading.value = false;
+      return;
     }
     // call api to check
     phoneFormKey.currentState!.save();

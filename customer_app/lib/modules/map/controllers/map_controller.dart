@@ -329,14 +329,18 @@ class MapController extends GetxController {
     requestListener?.ignore();
     PassengerAPIService.tripApi.cancelRequest(requestId: requestId);
 
-    waitingSecond.value = 0;
-    waitingMultipy = 1;
-    _timer.cancel();
+    stopTimeout();
 
     status.value = STATUS.SELECTVEHICLE;
 
     isLoading.value = false;
     EasyLoading.dismiss();
+  }
+
+  void stopTimeout() {
+    waitingSecond.value = 0;
+    waitingMultipy = 1;
+    _timer.cancel();
   }
 
   // Future<void> handleVoucher() async {
@@ -434,9 +438,9 @@ class MapController extends GetxController {
             await PassengerAPIService.tripApi.getCurrentTrip(requestId);
         tripId = tripInfo['tripId'] as String;
         var driverId = tripInfo['driverId'] ?? "testDriverId";
-
         polylinePoints.clear();
 
+        stopTimeout();
         driver.value =
             await FirestoreRealtimeService.instance.readDriverNode(driverId);
         status.value = STATUS.FOUND;

@@ -16,8 +16,8 @@ class ChatMessageWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       color: chatMessageType == ChatMessageType.driver
-          ? const Color(0xff343541)
-          : const Color(0xff444654),
+          ? Colors.white
+          : Colors.grey[300],
       child: Row(
         children: [
           Container(
@@ -47,7 +47,7 @@ class ChatMessageWidget extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1
-                          ?.copyWith(color: Colors.white)),
+                          ?.copyWith(color: Colors.black)),
                 )
               ],
             ),

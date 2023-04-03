@@ -58,16 +58,16 @@ class ChatView extends GetView<ChatController> {
       child: Container(
         margin: const EdgeInsets.only(left: 10, right: 10),
         decoration: BoxDecoration(
-          color: const Color(0xff444654),
+          color: Colors.grey[300],
           borderRadius: BorderRadius.circular(30),
         ),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
           controller: controller.textController,
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.black),
           decoration: const InputDecoration(
             hintText: "Type a message...",
-            hintStyle: TextStyle(color: Colors.white54),
+            hintStyle: TextStyle(color: Colors.black38),
             border: InputBorder.none,
             contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           ),

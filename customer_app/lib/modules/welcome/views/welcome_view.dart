@@ -86,7 +86,7 @@ class WelcomeView extends StatelessWidget {
                         ))),
                 TextButton(
                     onPressed: () {
-                      Get.toNamed(Routes.CHAT);
+                      Get.toNamed(Routes.FORGOT_PASSWORD);
                     },
                     child: Text(
                       "Forgot password?",

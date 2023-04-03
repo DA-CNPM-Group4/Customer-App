@@ -55,11 +55,13 @@ class OtpController extends GetxController {
 
     if (!lifeCycleController.isActiveOTP) {
       if (!passwordFormKey.currentState!.validate()) {
+        isLoading.value = false;
         return;
       }
     }
 
     if (!isOTPValid) {
+      isLoading.value = false;
       return;
     }
     otpFormKey.currentState?.save();

@@ -15,6 +15,7 @@ abstract class Routes {
   static const MAP = _Paths.MAP;
   static const SEARCH_PAGE = _Paths.SEARCH_PAGE;
   static const USER = _Paths.USER;
+  static const CHAT = _Paths.CHAT;
   static const EDIT_USER = _Paths.EDIT_USER;
   static const VOUCHER = _Paths.VOUCHER;
   static const OTP = _Paths.OTP;
@@ -36,6 +37,7 @@ abstract class _Paths {
   static const MAP = '/map';
   static const SEARCH_PAGE = '/search-page';
   static const USER = '/user';
+  static const CHAT = '/chat';
   static const EDIT_USER = '/edit-user';
   static const VOUCHER = '/voucher';
   static const OTP = '/otp';

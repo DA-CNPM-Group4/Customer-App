@@ -47,14 +47,14 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBwqWNFnAkDOuVip4NZ0vJPpxVAaRqUx6g',
-    appId: '1:711824391524:web:18d0567c1fc0f151b40e71',
+    apiKey: 'AIzaSyBmsDfUqIcj3E8lrFajTAHtfS3eWboY2VU',
+    appId: '1:711824391524:web:9b116a25f557d9c4b40e71',
     messagingSenderId: '711824391524',
     projectId: 'doancnpmnhom4-6bc5e',
     authDomain: 'doancnpmnhom4-6bc5e.firebaseapp.com',
     databaseURL: 'https://doancnpmnhom4-6bc5e-default-rtdb.firebaseio.com',
     storageBucket: 'doancnpmnhom4-6bc5e.appspot.com',
-    measurementId: 'G-1Y4QXG4BRG',
+    measurementId: 'G-CKN2M9QRKR',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -73,6 +73,7 @@ class DefaultFirebaseOptions {
     projectId: 'doancnpmnhom4-6bc5e',
     databaseURL: 'https://doancnpmnhom4-6bc5e-default-rtdb.firebaseio.com',
     storageBucket: 'doancnpmnhom4-6bc5e.appspot.com',
+    androidClientId: '711824391524-gl9rnab2cjktb3oiunlh810d3l7eg179.apps.googleusercontent.com',
     iosClientId: '711824391524-hvugl9n1lvssmhlk3a56fucmrnhdqtqt.apps.googleusercontent.com',
     iosBundleId: 'com.hcmus.customerApp',
   );

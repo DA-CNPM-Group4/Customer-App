@@ -1,7 +1,12 @@
+
 import 'package:flutter/material.dart';
 
 class AvatarCircle extends StatelessWidget {
-  const AvatarCircle({Key? key, required double width, required double height, required String source})
+  const AvatarCircle(
+      {Key? key,
+      required double width,
+      required double height,
+      required String source})
       : _width = width,
         _height = height,
         _source = source,

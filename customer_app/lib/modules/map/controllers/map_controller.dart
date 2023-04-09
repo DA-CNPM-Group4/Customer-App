@@ -9,7 +9,7 @@ import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
 import 'package:customer_app/data/models/requests/rate_trip_request.dart';
 import 'package:customer_app/data/models/vehicle.dart';
-import 'package:customer_app/data/providers/firestore_realtime_provider.dart';
+import 'package:customer_app/data/providers/firesbase_realtime_provider.dart';
 import 'package:customer_app/data/services/device_location_service.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';
 import 'package:customer_app/data/services/firebase_realtime_service.dart';
@@ -404,7 +404,7 @@ class MapController extends GetxController {
         VehicleType: CommonObject.vehicleList[selectedIndex.value].type!);
 
     try {
-      await FirestoreRealtimeService.instance.setPassengerNode(
+      await FirebaseRealtimeService.instance.setPassengerNode(
         passenger: RealtimePassenger(
           info: RealtimePassengerInfo(
             name: user.name,
@@ -440,7 +440,7 @@ class MapController extends GetxController {
 
         stopTimeout();
         driver.value =
-            await FirestoreRealtimeService.instance.readDriverNode(driverId);
+            await FirebaseRealtimeService.instance.readDriverNode(driverId);
         status.value = STATUS.FOUND;
 
         await enableRealtimeLocator();
@@ -511,14 +511,14 @@ class MapController extends GetxController {
           await DeviceLocationService.instance.getAddressFromLatLang(value);
       var position = RealtimeLocation(
           lat: value.latitude, long: value.longitude, address: address);
-      await FirestoreRealtimeService.instance
+      await FirebaseRealtimeService.instance
           .updatePassengerNode(user.accountId, position);
     });
   }
 
   Future<void> disableRealtimeLocator() async {
     await gpsStreamSubscription?.cancel();
-    await FirestoreRealtimeService.instance.deletePassengerNode(user.accountId);
+    await FirebaseRealtimeService.instance.deletePassengerNode(user.accountId);
   }
 
   void startTimer() {

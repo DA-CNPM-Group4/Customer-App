@@ -1,5 +1,5 @@
 import 'package:customer_app/Data/models/realtime_models/realtime_passenger.dart';
-import 'package:customer_app/core/utils/widgets.dart';
+import 'package:customer_app/modules/utils/widgets.dart';
 import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';

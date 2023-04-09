@@ -4,15 +4,14 @@ import 'package:customer_app/Data/models/realtime_models/realtime_passenger.dart
 import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_location.dart';
 import 'package:customer_app/data/models/realtime_models/trip_request.dart';
-import 'package:customer_app/data/providers/firestore_realtime_provider.dart';
+import 'package:customer_app/data/providers/firesbase_realtime_provider.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 
-class FirestoreRealtimeService {
-  static FirestoreRealtimeService? _instance;
+class FirebaseRealtimeService {
+  static FirebaseRealtimeService? _instance;
 
-  static FirestoreRealtimeService get instance {
-    return _instance ??= FirestoreRealtimeService();
+  static FirebaseRealtimeService get instance {
+    return _instance ??= FirebaseRealtimeService();
   }
 
   final database = FirebaseDatabase.instance;

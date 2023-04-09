@@ -1,4 +1,4 @@
-import 'package:customer_app/core/utils/widgets.dart';
+import 'package:customer_app/modules/utils/widgets.dart';
 import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/models/requests/update_passenger_request.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';

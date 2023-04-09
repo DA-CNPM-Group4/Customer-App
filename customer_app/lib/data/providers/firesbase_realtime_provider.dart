@@ -1,15 +1,15 @@
 import 'package:firebase_database/firebase_database.dart';
 
-class FirestoreRealtimeProvider {
+class FireBaseRealtimeProvider {
   // make this nullable by adding '?'
-  static FirestoreRealtimeProvider? _instance;
+  static FireBaseRealtimeProvider? _instance;
 
-  static FirestoreRealtimeProvider get instance {
-    return _instance ??= FirestoreRealtimeProvider._();
+  static FireBaseRealtimeProvider get instance {
+    return _instance ??= FireBaseRealtimeProvider._();
   }
 
-  factory FirestoreRealtimeProvider() {
-    _instance ??= FirestoreRealtimeProvider._();
+  factory FireBaseRealtimeProvider() {
+    _instance ??= FireBaseRealtimeProvider._();
     // since you are sure you will return non-null value, add '!' operator
     return _instance!;
   }
@@ -18,7 +18,7 @@ class FirestoreRealtimeProvider {
   late DatabaseReference onlDriversRef;
   late DatabaseReference requestsRef;
 
-  FirestoreRealtimeProvider._() {
+  FireBaseRealtimeProvider._() {
     database = FirebaseDatabase.instance;
     onlDriversRef = database.ref(FirebaseRealtimePaths.DRIVERS);
     requestsRef = database.ref(FirebaseRealtimePaths.REQUESTS);

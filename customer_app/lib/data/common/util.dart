@@ -4,9 +4,12 @@ import 'package:intl/intl.dart';
 
 enum SEARCHTYPES { LOCATION, MYDESTINATION, BOTH }
 
-void showSnackBar(String title, String message) {
+void showSnackBar(String title, String message, {int second = 3}) {
   Get.snackbar(title, message,
-      colorText: Colors.black, backgroundColor: Colors.grey[500]);
+      isDismissible: true,
+      colorText: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 130, 230, 63),
+      duration: Duration(seconds: second));
 }
 
 final formatBalance = NumberFormat("#,##0", "vi_VN");

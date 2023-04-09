@@ -4,12 +4,14 @@ import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/models/requests/update_passenger_request.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
+import 'package:customer_app/data/services/chat_api_service.dart';
 import 'package:customer_app/data/services/general_api_service.dart';
 import 'package:customer_app/data/services/trip_api_service.dart';
 
 class PassengerAPIService {
   static GeneralAPIService authApi = GeneralAPIService();
   static TripApiService tripApi = TripApiService();
+  static ChatAPIService chatApi = ChatAPIService();
 
   static Future<void> createPassenger(
       {required CreatePassengerRequestBody body}) async {

@@ -12,65 +12,92 @@ class ChatMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return chatMessageType == ChatMessageType.passenger
-        ? Container(
-            margin: const EdgeInsets.symmetric(vertical: 4),
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-            color: Colors.grey[200],
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(text,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          ?.copyWith(color: Colors.black)),
-                )
-              ],
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      child: Row(
+        mainAxisAlignment: chatMessageType == ChatMessageType.passenger
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
+        children: [
+          if (chatMessageType == ChatMessageType.driver)
+            ProfileContainer(chatMessageType: chatMessageType),
+          if (chatMessageType == ChatMessageType.driver)
+            const SizedBox(width: 15),
+          Container(
+            padding: const EdgeInsets.all(15),
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.6),
+            decoration: BoxDecoration(
+              color: chatMessageType == ChatMessageType.passenger
+                  ? Colors.blue
+                  : Colors.grey.shade800,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(15),
+                topRight: const Radius.circular(15),
+                bottomLeft: chatMessageType == ChatMessageType.passenger
+                    ? const Radius.circular(15)
+                    : const Radius.circular(0),
+                bottomRight: chatMessageType == ChatMessageType.passenger
+                    ? const Radius.circular(0)
+                    : const Radius.circular(15),
+              ),
             ),
-          )
-        : Container(
-            margin: const EdgeInsets.symmetric(vertical: 4),
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-            color: Colors.white,
-            child: Row(
-              children: [
-                Container(
-                    margin: const EdgeInsets.only(right: 16),
-                    child: CircleAvatar(
-                      backgroundColor: const Color.fromRGBO(16, 163, 127, 1),
-                      child: Image.asset(
-                        "assets/icons/face_icon.png",
-                        color: Colors.white,
-                        scale: 1.5,
-                      ),
-                    )),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(text,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                ?.copyWith(color: Colors.black)),
-                      )
-                    ],
-                  ),
-                )
-              ],
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
             ),
-          );
+          ),
+          if (chatMessageType == ChatMessageType.passenger)
+            const SizedBox(width: 15),
+          if (chatMessageType == ChatMessageType.passenger)
+            ProfileContainer(chatMessageType: chatMessageType),
+        ],
+      ),
+    );
+  }
+}
+
+class ProfileContainer extends StatelessWidget {
+  const ProfileContainer({
+    super.key,
+    required this.chatMessageType,
+  });
+
+  final ChatMessageType chatMessageType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 40,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: chatMessageType == ChatMessageType.passenger
+            ? Colors.blue
+            : Colors.grey.shade800,
+        borderRadius: BorderRadius.only(
+          topLeft: const Radius.circular(10),
+          topRight: const Radius.circular(10),
+          bottomLeft: chatMessageType == ChatMessageType.passenger
+              ? const Radius.circular(0)
+              : const Radius.circular(15),
+          bottomRight: chatMessageType == ChatMessageType.passenger
+              ? const Radius.circular(15)
+              : const Radius.circular(0),
+        ),
+      ),
+      child: chatMessageType == ChatMessageType.passenger
+          ? const Icon(
+              Icons.person,
+              color: Colors.white,
+            )
+          : Image.asset(
+              "assets/icons/face_icon.png",
+              color: Colors.white,
+              scale: 1.5,
+            ),
+    );
   }
 }

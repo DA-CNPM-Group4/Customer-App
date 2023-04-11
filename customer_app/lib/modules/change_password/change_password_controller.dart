@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../data/services/passenger_api_service.dart';
-import '../lifecycle_controller.dart';
 
 class ChangePasswordController extends GetxController {
   final LifeCycleController lifeCycleController =

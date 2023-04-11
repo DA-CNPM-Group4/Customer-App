@@ -43,8 +43,8 @@ class HomeView extends GetView<HomeController> {
         child: Card(
           elevation: elevation ?? 10,
           margin: EdgeInsets.symmetric(
-              vertical: e == TYPES.VERTICAL ? 10 : 0,
-              horizontal: e == TYPES.HORIZONTAL ? 10 : 0),
+              vertical: e == TYPES.vertical ? 10 : 0,
+              horizontal: e == TYPES.horizontal ? 10 : 0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Image.asset(icon),
@@ -119,13 +119,13 @@ class HomeView extends GetView<HomeController> {
                           icon: "assets/icons/main_icon_4.png",
                           title: "FoodHub",
                           onPressed: () {
-                            print("3");
+                            debugPrint("3");
                           }),
                       mainIconButton(
                           icon: "assets/icons/main_icon_3.png",
                           title: "SendHub",
                           onPressed: () {
-                            print("4");
+                            debugPrint("4");
                           })
                     ],
                   ),
@@ -137,7 +137,7 @@ class HomeView extends GetView<HomeController> {
                     itemBuilder: (_, item) {
                       return mainBanner(
                           icon: controller.banners[item],
-                          e: TYPES.VERTICAL,
+                          e: TYPES.vertical,
                           elevation: 0);
                     },
                     itemCount: controller.banners.length,
@@ -150,4 +150,4 @@ class HomeView extends GetView<HomeController> {
   }
 }
 
-enum TYPES { VERTICAL, HORIZONTAL }
+enum TYPES { vertical, horizontal }

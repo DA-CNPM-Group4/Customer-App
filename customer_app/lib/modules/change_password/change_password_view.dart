@@ -77,7 +77,7 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
               await controller.validateAndSave();
             },
             style: ElevatedButton.styleFrom(
-              primary: Colors.green,
+              backgroundColor: Colors.green,
             ),
             child: Obx(() => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
@@ -114,7 +114,7 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
           controller: controller,
           validator: (value) => validator != null ? validator(value) : null,
           onSaved: (value) {},
-          inputFormatters: [],
+          inputFormatters: const [],
           enabled: enable ?? true,
           decoration: InputDecoration(hintText: hint),
         ),

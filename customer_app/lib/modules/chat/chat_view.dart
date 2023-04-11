@@ -100,7 +100,6 @@ class ChatView extends GetView<ChatController> {
                       chatMessageType: ChatMessageType.passenger));
                   // isLoading = true;
                   // });
-                  var input = controller.textController.text;
                   controller.textController.clear();
                   Future.delayed(const Duration(milliseconds: 50))
                       .then((value) => _scrollDown());

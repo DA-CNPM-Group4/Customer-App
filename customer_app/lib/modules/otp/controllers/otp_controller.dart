@@ -116,14 +116,4 @@ class OtpController extends GetxController {
     }
     isLoading2.value = false;
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

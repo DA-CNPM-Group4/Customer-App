@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/themes/base_style.dart';
@@ -166,11 +164,12 @@ class SearchPageView extends GetView<SearchPageController> {
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.white),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white),
                         onPressed: () {
                           Get.toNamed(Routes.MAP, arguments: {
                             "location": controller.currentLocation,
-                            "type": SEARCHTYPES.MYDESTINATION
+                            "type": SEARCHTYPES.mydestination
                           });
                         },
                         child: Row(
@@ -226,7 +225,7 @@ class SearchPageView extends GetView<SearchPageController> {
                                       controller.location[index].address!;
                                   Get.toNamed(Routes.MAP, arguments: {
                                     'location': controller.location[index],
-                                    "type": SEARCHTYPES.LOCATION
+                                    "type": SEARCHTYPES.location
                                   });
                                 } else if (controller
                                         .myLocationController.text.isEmpty &&
@@ -236,7 +235,7 @@ class SearchPageView extends GetView<SearchPageController> {
                                       controller.location[index].address!;
                                   Get.toNamed(Routes.MAP, arguments: {
                                     'destination': controller.location[index],
-                                    "type": SEARCHTYPES.MYDESTINATION
+                                    "type": SEARCHTYPES.mydestination
                                   });
                                 } else if (controller
                                         .myLocationController.text.isNotEmpty &&
@@ -244,7 +243,7 @@ class SearchPageView extends GetView<SearchPageController> {
                                         .isNotEmpty) {
                                   Get.toNamed(Routes.MAP, arguments: {
                                     'destination': controller.location[index],
-                                    "type": SEARCHTYPES.MYDESTINATION
+                                    "type": SEARCHTYPES.mydestination
                                   });
                                 }
                               },

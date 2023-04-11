@@ -129,7 +129,7 @@ class UserView extends GetView<UserController> {
                         isHolderNameVisible: true,
                         showBackView: false,
                         onCreditCardWidgetChange:
-                            (CreditCardBrand) {}, //true when you want to show cvv(back) view
+                            (creditCardBrand) {}, //true when you want to show cvv(back) view
                       ),
               ),
             ),
@@ -350,11 +350,8 @@ class UserView extends GetView<UserController> {
                       alignment: Alignment.centerRight,
                       child: Obx(
                         () => ElevatedButton(
-                            onPressed: controller.isClicked.value
-                                ? null
-                                : () async {
-                                    await controller.startTimer();
-                                  },
+                            onPressed:
+                                controller.isClicked.value ? null : () async {},
                             child: controller.isClicked.value
                                 ? Text(
                                     "${controller.start.value}s",
@@ -372,7 +369,8 @@ class UserView extends GetView<UserController> {
                   height: 60,
                   child: Obx(
                     () => ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.green),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
                         onPressed: check1.value && check2.value
                             ? () async {
                                 await controller.validateOTP(

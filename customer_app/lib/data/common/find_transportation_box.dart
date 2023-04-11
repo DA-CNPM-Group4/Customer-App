@@ -6,15 +6,14 @@ import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:get/get.dart';
-import '../../routes/app_pages.dart';
 
 class FindTransportationBox extends StatelessWidget {
   FindTransportationBox({Key? key, this.searchTap, this.mapTap})
       : super(key: key);
-  Function()? searchTap;
-  Function()? mapTap;
+  final Function()? searchTap;
+  final Function()? mapTap;
 
-  var controller = Get.find<FindTransportationController>();
+  final controller = Get.find<FindTransportationController>();
 
   @override
   Widget build(BuildContext context) {

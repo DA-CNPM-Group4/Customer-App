@@ -1,5 +1,4 @@
 import 'package:customer_app/data/common/util.dart';
-import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';

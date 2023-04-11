@@ -3,6 +3,7 @@ import 'package:customer_app/Data/models/realtime_models/firestore_chat.dart';
 import 'package:customer_app/Data/models/realtime_models/firestore_message.dart';
 import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/core/utils/utils.dart';
+import 'package:flutter/cupertino.dart';
 
 class FireStoreDatabaseService {
   static FireStoreDatabaseService? _instance;
@@ -18,7 +19,7 @@ class FireStoreDatabaseService {
     required String tripId,
   }) async {
     await database
-        .collection(FirestoreDatabasePath.CHAT)
+        .collection(FirestoreDatabasePath.chat)
         .doc(tripId)
         .set(data.toJson())
         .onError(
@@ -35,9 +36,9 @@ class FireStoreDatabaseService {
     required String tripId,
   }) async {
     CollectionReference messages = database
-        .collection(FirestoreDatabasePath.CHAT)
+        .collection(FirestoreDatabasePath.chat)
         .doc(tripId)
-        .collection(FirestoreDatabasePath.MESSAGE);
+        .collection(FirestoreDatabasePath.message);
 
     await messages.add(data.toJson()).onError(
           (error, stackTrace) => throw IBussinessException(
@@ -51,9 +52,9 @@ class FireStoreDatabaseService {
   Stream<QuerySnapshot<Map<String, dynamic>>> getChatStream(
       {required String tripId}) {
     final docRef = database
-        .collection(FirestoreDatabasePath.CHAT)
+        .collection(FirestoreDatabasePath.chat)
         .doc(tripId)
-        .collection(FirestoreDatabasePath.MESSAGE);
+        .collection(FirestoreDatabasePath.message);
     return docRef.snapshots();
   }
 
@@ -72,7 +73,7 @@ class FireStoreDatabaseService {
     try {
       await createChat(tripId: id, data: chatData);
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
 
     Stream<QuerySnapshot<Map<String, dynamic>>> chatStreamController =
@@ -84,7 +85,7 @@ class FireStoreDatabaseService {
           var chat = FirestoreMessageModel.fromJson(docAdd.doc.data()!);
           chats.add(chat);
         }
-        print(chats.length);
+        debugPrint(chats.length.toString());
       }
     });
 
@@ -107,12 +108,12 @@ class FireStoreDatabaseService {
           senderName: "Test name");
       await sendMessage(data: messsage, tripId: id);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 }
 
 abstract class FirestoreDatabasePath {
-  static const CHAT = 'Chat';
-  static const MESSAGE = 'messages';
+  static const chat = 'Chat';
+  static const message = 'messages';
 }

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-enum SEARCHTYPES { LOCATION, MYDESTINATION, BOTH }
+enum SEARCHTYPES { location, mydestination, both }
 
 void showSnackBar(String title, String message, {int second = 3}) {
   Get.snackbar(title, message,

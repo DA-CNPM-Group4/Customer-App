@@ -20,20 +20,20 @@ class FireBaseRealtimeProvider {
 
   FireBaseRealtimeProvider._() {
     database = FirebaseDatabase.instance;
-    onlDriversRef = database.ref(FirebaseRealtimePaths.DRIVERS);
-    requestsRef = database.ref(FirebaseRealtimePaths.REQUESTS);
+    onlDriversRef = database.ref(FirebaseRealtimePaths.drivers);
+    requestsRef = database.ref(FirebaseRealtimePaths.requests);
     // initialization and stuff
   }
 
   DatabaseReference driverNodeReferences(String driverId) {
-    return database.ref('${FirebaseRealtimePaths.DRIVERS}/$driverId');
+    return database.ref('${FirebaseRealtimePaths.drivers}/$driverId');
   }
 }
 
 abstract class FirebaseRealtimePaths {
   FirebaseRealtimePaths._();
-  static const DRIVERS = 'drivers';
-  static const TRIPS = 'trips';
-  static const REQUESTS = 'requests';
-  static const PASSENGERS = 'passengers';
+  static const drivers = 'drivers';
+  static const trips = 'trips';
+  static const requests = 'requests';
+  static const passengers = 'passengers';
 }

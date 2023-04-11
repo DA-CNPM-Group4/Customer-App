@@ -128,7 +128,7 @@ class MapController extends GetxController {
     ));
 
     if (Get.arguments != null) {
-      if (Get.arguments["type"] == SEARCHTYPES.LOCATION) {
+      if (Get.arguments["type"] == SEARCHTYPES.location) {
         isShow = true;
         text.value = "Set pickup location";
         myLocation = Get.arguments["location"];
@@ -427,7 +427,7 @@ class MapController extends GetxController {
       startTimer();
 
       requestListener = FirebaseDatabase.instance
-          .ref(FirebaseRealtimePaths.REQUESTS)
+          .ref(FirebaseRealtimePaths.requests)
           .child(requestId)
           .once(DatabaseEventType.childRemoved);
 
@@ -446,19 +446,18 @@ class MapController extends GetxController {
         await enableRealtimeLocator();
 
         tripChangeStatusListener = FirebaseDatabase.instance
-            .ref(FirebaseRealtimePaths.TRIPS)
+            .ref(FirebaseRealtimePaths.trips)
             .child(tripId)
             .onChildChanged
             .listen((event) {
           if (!event.snapshot.exists) return;
           isStateChanged.value = true;
-          print("haha");
         });
 
         assignDriverListener(driverId);
 
         FirebaseDatabase.instance
-            .ref(FirebaseRealtimePaths.TRIPS)
+            .ref(FirebaseRealtimePaths.trips)
             .child(tripId)
             .once(DatabaseEventType.childRemoved)
             .then((value) async {
@@ -474,13 +473,13 @@ class MapController extends GetxController {
           isStateChanged.value = false;
         });
       });
-    } catch (e) {}
+    } catch (_) {}
     isLoading.value = false;
   }
 
   void assignDriverListener(driverId) {
     driverListener = FirebaseDatabase.instance
-        .ref(FirebaseRealtimePaths.DRIVERS)
+        .ref(FirebaseRealtimePaths.drivers)
         .child(driverId)
         .child("location")
         .onValue

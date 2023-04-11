@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +7,8 @@ class TicketView extends StatelessWidget {
   final Voucher voucher;
   final bool selected;
 
-  const TicketView({Key? key, required this.voucher, required this.selected}) : super(key: key);
+  const TicketView({Key? key, required this.voucher, required this.selected})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,18 +38,18 @@ class TicketView extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     "${voucher.discountName} discount",
-                    style: textTheme.headline1!.copyWith(fontSize: 18),
+                    style: textTheme.displayLarge!.copyWith(fontSize: 18),
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           "Discount percent: ${voucher.discountPercent}",
-                          style: textTheme.headline2,
+                          style: textTheme.displayMedium,
                         ),
                         Text(
                           "Quantity: ${voucher.quantity}",
-                          style: textTheme.headline2,
+                          style: textTheme.displayMedium,
                         ),
                       ])
                 ],
@@ -156,7 +156,7 @@ class TicketView extends StatelessWidget {
                   ),
                   Text(
                     "Voucher expires on ${voucher.endDate}",
-                    style: textTheme.headline3!.copyWith(fontSize: 9),
+                    style: textTheme.displaySmall!.copyWith(fontSize: 9),
                   ),
                   const Spacer(),
                   SizedBox(
@@ -168,19 +168,19 @@ class TicketView extends StatelessWidget {
                                   color: Colors.green,
                                 ),
                               ),
-                              primary: selected ? Colors.grey : Colors.white,
+                              backgroundColor:
+                                  selected ? Colors.grey : Colors.white,
                               elevation: 0),
                           onPressed: () {
-                            if(selected){
+                            if (selected) {
                               Get.back(result: null);
-                            }
-                            else {
+                            } else {
                               Get.back(result: voucher);
                             }
                           },
                           child: Text(
                             selected ? "Remove" : "Apply",
-                            style: textTheme.headline2,
+                            style: textTheme.displayMedium,
                           )))
                 ],
               ),

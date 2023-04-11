@@ -1,5 +1,4 @@
 import 'package:customer_app/modules/login/controllers/login_controller.dart';
-import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

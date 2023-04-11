@@ -57,6 +57,7 @@ class UserController extends GetxController {
 
   @override
   void onInit() async {
+    super.onInit();
     isLoading.value = true;
     await init();
     isLoading.value = false;
@@ -68,11 +69,6 @@ class UserController extends GetxController {
     }
     user = lifeCycleController.passenger;
     // await getWallet();
-  }
-
-  @override
-  void onClose() async {
-    super.onClose();
   }
 
   Future<void> getUserData() async {
@@ -91,11 +87,6 @@ class UserController extends GetxController {
     var response_1 = await APIHandlerImp.instance.get("user/getWallet");
     wallet = Wallet.fromJson(response_1.data["data"]);
     isLoading.value = false;
-  }
-
-  sendOTP() async {
-    var response = await APIHandlerImp.instance
-        .put({"username": lifeCycleController.passenger?.phone}, "sendOTP");
   }
 
   validateOTP(TextEditingController otpController,
@@ -142,23 +133,5 @@ class UserController extends GetxController {
 
   void goToChangePasswordView() {
     Get.toNamed(Routes.CHANGE_PASSWORD);
-  }
-
-  Future<void> startTimer() async {
-    isClicked.value = true;
-    const oneSec = Duration(seconds: 1);
-    await sendOTP();
-    timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (start.value == 0) {
-          start.value = 30;
-          isClicked.value = false;
-          timer.cancel();
-        } else {
-          start.value -= 1;
-        }
-      },
-    );
   }
 }

@@ -25,7 +25,7 @@ class FirebaseRealtimeService {
   Future<RealtimeDriver?> readDriverNode(
     String driverId,
   ) async {
-    var ref = database.ref(FirebaseRealtimePaths.DRIVERS);
+    var ref = database.ref(FirebaseRealtimePaths.drivers);
     var snapshot = await ref.child(driverId).get();
 
     if (snapshot.exists) {
@@ -43,7 +43,7 @@ class FirebaseRealtimeService {
   Future<RealtimePassenger?> readPassengerNode(
     String passengerId,
   ) async {
-    var ref = database.ref(FirebaseRealtimePaths.PASSENGERS);
+    var ref = database.ref(FirebaseRealtimePaths.passengers);
     var snapshot = await ref.child(passengerId).get();
 
     if (snapshot.exists) {
@@ -60,7 +60,7 @@ class FirebaseRealtimeService {
   Future<RealtimeTripRequest?> readTripNode(
     String tripId,
   ) async {
-    var ref = database.ref(FirebaseRealtimePaths.TRIPS);
+    var ref = database.ref(FirebaseRealtimePaths.trips);
     var snapshot = await ref.child(tripId).get();
 
     if (snapshot.exists) {
@@ -75,7 +75,7 @@ class FirebaseRealtimeService {
   }
 
   Future<void> setDriverNode(String driverId, RealtimeDriver driver) async {
-    var ref = database.ref(FirebaseRealtimePaths.DRIVERS).child(driverId);
+    var ref = database.ref(FirebaseRealtimePaths.drivers).child(driverId);
     Map<String, dynamic> data = driver.toJson();
     await ref.set(data);
   }
@@ -83,7 +83,7 @@ class FirebaseRealtimeService {
   Future<void> setPassengerNode(
       {required String passengerId,
       required RealtimePassenger passenger}) async {
-    var ref = database.ref(FirebaseRealtimePaths.PASSENGERS).child(passengerId);
+    var ref = database.ref(FirebaseRealtimePaths.passengers).child(passengerId);
     Map<String, dynamic> data = passenger.toJson();
     await ref.set(data);
   }
@@ -91,7 +91,7 @@ class FirebaseRealtimeService {
   Future<void> updateDriverLocationNode(
       String driverId, RealtimeLocation location) async {
     var ref = database
-        .ref(FirebaseRealtimePaths.DRIVERS)
+        .ref(FirebaseRealtimePaths.drivers)
         .child(driverId)
         .child('location');
     Map<String, dynamic> data = location.toJson();
@@ -101,7 +101,7 @@ class FirebaseRealtimeService {
   Future<void> updatePassengerNode(
       String passengerId, RealtimeLocation location) async {
     var ref = database
-        .ref(FirebaseRealtimePaths.PASSENGERS)
+        .ref(FirebaseRealtimePaths.passengers)
         .child(passengerId)
         .child('location');
     Map<String, dynamic> data = location.toJson();
@@ -109,12 +109,12 @@ class FirebaseRealtimeService {
   }
 
   Future<void> deleteDriverNode(String driverId) async {
-    var ref = database.ref(FirebaseRealtimePaths.DRIVERS).child(driverId);
+    var ref = database.ref(FirebaseRealtimePaths.drivers).child(driverId);
     await ref.remove();
   }
 
   Future<void> deletePassengerNode(String passengerId) async {
-    var ref = database.ref(FirebaseRealtimePaths.PASSENGERS).child(passengerId);
+    var ref = database.ref(FirebaseRealtimePaths.passengers).child(passengerId);
     await ref.remove();
   }
 
@@ -122,7 +122,7 @@ class FirebaseRealtimeService {
     String driverId,
     Function(DatabaseEvent) callback,
   ) async {
-    var ref = database.ref(FirebaseRealtimePaths.DRIVERS).child(driverId);
+    var ref = database.ref(FirebaseRealtimePaths.drivers).child(driverId);
 
     ref.onValue.listen((e) {
       callback(e);
@@ -133,7 +133,7 @@ class FirebaseRealtimeService {
     String driverId,
     Function(DatabaseEvent) callback,
   ) async {
-    var ref = database.ref(FirebaseRealtimePaths.TRIPS);
+    var ref = database.ref(FirebaseRealtimePaths.trips);
 
     ref.onChildAdded.listen((e) {
       callback(e);

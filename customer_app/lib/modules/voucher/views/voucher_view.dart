@@ -45,7 +45,7 @@ class VoucherView extends GetView<VoucherController> {
                 const SizedBox(
                   height: 10,
                 ),
-                FakeSearch(
+                const FakeSearch(
                   prefixIcon: Icons.search,
                   hint: 'Have a promo code? Enter it here...',
                   suffixIcon: Icons.arrow_forward_ios,

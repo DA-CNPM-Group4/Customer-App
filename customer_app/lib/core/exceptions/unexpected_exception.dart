@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class UnexpectedException implements Exception {
   const UnexpectedException(
       {this.debugMessage = "Unexprected exception",
@@ -12,7 +14,7 @@ class UnexpectedException implements Exception {
   String toString() {
     String result = message ?? "Something went wrong! Contact the owner";
     if (debugMessage is String) {
-      print('$context: $debugMessage');
+      debugPrint('$context: $debugMessage');
     }
     return result;
   }

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class IBussinessException implements Exception {
   const IBussinessException(this.message,
       {this.debugMessage = "unknown message", this.place = "unknown"});
@@ -10,7 +12,7 @@ class IBussinessException implements Exception {
   String toString() {
     String result = message ?? 'Bussiness Logic Exception';
     if (debugMessage is String) {
-      print('$place: $debugMessage');
+      debugPrint('$place: $debugMessage');
     }
     return result;
   }

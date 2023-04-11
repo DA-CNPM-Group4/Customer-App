@@ -21,10 +21,6 @@ class MapView extends GetView<MapController> {
     double heightSafeArea = size.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
-    double keyboardHeight = EdgeInsets.fromWindowPadding(
-            WidgetsBinding.instance.window.viewInsets,
-            WidgetsBinding.instance.window.devicePixelRatio)
-        .bottom;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Stack(children: [

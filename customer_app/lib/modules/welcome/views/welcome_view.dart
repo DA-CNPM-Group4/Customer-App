@@ -1,4 +1,3 @@
-import 'package:customer_app/modules/welcome/controllers/welcome_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +58,8 @@ class WelcomeView extends StatelessWidget {
                     width: double.infinity,
                     height: 72,
                     child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.green),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
                         onPressed: () {
                           Get.toNamed(Routes.LOGIN);
                         },
@@ -75,7 +75,7 @@ class WelcomeView extends StatelessWidget {
                                 color: Colors.green,
                               ),
                             ),
-                            primary: Colors.white,
+                            backgroundColor: Colors.white,
                             elevation: 0),
                         onPressed: () {
                           Get.toNamed(Routes.REGISTER);

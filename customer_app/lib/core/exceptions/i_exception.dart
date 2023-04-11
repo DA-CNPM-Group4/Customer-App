@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class IException implements Exception {
   const IException(this.message,
       {this.debugMessage = "<Debug Message>", this.context = "<Context>"});
@@ -10,7 +12,7 @@ class IException implements Exception {
   String toString() {
     String result = message ?? '<Message-Type>';
     if (debugMessage is String) {
-      print('$context: $debugMessage');
+      debugPrint('$context: $debugMessage');
     }
     return result;
   }

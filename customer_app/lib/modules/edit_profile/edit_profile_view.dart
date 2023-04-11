@@ -1,11 +1,8 @@
 import 'package:customer_app/modules/edit_profile/widgets/avatar_circle.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-
-import '../../routes/app_pages.dart';
 
 import 'edit_profile_controller.dart';
 
@@ -74,7 +71,8 @@ class EditProfileView extends GetView<EditProfileController> {
                               radius: 15,
                               child: SvgPicture.asset(
                                 "assets/icons/ic_camera.svg",
-                                color: Colors.grey[700],
+                                colorFilter: ColorFilter.mode(
+                                    Colors.grey[700]!, BlendMode.srcIn),
                               ),
                             ),
                           ),
@@ -146,7 +144,7 @@ class EditProfileView extends GetView<EditProfileController> {
               await controller.validateAndSave();
             },
             style: ElevatedButton.styleFrom(
-              primary: Colors.green,
+              backgroundColor: Colors.green,
             ),
             child: Obx(() => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),

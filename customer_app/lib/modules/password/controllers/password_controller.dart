@@ -1,4 +1,3 @@
-import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';
@@ -17,11 +16,6 @@ class PasswordController extends GetxController {
   APIHandlerImp apiHandlerImp = APIHandlerImp();
   TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   String? passwordValidator(String value) {
     if (value.isEmpty) {
@@ -64,15 +58,5 @@ class PasswordController extends GetxController {
     }
 
     isLoading.value = false;
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

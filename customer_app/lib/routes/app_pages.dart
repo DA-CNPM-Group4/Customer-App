@@ -32,7 +32,6 @@ import '../modules/password/bindings/password_binding.dart';
 import '../modules/password/views/password_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
-import '../modules/welcome/bindings/welcome_binding.dart';
 import '../modules/welcome/views/welcome_view.dart';
 
 part 'app_routes.dart';
@@ -86,10 +85,7 @@ class AppPages {
         name: _Paths.HOME,
         page: () => const HomeView(),
         binding: HomeBinding(),
-        bindings: [
-          // FindTransportationBinding(),
-          // SearchPageBinding()
-        ]),
+        bindings: const []),
     GetPage(
         name: _Paths.FIND_TRANSPORTATION,
         page: () => const FindTransportationView(),

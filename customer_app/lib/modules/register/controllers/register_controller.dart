@@ -1,4 +1,3 @@
-import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,11 +11,6 @@ class RegisterController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-
-  @override
-  void onInit() async {
-    super.onInit();
-  }
 
   String? nameValidator(String value) {
     if (value.isEmpty) {
@@ -67,15 +61,5 @@ class RegisterController extends GetxController {
     //   "username": '0${phoneNumberController.text}'
     // });
     Get.toNamed(Routes.OTP);
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

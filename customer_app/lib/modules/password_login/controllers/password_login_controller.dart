@@ -1,5 +1,6 @@
 import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/data/common/util.dart';
+import 'package:customer_app/data/models/requests/create_passenger_request.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
@@ -45,13 +46,7 @@ class PasswordLoginController extends GetxController {
 
       await PassengerAPIService.authApi.login(body: requestBody);
 
-      try {
-        await lifeCycleController.getPassengerInfoAndRoutingHome();
-      } on IBussinessException catch (_) {
-        await lifeCycleController.createPassengerInfo();
-      } catch (e) {
-        showSnackBar("Error", e.toString());
-      }
+      await lifeCycleController.getPassengerInfoAndRoutingHome();
     } on IBussinessException catch (e) {
       if (e is AccountNotActiveException) {
         showSnackBar("Active Account", "Check your Email To Get OTP");
@@ -61,11 +56,6 @@ class PasswordLoginController extends GetxController {
       }
     }
     isLoading.value = false;
-  }
-
-  void toOTPPage() {
-    lifeCycleController.isActiveOTP = true;
-    Get.toNamed(Routes.OTP);
   }
 
   Future<void> handleSendActiveAccountOTP() async {

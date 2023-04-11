@@ -1,5 +1,4 @@
 import 'package:customer_app/modules/utils/widgets.dart';
-import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/models/requests/update_passenger_request.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
@@ -61,7 +60,7 @@ class EditProfileController extends GetxController {
       await PassengerAPIService.updatePassenger(body: body);
       showSnackBar("Edit Profile Success", "Your profile have been updated");
 
-      lifeCycleController.passenger =
+      lifeCycleController.setPassenger =
           await PassengerAPIService.getPassengerInfo();
     } catch (e) {
       showSnackBar("Error", e.toString());
@@ -71,6 +70,7 @@ class EditProfileController extends GetxController {
 
   @override
   void onInit() async {
+    super.onInit();
     try {
       lifeCycleController.passenger ??=
           await PassengerAPIService.getPassengerInfo();
@@ -82,13 +82,5 @@ class EditProfileController extends GetxController {
       showSnackBar("Error", e.toString());
       Get.offAllNamed(Routes.WELCOME);
     }
-  }
-
-  @override
-  void onReady() {}
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

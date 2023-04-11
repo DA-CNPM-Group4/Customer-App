@@ -124,6 +124,28 @@ class LoginView extends GetView<LoginController> {
                     ),
                   ),
                   const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: BaseColor.blue),
+                        onPressed: () async {
+                          await controller.signInWithGoogle();
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.network(
+                                'http://pngimg.com/uploads/google/google_PNG19635.png',
+                                fit: BoxFit.cover),
+                            const SizedBox(
+                              width: 5.0,
+                            ),
+                            const Text('Sign-in with Google')
+                          ],
+                        )),
+                  ),
                 ],
               ),
             ),

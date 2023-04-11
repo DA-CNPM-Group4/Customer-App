@@ -2,11 +2,8 @@ import 'dart:async';
 
 import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/data/common/util.dart';
-import 'package:customer_app/data/models/requests/create_passenger_request.dart';
-import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
-import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -53,6 +50,7 @@ class OtpController extends GetxController {
     isLoading.value = true;
     final isOTPValid = otpFormKey.currentState!.validate();
 
+    // valid if in case change password password
     if (!lifeCycleController.isActiveOTP) {
       if (!passwordFormKey.currentState!.validate()) {
         isLoading.value = false;
@@ -66,17 +64,13 @@ class OtpController extends GetxController {
     }
     otpFormKey.currentState?.save();
     passwordFormKey.currentState?.save();
+
     try {
       if (lifeCycleController.isActiveOTP) {
         await PassengerAPIService.authApi
             .activeAccountByOTP(lifeCycleController.email, otpController.text);
-        try {
-          await lifeCycleController.getPassengerInfoAndRoutingHome();
-        } on IBussinessException catch (_) {
-          await lifeCycleController.createPassengerInfo();
-        } catch (e) {
-          showSnackBar("Error", e.toString());
-        }
+
+        await lifeCycleController.getPassengerInfoAndRoutingHome();
       } else {
         await PassengerAPIService.authApi.resetPassword(
             lifeCycleController.email,
@@ -85,7 +79,7 @@ class OtpController extends GetxController {
         Get.offAllNamed(Routes.WELCOME);
         showSnackBar("Reset Password", "Reset Password Successfully!");
       }
-    } catch (e) {
+    } on IBussinessException catch (e) {
       showSnackBar("Error", e.toString());
     }
     isLoading.value = false;

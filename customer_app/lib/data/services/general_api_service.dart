@@ -82,7 +82,14 @@ class GeneralAPIService {
   Future<void> loginByGoogle() async {
     try {
       // begin sign in process
-      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+
+      await GoogleSignIn().signOut();
+      final GoogleSignInAccount? gUser = await GoogleSignIn(
+        scopes: [
+          'https://www.googleapis.com/auth/userinfo.email',
+          'https://www.googleapis.com/auth/userinfo.profile',
+        ],
+      ).signIn();
 
       // obtain auth detail from request
       final GoogleSignInAuthentication gAuth = await gUser!.authentication;
@@ -91,7 +98,16 @@ class GeneralAPIService {
       final credential = GoogleAuthProvider.credential(
           accessToken: gAuth.accessToken, idToken: gAuth.idToken);
 
-      // actually sign in
+      final body = {
+        "loginToken": credential.accessToken,
+        "role": "Driver",
+      };
+
+      var response = await APIHandlerImp.instance
+          .post(body, "/Authentication/LoginWithGoogle");
+
+      var responseBody = LoginResponseBody.fromJson(response.data['data']);
+      await _storeAllIdentity(responseBody);
 
       // await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {

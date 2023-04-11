@@ -40,6 +40,7 @@ class TripInfoView extends GetView<TripInfoController> {
                 child: Image.asset(
                   "assets/icons/icon_history.png",
                   fit: BoxFit.fitHeight,
+                  color: Colors.green,
                 ),
               ),
               Padding(

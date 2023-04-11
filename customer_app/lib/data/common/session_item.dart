@@ -112,8 +112,8 @@ class SessionItem extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
                       decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xff0070F3)),
-                          color: const Color(0xff0070F3),
+                          border: Border.all(color: Colors.green),
+                          color: Colors.green,
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(4),
                               bottomLeft: Radius.circular(4))),
@@ -135,7 +135,7 @@ class SessionItem extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
                       decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xff0070F3)),
+                          border: Border.all(color: Colors.green),
                           color: Colors.white,
                           borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(4),
@@ -145,7 +145,7 @@ class SessionItem extends StatelessWidget {
                         children: const [
                           Text(
                             "Trip Detail",
-                            style: TextStyle(color: Color(0xff0070F3)),
+                            style: TextStyle(color: Colors.green),
                           )
                         ],
                       ),

@@ -8,9 +8,9 @@ import 'package:customer_app/data/providers/api_provider.dart';
 class TripApiService {
   Future<TripResponse> getTrip(String tripId) async {
     try {
-      var query = {'tripId': tripId};
+      var body = {'tripId': tripId};
       var response = await APIHandlerImp.instance
-          .get('/Trip/Trip/GetCurrentTrip', query: query);
+          .get('/Trip/Trip/GetCurrentTrip', body: body);
       if (response.data["status"]) {
         return TripResponse.fromJson(response.data['data']);
       } else {
@@ -25,10 +25,10 @@ class TripApiService {
   Future<List<TripResponse>> getPassengerTrips() async {
     try {
       var passengerId = await APIHandlerImp.instance.getIdentity();
-      var query = {'passengerId': passengerId};
+      var body = {'passengerId': passengerId};
 
       var response = await APIHandlerImp.instance
-          .get('/Trip/Trip/GetDriverTrips', query: query);
+          .get('/Trip/Trip/GetDriverTrips', body: body);
       if (response.data["status"]) {
         var listTripJson = response.data['data'] as List;
         return listTripJson
@@ -73,9 +73,11 @@ class TripApiService {
 
   Future<void> cancelRequest({required String requestId}) async {
     try {
-      var query = {"requestId": requestId};
-      var response = await APIHandlerImp.instance
-          .post(null, '/Trip/TripRequest/CancelRequest', query: query);
+      var body = {"requestId": requestId};
+      var response = await APIHandlerImp.instance.post(
+        body,
+        '/Trip/TripRequest/CancelRequest',
+      );
       if (response.data["status"]) {
       } else {
         return Future.error(IBussinessException(response.data['message']));
@@ -90,10 +92,10 @@ class TripApiService {
     try {
       var identity = await APIHandlerImp.instance.getIdentity();
 
-      var query = {'passengerId': identity, "requestId": requestId};
+      var body = {'passengerId': identity, "requestId": requestId};
       var response = await APIHandlerImp.instance.get(
         '/Trip/Trip/GetCurrentTripForPassenger',
-        query: query,
+        body: body,
       );
       if (response.data["status"]) {
         return response.data['data'];

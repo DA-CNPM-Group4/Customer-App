@@ -83,11 +83,13 @@ class APIHandlerImp implements APIHandlerInterface {
   @override
   Future<Response> get(
     String endpoint, {
+    var body,
     bool useToken = false,
     Map<String, dynamic>? query,
   }) async {
     Response response = await client.get(
       host + endpoint,
+      data: json.encode(body),
       queryParameters: query,
       options: Options(
         headers: await _buildHeader(useToken: useToken),

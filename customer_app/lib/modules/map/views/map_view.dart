@@ -40,14 +40,14 @@ class MapView extends GetView<MapController> {
               },
               markers: controller.markers.values.toSet(),
               initialCameraPosition: CameraPosition(
-                  target: controller.searchingLocation == null
+                  target: controller.searchDestination == null
                       ? LatLng(
                           controller.findTransportationController
                               .position["latitude"],
                           controller.findTransportationController
                               .position["longitude"])
-                      : LatLng(controller.searchingLocation!.location!.lat!,
-                          controller.searchingLocation!.location!.lng!),
+                      : LatLng(controller.searchDestination!.location!.lat!,
+                          controller.searchDestination!.location!.lng!),
                   zoom: 15),
             ),
           ),

@@ -1,8 +1,8 @@
+import 'package:customer_app/data/models/local_entity/location.dart';
+import 'package:customer_app/data/services/device_location_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import '../../../data/common/google_map.dart';
 
 class FindTransportationController extends GetxController {
   var lifeCycleController = Get.find<LifeCycleController>();
@@ -11,7 +11,6 @@ class FindTransportationController extends GetxController {
   var position = {}.obs;
   var showMap = false.obs;
   var isLoading = false.obs;
-  Maps map = Maps();
   ScrollController scrollController = ScrollController(initialScrollOffset: 1);
 
   @override
@@ -21,11 +20,10 @@ class FindTransportationController extends GetxController {
     scrollController.addListener(() {
       scrollPosition.value = scrollController.position.pixels;
     });
-    await map.determinePosition();
-    if (map.permission == LocationPermission.whileInUse ||
-        map.permission == LocationPermission.always) {
-      position.value = await map.getCurrentPosition();
-    }
+
+    position.value =
+        await DeviceLocationService.instance.getCurrentPositionAsMap();
+
     isLoading.value = false;
   }
 }

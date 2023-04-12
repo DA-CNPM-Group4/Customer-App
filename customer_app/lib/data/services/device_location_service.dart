@@ -4,12 +4,12 @@ import 'package:geolocator/geolocator.dart';
 class DeviceLocationService {
   static DeviceLocationService? _instance;
 
+  // singleton
   static DeviceLocationService get instance {
     return _instance ??= DeviceLocationService._();
   }
 
   late LocationSettings currentSetting;
-  late LocationPermission currentPermisson;
   DeviceLocationService._() {
     currentSetting = _getDeviceSetting();
   }
@@ -19,15 +19,23 @@ class DeviceLocationService {
     // since you are sure you will return non-null value, add '!' operator
     return _instance!;
   }
+  // singleton
 
   Future<Position> getCurrentPosition() async {
     bool canAccessLocation = await requestPermission();
 
     if (canAccessLocation) {
-      return await Geolocator.getCurrentPosition();
+      return await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
     } else {
       throw Future.error('Access Device Location Denied');
     }
+  }
+
+  Future<Map<String, dynamic>> getCurrentPositionAsMap() async {
+    final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return {"latitude": position.latitude, "longitude": position.longitude};
   }
 
   Future<Stream<Position>> getLocationStream() async {
@@ -38,9 +46,10 @@ class DeviceLocationService {
     }
   }
 
-  Future<String> getAddressFromLatLang(Position position) async {
+  Future<String> getAddressFromLatLang(
+      {required double latitude, required double longitude}) async {
     List<Placemark> placemark =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
+        await placemarkFromCoordinates(latitude, longitude);
     Placemark place = placemark[0];
     return '${place.street}, ${place.subAdministrativeArea}, ${place.administrativeArea}, ${place.country}';
   }
@@ -81,30 +90,22 @@ class DeviceLocationService {
       // accessing the position and request users of the
       // App to enable the location services.
 
-      // return Future.error('Location services are disabled.');
+      return Future.error('Location services are disabled.');
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();
   }
 

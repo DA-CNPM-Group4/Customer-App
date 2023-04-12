@@ -1,12 +1,13 @@
 class BackendEnviroment {
   static String host = "https://dacnpmbe11.azurewebsites.net/api";
 
-  static checkDevelopmentMode() {
+  static checkDevelopmentMode({bool isUseEmulator = false}) {
     assert(() {
-      // host = "http://192.168.1.7:8001/api";
-
-      // For Emulator
-      host = "http://10.0.2.2:8001/api";
+      if (isUseEmulator) {
+        host = "http://10.0.2.2:8001/api";
+      } else {
+        host = "http://192.168.1.7:8001/api";
+      }
       return true;
     }());
   }

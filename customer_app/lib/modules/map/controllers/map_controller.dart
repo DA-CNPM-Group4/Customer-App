@@ -66,8 +66,8 @@ class MapController extends GetxController {
   var findTransportationController = Get.find<FindTransportationController>();
   var searchPageController = Get.find<SearchPageController>();
 
-  SearchLocation? myLocation;
-  SearchLocation? searchingLocation;
+  SearchLocation? searchPickup;
+  SearchLocation? searchDestination;
 
   SearchLocationTypes? searchLocationType;
   Location? from;
@@ -103,8 +103,8 @@ class MapController extends GetxController {
         lat: findTransportationController.position["latitude"],
         lng: findTransportationController.position["longitude"]);
 
-    await getAddress(from);
-    await createMarker();
+    await setAddress(from);
+    await initMarker();
 
     to = Location(
         lat: findTransportationController.position["latitude"],
@@ -122,9 +122,9 @@ class MapController extends GetxController {
       if (Get.arguments["type"] == SEARCHTYPES.location) {
         isShow = true;
         text.value = "Set pickup location";
-        myLocation = Get.arguments["location"];
-        await getAddress(myLocation!.location);
-        await myLocationMarker("1", myLocation?.location,
+        searchPickup = Get.arguments["location"];
+        await setAddress(searchPickup!.location);
+        await myLocationMarker("1", searchPickup?.location,
             searchPageController.myPickupSearchLocationController);
         searchLocationType = SearchLocationTypes.SELECTLOCATION;
       } else {
@@ -138,7 +138,7 @@ class MapController extends GetxController {
           searchLocationType = SearchLocationTypes.SELECTEVIAMAP;
         } else {
           isShow = true;
-          searchingLocation = Get.arguments["destination"];
+          searchDestination = Get.arguments["destination"];
           text.value = "Set pickup location";
           from = searchPageController.currentLocation;
           await myLocationMarker(
@@ -152,20 +152,19 @@ class MapController extends GetxController {
 
   getCurrentPosition() async {
     findTransportationController.position.value =
-        await findTransportationController.map.getCurrentPosition();
+        await DeviceLocationService.instance.getCurrentPositionAsMap();
   }
 
-  getAddress(Location? location) async {
-    var temp = await findTransportationController.map
-        .getCurrentAddress(location?.lat!, location?.lng!);
-    address.value =
-        '${temp.street}, ${temp.subAdministrativeArea}, ${temp.administrativeArea}, ${temp.country}';
+  setAddress(Location? location) async {
+    var temp = await DeviceLocationService.instance.getAddressFromLatLang(
+        latitude: location?.lat ?? 0, longitude: location?.lng ?? 0);
+    address.value = temp;
     location?.address = address.value;
   }
 
   myLocationMarker(String makerId, Location? location,
       TextEditingController textEditController) async {
-    await getAddress(location);
+    await setAddress(location);
     textEditController.text = address.value;
     final Marker marker = Marker(
         markerId: MarkerId(makerId),
@@ -179,13 +178,13 @@ class MapController extends GetxController {
         onDragEnd: ((newPosition) async {
           isDragging.value = false;
           location?.setLocation(newPosition);
-          await getAddress(location);
+          await setAddress(location);
           textEditController.text = address.value;
         }),
         position: LatLng(
-            location?.lat ?? findTransportationController.map.position.latitude,
-            location?.lng ??
-                findTransportationController.map.position.longitude));
+          location?.lat ?? 0,
+          location?.lng ?? 0,
+        ));
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(target: LatLng(location!.lat!, location.lng!), zoom: 15),
     ));
@@ -227,16 +226,16 @@ class MapController extends GetxController {
   Future<void> handleSearch() async {
     if (searchLocationType == SearchLocationTypes.SELECTLOCATION) {
       text.value = "Set pickup location";
-      searchPageController.currentLocation = myLocation!.location!;
+      searchPageController.currentLocation = searchPickup!.location!;
       searchPageController.myPickupSearchLocationController.text =
           address.value;
       searchPageController.location.clear();
       Get.back();
     } else if (searchLocationType == SearchLocationTypes.SELECTDESTINATION) {
       text.value = "Set up destination";
-      await myLocationMarker("2", searchingLocation?.location,
+      await myLocationMarker("2", searchDestination?.location,
           searchPageController.myDestinationSearchController);
-      to = searchingLocation?.location;
+      to = searchDestination?.location;
       searchLocationType = SearchLocationTypes.HASBOTH;
     } else if (searchLocationType == SearchLocationTypes.SELECTEVIAMAP) {
       text.value = "Set pickup location";
@@ -286,7 +285,7 @@ class MapController extends GetxController {
     }
   }
 
-  Future<void> createMarker() async {
+  Future<void> initMarker() async {
     mapMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/vehicle_icons/car_icon.png");
   }
@@ -473,8 +472,8 @@ class MapController extends GetxController {
   Future<void> enableRealtimeLocator() async {
     var stream = await DeviceLocationService.instance.getLocationStream();
     gpsStreamSubscription = stream.listen((value) async {
-      var address =
-          await DeviceLocationService.instance.getAddressFromLatLang(value);
+      var address = await DeviceLocationService.instance.getAddressFromLatLang(
+          latitude: value.latitude, longitude: value.longitude);
       var position = RealtimeLocation(
           lat: value.latitude, long: value.longitude, address: address);
       await FirebaseRealtimeService.instance

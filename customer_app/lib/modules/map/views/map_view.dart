@@ -1,4 +1,5 @@
 import 'package:customer_app/core/constants/common_object.dart';
+import 'package:customer_app/core/constants/enum.dart';
 import 'package:customer_app/modules/map/widgets/bottom_sheets.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
 import 'package:customer_app/modules/utils/widgets.dart';
@@ -64,15 +65,16 @@ class MapView extends GetView<MapController> {
                       children: [
                         Obx(
                           () => Visibility(
-                            visible: controller.status.value != STATUS.FOUND
-                                ? true
-                                : false,
+                            visible:
+                                controller.status.value != DrivingStatus.FOUND
+                                    ? true
+                                    : false,
                             child: roundedButton(
                                 icon: Icons.arrow_back,
-                                f: () {
+                                f: () async {
                                   if (controller.status.value ==
-                                      STATUS.FINDING) {
-                                    controller.handleBackButton();
+                                      DrivingStatus.FINDING) {
+                                    await controller.handleBackButton();
                                   } else {
                                     Get.back();
                                   }
@@ -93,7 +95,7 @@ class MapView extends GetView<MapController> {
                   Obx(
                     () => AnimatedContainer(
                         height: controller.pass.value &&
-                                controller.status.value != STATUS.FOUND
+                                controller.status.value != DrivingStatus.FOUND
                             ? heightSafeArea * 0.41
                             : heightSafeArea * 0.39,
                         width: MediaQuery.of(context).size.width,
@@ -121,12 +123,13 @@ class MapView extends GetView<MapController> {
                               )
                             : controller.pass.value
                                 ? (controller.status.value ==
-                                            STATUS.SELECTVEHICLE ||
+                                            DrivingStatus.SELECTVEHICLE ||
                                         controller.status.value ==
-                                            STATUS.HASVOUCHER
+                                            DrivingStatus.HASVOUCHER
                                     ? selectVehicle(
                                         context: context, textTheme: textTheme)
-                                    : controller.status.value == STATUS.FINDING
+                                    : controller.status.value ==
+                                            DrivingStatus.FINDING
                                         ? findingDriver(textTheme: textTheme)
                                         : foundDriver(
                                             textTheme: textTheme,
@@ -351,7 +354,7 @@ class MapView extends GetView<MapController> {
               child: Expanded(
                 child: ElevatedButton(
                     onPressed: () async {
-                      controller.handleSearch();
+                      await controller.handleSearch();
                     },
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.green),

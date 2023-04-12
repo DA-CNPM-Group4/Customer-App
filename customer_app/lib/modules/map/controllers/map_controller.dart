@@ -30,13 +30,13 @@ import '../../../data/models/voucher/voucher.dart';
 
 class MapController extends GetxController {
   LifeCycleController lifeCycleController = Get.find<LifeCycleController>();
-  late UserEntity user;
+  late UserEntity pasenger;
 
+  // cancel request
   final waitingSecond = 0.obs;
   var waitingMultipy = 1;
   var isShowCancel = false;
-
-  late Timer _timer;
+  late Timer? _timer;
   bool isPressCancel = false;
 
   var isLoading = false.obs;
@@ -48,11 +48,12 @@ class MapController extends GetxController {
   var selectedIndex = 0.obs;
   String tripId = "";
   String requestId = "";
+
 // feedback
   TextEditingController feedbackController = TextEditingController();
   double star = 5;
 
-  Rx<STATUS> status = STATUS.SELECTVEHICLE.obs;
+  Rx<DrivingStatus> status = DrivingStatus.SELECTVEHICLE.obs;
   RxString text = "Your current location".obs;
   Voucher? voucher;
   var groupValue = "CASH".obs;
@@ -61,7 +62,6 @@ class MapController extends GetxController {
   late GoogleMapController googleMapController;
   BitmapDescriptor? mapMarker;
   List<PointLatLng> searchResult = [];
-
   RxMap<MarkerId, Marker> markers = <MarkerId, Marker>{}.obs;
   RxList<LatLng> polylinePoints = <LatLng>[].obs;
   final RxList<Polyline> polyline = <Polyline>[].obs;
@@ -69,34 +69,33 @@ class MapController extends GetxController {
   // search
   var findTransportationController = Get.find<FindTransportationController>();
   var searchPageController = Get.find<SearchPageController>();
+
   SearchLocation? myLocation;
   SearchLocation? searchingLocation;
-  TYPES? types;
 
-  //controller
+  SelectLocation? types;
   Location? from;
   Location? to;
 
   Map<dynamic, dynamic> request = {};
   Rxn<RealtimeDriver> driver = Rxn<RealtimeDriver>();
-
   Future<DatabaseEvent>? requestListener;
   StreamSubscription? driverListener;
   StreamSubscription? tripChangeStatusListener;
   StreamSubscription? tripDeleteListener;
-
   var isStateChanged = false.obs;
 
   @override
   void onClose() {
-    _timer.cancel();
+    print("ON CLOSE");
+    _timer?.cancel();
     super.onClose();
   }
 
   @override
   void onInit() async {
     super.onInit();
-    user = await lifeCycleController.getPassenger;
+    pasenger = await lifeCycleController.getPassenger;
 
     isLoading.value = true;
     await getCurrentPosition();
@@ -127,8 +126,8 @@ class MapController extends GetxController {
         myLocation = Get.arguments["location"];
         await getAddress(myLocation!.location);
         await myLocationMarker("1", myLocation?.location,
-            searchPageController.myLocationController);
-        types = TYPES.SELECTLOCATION;
+            searchPageController.myPickupSearchLocationController);
+        types = SelectLocation.SELECTLOCATION;
       } else {
         if (Get.arguments["location"] != null &&
             Get.arguments["destination"] == null) {
@@ -136,16 +135,16 @@ class MapController extends GetxController {
           from = Get.arguments["location"];
           text.value = "Set destination";
           await myLocationMarker(
-              "2", to, searchPageController.destinationController);
-          types = TYPES.SELECTEVIAMAP;
+              "2", to, searchPageController.myDestinationSearchController);
+          types = SelectLocation.SELECTEVIAMAP;
         } else {
           isShow = true;
           searchingLocation = Get.arguments["destination"];
           text.value = "Set pickup location";
           from = searchPageController.currentLocation;
           await myLocationMarker(
-              "1", from, searchPageController.myLocationController);
-          types = TYPES.SELECTDESTINATION;
+              "1", from, searchPageController.myPickupSearchLocationController);
+          types = SelectLocation.SELECTDESTINATION;
         }
       }
     }
@@ -226,25 +225,26 @@ class MapController extends GetxController {
     markers[markerId] = Marker(markerId: markerId, position: newMarkerPosition);
   }
 
-  void handleSearch() async {
-    if (types == TYPES.SELECTLOCATION) {
+  Future<void> handleSearch() async {
+    if (types == SelectLocation.SELECTLOCATION) {
       text.value = "Set pickup location";
       searchPageController.currentLocation = myLocation!.location!;
-      searchPageController.myLocationController.text = address.value;
+      searchPageController.myPickupSearchLocationController.text =
+          address.value;
       searchPageController.location.clear();
       Get.back();
-    } else if (types == TYPES.SELECTDESTINATION) {
+    } else if (types == SelectLocation.SELECTDESTINATION) {
       text.value = "Set up destination";
       await myLocationMarker("2", searchingLocation?.location,
-          searchPageController.destinationController);
+          searchPageController.myDestinationSearchController);
       to = searchingLocation?.location;
-      types = TYPES.HASBOTH;
-    } else if (types == TYPES.SELECTEVIAMAP) {
+      types = SelectLocation.HASBOTH;
+    } else if (types == SelectLocation.SELECTEVIAMAP) {
       text.value = "Set pickup location";
       await myLocationMarker(
-          "1", from, searchPageController.myLocationController);
-      types = TYPES.HASBOTH;
-    } else if (types == TYPES.HASBOTH) {
+          "1", from, searchPageController.myPickupSearchLocationController);
+      types = SelectLocation.HASBOTH;
+    } else if (types == SelectLocation.HASBOTH) {
       await route(from, to);
       await updatePrice(CommonObject.vehicleList, distance.value);
 
@@ -304,7 +304,7 @@ class MapController extends GetxController {
         onConfirm: () async {
           await cancelBooking();
           isShowCancel = false;
-          Get.close(1);
+          Get.back();
         },
         onCancel: () {
           isShowCancel = false;
@@ -322,7 +322,7 @@ class MapController extends GetxController {
 
     stopTimeout();
 
-    status.value = STATUS.SELECTVEHICLE;
+    status.value = DrivingStatus.SELECTVEHICLE;
 
     isLoading.value = false;
     EasyLoading.dismiss();
@@ -331,34 +331,8 @@ class MapController extends GetxController {
   void stopTimeout() {
     waitingSecond.value = 0;
     waitingMultipy = 1;
-    _timer.cancel();
+    _timer?.cancel();
   }
-
-  // Future<void> handleVoucher() async {
-  //   isLoading.value = true;
-  //   var vo = await Get.toNamed(Routes.VOUCHER, arguments: {"voucher": voucher});
-
-  //   for (Vehicle v in vehicleList) {
-  //     if (v.priceAfterVoucher != "") {
-  //       v.price = v.priceAfterVoucher;
-  //       v.priceAfterVoucher = "";
-  //     }
-  //   }
-
-  //   voucher = vo;
-  //   status.value = STATUS.HASVOUCHER;
-  //   if (vo != null) {
-  //     for (Vehicle v in vehicleList) {
-  //       Get.log(v.price!);
-  //       v.priceAfterVoucher = v.price;
-  //       v.price = (double.parse(v.price!) -
-  //               double.parse(v.price!) * voucher!.discountPercent!)
-  //           .toString();
-  //       Get.log(v.price!);
-  //     }
-  //   }
-  //   isLoading.value = false;
-  // }
 
   Future<void> updatePrice(List<Vehicle> vehicleList, double distance) async {
     try {
@@ -379,7 +353,7 @@ class MapController extends GetxController {
   Future<void> sendRequest() async {
     isLoading.value = true;
 
-    var accountId = user.accountId;
+    var accountId = pasenger.accountId;
 
     var requestBody = CreateTripRequestBody(
         LatStartAddr: from!.lng!,
@@ -390,7 +364,7 @@ class MapController extends GetxController {
         Destination: to!.address!,
         Distance: distance.value,
         PassengerNote: "Fast!!!",
-        PassengerPhone: user.phone,
+        PassengerPhone: pasenger.phone,
         Price:
             double.parse(CommonObject.vehicleList[selectedIndex.value].price!)
                 .ceil(),
@@ -400,8 +374,8 @@ class MapController extends GetxController {
       await FirebaseRealtimeService.instance.setPassengerNode(
         passenger: RealtimePassenger(
           info: RealtimePassengerInfo(
-            name: user.name,
-            phone: user.phone,
+            name: pasenger.name,
+            phone: pasenger.phone,
           ),
           location: RealtimeLocation(
             address: from!.address!,
@@ -416,7 +390,7 @@ class MapController extends GetxController {
           await PassengerAPIService.tripApi.createRequest(body: requestBody);
       isLoading.value = false;
 
-      status.value = STATUS.FINDING;
+      status.value = DrivingStatus.FINDING;
       startTimer();
 
       requestListener = FirebaseDatabase.instance
@@ -434,7 +408,7 @@ class MapController extends GetxController {
         stopTimeout();
         driver.value =
             await FirebaseRealtimeService.instance.readDriverNode(driverId);
-        status.value = STATUS.FOUND;
+        status.value = DrivingStatus.FOUND;
 
         await enableRealtimeLocator();
 
@@ -461,7 +435,7 @@ class MapController extends GetxController {
             showSnackBar("Trip Completed", "Trip Completed");
           } else {
             showSnackBar("Trip Cancel", "Your trip have been cancel by driver");
-            status.value = STATUS.SELECTVEHICLE;
+            status.value = DrivingStatus.SELECTVEHICLE;
           }
           isStateChanged.value = false;
         });
@@ -504,19 +478,21 @@ class MapController extends GetxController {
       var position = RealtimeLocation(
           lat: value.latitude, long: value.longitude, address: address);
       await FirebaseRealtimeService.instance
-          .updatePassengerNode(user.accountId, position);
+          .updatePassengerNode(pasenger.accountId, position);
     });
   }
 
   Future<void> disableRealtimeLocator() async {
     await gpsStreamSubscription?.cancel();
-    await FirebaseRealtimeService.instance.deletePassengerNode(user.accountId);
+    await FirebaseRealtimeService.instance
+        .deletePassengerNode(pasenger.accountId);
   }
 
   void startTimer() {
     _timer = Timer.periodic(
       const Duration(seconds: 1),
       (Timer timer) async {
+        print("timer is running");
         waitingSecond.value += 1;
         if (waitingSecond.value > 30 * waitingMultipy) {
           waitingMultipy += 1;
@@ -574,8 +550,7 @@ class MapController extends GetxController {
                   );
                   showSnackBar("Rate Success", "Rating Driver sucessfully");
                 } catch (e) {
-                  //
-                  showSnackBar("Rate failed", "Rating Driver sucessfully");
+                  showSnackBar("Rate failed", "Rating Driver failed");
                 } finally {
                   EasyLoading.dismiss();
                   Get.back(closeOverlays: true);
@@ -588,7 +563,3 @@ class MapController extends GetxController {
     );
   }
 }
-
-enum TYPES { SELECTLOCATION, SELECTEVIAMAP, SELECTDESTINATION, HASBOTH }
-
-enum STATUS { SELECTVEHICLE, HASVOUCHER, FINDING, FOUND, COMPLETED, CANCEL }

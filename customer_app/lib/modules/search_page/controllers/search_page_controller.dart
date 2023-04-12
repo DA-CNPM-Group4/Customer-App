@@ -17,10 +17,11 @@ class SearchPageController extends GetxController
 
   var isMyLocationFocused = false.obs;
   var isDestinationFocused = false.obs;
-  var findTransportationController = Get.find<FindTransportationController>();
 
-  TextEditingController myLocationController = TextEditingController();
-  TextEditingController destinationController = TextEditingController();
+  var findTransportationController = Get.find<FindTransportationController>();
+  TextEditingController myPickupSearchLocationController =
+      TextEditingController();
+  TextEditingController myDestinationSearchController = TextEditingController();
   List<SearchLocation> location = [];
   late Location currentLocation;
   late Location myDestination;
@@ -54,26 +55,26 @@ class SearchPageController extends GetxController
       }
     });
 
-    myLocationController.addListener(() {
-      if (myLocationController.text == "") {
+    myPickupSearchLocationController.addListener(() {
+      if (myPickupSearchLocationController.text == "") {
         location = [];
       }
       if (_debounce?.isActive ?? false) _debounce!.cancel();
       _debounce = Timer(const Duration(milliseconds: 650), () {
-        if (myLocationController.text != "") {
-          searchLocation(myLocationController.text);
+        if (myPickupSearchLocationController.text != "") {
+          searchLocation(myPickupSearchLocationController.text);
         }
       });
     });
 
-    destinationController.addListener(() {
-      if (destinationController.text.isEmpty) {
+    myDestinationSearchController.addListener(() {
+      if (myDestinationSearchController.text.isEmpty) {
         location = [];
       }
       if (_debounce?.isActive ?? false) _debounce!.cancel();
       _debounce = Timer(const Duration(milliseconds: 650), () {
-        if (destinationController.text != "") {
-          searchLocation(destinationController.text);
+        if (myDestinationSearchController.text != "") {
+          searchLocation(myDestinationSearchController.text);
         }
       });
     });

@@ -117,19 +117,21 @@ class SearchPageView extends GetView<SearchPageController> {
                                         ? const TextStyle(color: Colors.black)
                                         : const TextStyle(color: Colors.grey)),
                                 focusNode: controller.myLocation,
-                                controller: controller.myLocationController,
+                                controller:
+                                    controller.myPickupSearchLocationController,
                                 onFieldSubmitted: (value) async {
                                   await controller.searchLocation(value);
                                 },
-                                onTap: () =>
-                                    controller.myLocationController.selection =
-                                        TextSelection(
-                                            baseOffset: 0,
-                                            extentOffset: controller
-                                                .myLocationController
-                                                .value
-                                                .text
-                                                .length),
+                                onTap: () => controller
+                                        .myPickupSearchLocationController
+                                        .selection =
+                                    TextSelection(
+                                        baseOffset: 0,
+                                        extentOffset: controller
+                                            .myPickupSearchLocationController
+                                            .value
+                                            .text
+                                            .length),
                               ),
                               Divider(
                                 height: 1,
@@ -140,13 +142,15 @@ class SearchPageView extends GetView<SearchPageController> {
                                 focusNode: controller.destination,
                                 decoration: const InputDecoration.collapsed(
                                     hintText: 'Search for a destination'),
-                                controller: controller.destinationController,
+                                controller:
+                                    controller.myDestinationSearchController,
                                 onTap: () {
-                                  controller.destinationController.selection =
+                                  controller.myDestinationSearchController
+                                          .selection =
                                       TextSelection(
                                           baseOffset: 0,
                                           extentOffset: controller
-                                              .destinationController
+                                              .myDestinationSearchController
                                               .value
                                               .text
                                               .length);
@@ -217,30 +221,36 @@ class SearchPageView extends GetView<SearchPageController> {
                                 style: BaseTextStyle.body1(fontSize: 16),
                               ),
                               onTap: () async {
-                                if (controller
-                                        .myLocationController.text.isNotEmpty &&
-                                    controller
-                                        .destinationController.text.isEmpty) {
-                                  controller.myLocationController.text =
+                                if (controller.myPickupSearchLocationController
+                                        .text.isNotEmpty &&
+                                    controller.myDestinationSearchController
+                                        .text.isEmpty) {
+                                  controller.myPickupSearchLocationController
+                                          .text =
                                       controller.location[index].address!;
                                   Get.toNamed(Routes.MAP, arguments: {
                                     'location': controller.location[index],
                                     "type": SEARCHTYPES.location
                                   });
                                 } else if (controller
-                                        .myLocationController.text.isEmpty &&
-                                    controller.destinationController.text
-                                        .isNotEmpty) {
-                                  controller.destinationController.text =
+                                        .myPickupSearchLocationController
+                                        .text
+                                        .isEmpty &&
+                                    controller.myDestinationSearchController
+                                        .text.isNotEmpty) {
+                                  controller
+                                          .myDestinationSearchController.text =
                                       controller.location[index].address!;
                                   Get.toNamed(Routes.MAP, arguments: {
                                     'destination': controller.location[index],
                                     "type": SEARCHTYPES.mydestination
                                   });
                                 } else if (controller
-                                        .myLocationController.text.isNotEmpty &&
-                                    controller.destinationController.text
-                                        .isNotEmpty) {
+                                        .myPickupSearchLocationController
+                                        .text
+                                        .isNotEmpty &&
+                                    controller.myDestinationSearchController
+                                        .text.isNotEmpty) {
                                   Get.toNamed(Routes.MAP, arguments: {
                                     'destination': controller.location[index],
                                     "type": SEARCHTYPES.mydestination

@@ -3,6 +3,7 @@ import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
+import 'package:customer_app/modules/utils/widgets.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -49,12 +50,11 @@ class PasswordController extends GetxController {
       await PassengerAPIService.authApi.register(body);
 
       Get.offAllNamed(Routes.WELCOME);
-      Get.snackbar(
-          "Register successfully", "Enter your OTP to active this account",
-          colorText: Colors.black, backgroundColor: Colors.grey[200]);
+      showSnackBar(
+          "Register successfully", "Enter your OTP to active this account");
     } catch (e) {
-      Get.snackbar("Failed: ", e.toString(),
-          colorText: Colors.black, backgroundColor: Colors.grey[200]);
+      showSnackBar("Failed", e.toString());
+      Get.snackbar("Failed: ", e.toString(), colorText: Colors.black);
     }
 
     isLoading.value = false;

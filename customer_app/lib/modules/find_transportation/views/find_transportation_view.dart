@@ -1,4 +1,4 @@
-import 'package:customer_app/data/common/find_transportation_box.dart';
+import 'package:customer_app/modules/find_transportation/widgets/find_transportation_box.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 

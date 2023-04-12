@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:customer_app/data/common/network_handler.dart';
+import 'package:customer_app/data/models/local_entity/location.dart';
+import 'package:customer_app/data/models/local_entity/search_location.dart';
+import 'package:customer_app/modules/find_transportation/controllers/find_transportation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../data/common/location.dart';
-import '../../../data/common/search_location.dart';
-import '../../find_transportation/controllers/find_transportation_controller.dart';
 
 class SearchPageController extends GetxController
     with GetSingleTickerProviderStateMixin {

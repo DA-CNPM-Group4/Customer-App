@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../data/common/voucher_ticket.dart';
+import '../widgets/voucher_ticket.dart';
 import '../controllers/voucher_controller.dart';
 
 class VoucherView extends GetView<VoucherController> {

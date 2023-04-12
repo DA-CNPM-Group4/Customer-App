@@ -2,13 +2,16 @@ import 'dart:async';
 import 'package:customer_app/Data/models/realtime_models/realtime_passenger.dart';
 import 'package:customer_app/core/constants/common_object.dart';
 import 'package:customer_app/core/constants/enum.dart';
-import 'package:customer_app/data/common/location.dart';
+import 'package:customer_app/data/common/network_handler.dart';
+import 'package:customer_app/data/models/local_entity/location.dart';
+import 'package:customer_app/data/models/local_entity/search_location.dart';
 import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_location.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
 import 'package:customer_app/data/models/requests/rate_trip_request.dart';
 import 'package:customer_app/data/models/vehicle.dart';
+import 'package:customer_app/data/models/voucher/voucher.dart';
 import 'package:customer_app/data/providers/firesbase_realtime_provider.dart';
 import 'package:customer_app/data/services/device_location_service.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';
@@ -24,9 +27,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../../data/common/network_handler.dart';
-import '../../../data/common/search_location.dart';
-import '../../../data/models/voucher/voucher.dart';
 
 class MapController extends GetxController {
   LifeCycleController lifeCycleController = Get.find<LifeCycleController>();

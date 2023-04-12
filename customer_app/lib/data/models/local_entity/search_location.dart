@@ -1,4 +1,5 @@
-import 'package:customer_app/data/common/location.dart';
+
+import 'package:customer_app/data/models/local_entity/location.dart';
 
 class SearchLocation {
   String? id;
@@ -24,7 +25,7 @@ class SearchLocation {
     data['name'] = name;
     data['address'] = address;
     if (location != null) {
-      data['location'] = location!.toJson();
+      data['location'] = location?.toJson();
     }
     data['types'] = types;
     return data;

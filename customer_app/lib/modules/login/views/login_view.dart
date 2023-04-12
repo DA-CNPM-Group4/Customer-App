@@ -81,6 +81,7 @@ class LoginView extends GetView<LoginController> {
                     key: controller.emailFormKey,
                     child: Obx(
                       () => TextFormField(
+                        key: const Key("login_email_field"),
                         controller: controller.emailController,
                         inputFormatters: [
                           FilteringTextInputFormatter.singleLineFormatter
@@ -105,6 +106,7 @@ class LoginView extends GetView<LoginController> {
                     key: controller.phoneFormKey,
                     child: Obx(
                       () => TextFormField(
+                        key: const Key("login_phone_field"),
                         controller: controller.phoneNumberController,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
@@ -151,6 +153,7 @@ class LoginView extends GetView<LoginController> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+            key: const Key("login_login_btn"),
             elevation: 0.0,
             backgroundColor: Colors.grey,
             onPressed: () async {

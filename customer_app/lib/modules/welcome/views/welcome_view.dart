@@ -58,6 +58,7 @@ class WelcomeView extends StatelessWidget {
                     width: double.infinity,
                     height: 72,
                     child: ElevatedButton(
+                        key: const Key("welcome_login_btn"),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green),
                         onPressed: () {

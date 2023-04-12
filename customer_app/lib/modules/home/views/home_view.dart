@@ -10,27 +10,52 @@ import '../controllers/home_controller.dart';
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
 
-  Widget mainIconButton(
-      {required String icon, required String title, Function()? onPressed}) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Column(
-        children: [
-          Image.asset(
-            icon,
-            height: 55,
-            width: 55,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            title,
-            style: BaseTextStyle.heading1(fontSize: 14),
+  Widget mainIconButton({
+    required String icon,
+    required String title,
+    Function()? onPressed,
+    String? keyString,
+  }) {
+    return keyString != null
+        ? GestureDetector(
+            key: Key(keyString),
+            onTap: onPressed,
+            child: Column(
+              children: [
+                Image.asset(
+                  icon,
+                  height: 55,
+                  width: 55,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  title,
+                  style: BaseTextStyle.heading1(fontSize: 14),
+                )
+              ],
+            ),
           )
-        ],
-      ),
-    );
+        : GestureDetector(
+            onTap: onPressed,
+            child: Column(
+              children: [
+                Image.asset(
+                  icon,
+                  height: 55,
+                  width: 55,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  title,
+                  style: BaseTextStyle.heading1(fontSize: 14),
+                )
+              ],
+            ),
+          );
   }
 
   Widget mainBanner(
@@ -104,6 +129,7 @@ class HomeView extends GetView<HomeController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       mainIconButton(
+                          keyString: "home_booking_bike",
                           icon: "assets/icons/main_icon_1.png",
                           title: "BikeHub",
                           onPressed: () {

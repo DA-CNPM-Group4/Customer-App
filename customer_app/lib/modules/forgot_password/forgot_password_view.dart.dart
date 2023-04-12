@@ -1,3 +1,4 @@
+import 'package:customer_app/core/utils/utils.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -68,7 +69,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                             FilteringTextInputFormatter.singleLineFormatter
                           ],
                           validator: (value) =>
-                              controller.emailValidator(value!),
+                              StringValidator.emailValidator(value!),
                           textCapitalization: TextCapitalization.none,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(

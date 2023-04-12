@@ -39,13 +39,4 @@ class ForgotPasswordController extends GetxController {
     lifeCycleController.email = emailController.text;
     Get.toNamed(Routes.OTP);
   }
-
-  String? emailValidator(String value) {
-    if (value.isEmpty) {
-      return "This field must be filled";
-    } else if (!value.isEmail) {
-      return "You must enter a email address";
-    }
-    return null;
-  }
 }

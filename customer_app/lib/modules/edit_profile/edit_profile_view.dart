@@ -1,3 +1,4 @@
+import 'package:customer_app/core/utils/utils.dart';
 import 'package:customer_app/modules/edit_profile/widgets/avatar_circle.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
@@ -124,13 +125,15 @@ class EditProfileView extends GetView<EditProfileController> {
                       hint: "e.g. Adit Brahmana",
                       textTheme: textTheme,
                       controller: controller.nameController,
-                      validator: (value) => controller.nameValidator(value!)),
+                      validator: (value) =>
+                          StringValidator.nameValidator(value!)),
                   h_20,
                   titleAndText(
                       title: "Current Address",
                       hint: "Enter your current address",
                       controller: controller.addressController,
-                      validator: (value) => controller.addressValidator(value!),
+                      validator: (value) =>
+                          StringValidator.addressValidator(value!),
                       textTheme: textTheme),
                 ],
               ),

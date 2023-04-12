@@ -24,33 +24,10 @@ class OtpController extends GetxController {
 
   var error = ''.obs;
 
-  String? validator() {
-    if (otpController.text.isEmpty) {
-      return "OTP can't be empty";
-    } else if (otpController.text.length < 6) {
-      return "Please fill all the numbers";
-    }
-    return null;
-  }
-
-  String? passwordValidator(String value) {
-    if (value.isEmpty) {
-      return "This field is required";
-    } else if (value.length < 6) {
-      return "Password length must be longer than 6 digits";
-    }
-    return null;
-  }
-
-  Future<bool> validateOTP() async {
-    return true;
-  }
-
   Future<void> confirmOTP() async {
     isLoading.value = true;
     final isOTPValid = otpFormKey.currentState!.validate();
 
-    // valid if in case change password password
     if (!lifeCycleController.isActiveOTP) {
       if (!passwordFormKey.currentState!.validate()) {
         isLoading.value = false;
@@ -67,23 +44,29 @@ class OtpController extends GetxController {
 
     try {
       if (lifeCycleController.isActiveOTP) {
-        await PassengerAPIService.authApi
-            .activeAccountByOTP(lifeCycleController.email, otpController.text);
-
-        await lifeCycleController.getPassengerInfoAndRoutingHome();
+        await handleActiveAccount();
       } else {
-        await PassengerAPIService.authApi.resetPassword(
-            lifeCycleController.email,
-            passwordController.text,
-            otpController.text);
-        Get.offAllNamed(Routes.WELCOME);
-        showSnackBar("Reset Password", "Reset Password Successfully!");
+        await handleResetPassword();
       }
     } on IBussinessException catch (e) {
       showSnackBar("Error", e.toString());
     }
     isLoading.value = false;
     return;
+  }
+
+  Future<void> handleActiveAccount() async {
+    await PassengerAPIService.authApi
+        .activeAccountByOTP(lifeCycleController.email, otpController.text);
+
+    await lifeCycleController.getPassengerInfoAndRoutingHome();
+  }
+
+  Future<void> handleResetPassword() async {
+    await PassengerAPIService.authApi.resetPassword(
+        lifeCycleController.email, passwordController.text, otpController.text);
+    Get.offAllNamed(Routes.WELCOME);
+    showSnackBar("Reset Password", "Reset Password Successfully!");
   }
 
   Future<void> startTimer() async {

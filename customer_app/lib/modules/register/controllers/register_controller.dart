@@ -12,33 +12,6 @@ class RegisterController extends GetxController {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController nameController = TextEditingController();
 
-  String? nameValidator(String value) {
-    if (value.isEmpty) {
-      return "This field is required";
-    } else if (RegExp(".*[0-9].*").hasMatch(value)) {
-      return "Name can't have number";
-    }
-    return null;
-  }
-
-  String? emailValidator(String value) {
-    if (value.isEmpty) {
-      return "This field is required";
-    } else if (!GetUtils.isEmail(value)) {
-      return "This is not an email";
-    }
-    return null;
-  }
-
-  String? phoneNumberValidator(String value) {
-    if (value.isEmpty) {
-      return "This field is required";
-    } else if (!GetUtils.isPhoneNumber(value)) {
-      return "This is a valid phone number";
-    }
-    return null;
-  }
-
   Future<bool> check() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) {

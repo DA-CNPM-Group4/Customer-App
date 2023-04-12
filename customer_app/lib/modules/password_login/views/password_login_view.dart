@@ -1,3 +1,4 @@
+import 'package:customer_app/core/utils/utils.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 
@@ -64,11 +65,11 @@ class PasswordLoginView extends GetView<PasswordLoginController> {
                   child: TextFormField(
                     obscureText: true,
                     controller: controller.passwordController,
-                    validator: (value) => controller.passwordValidator(value!),
+                    validator: (value) =>
+                        StringValidator.passwordValidator(value!),
                     decoration: const InputDecoration(),
                   ),
                 )
-              
               ],
             ),
           ),

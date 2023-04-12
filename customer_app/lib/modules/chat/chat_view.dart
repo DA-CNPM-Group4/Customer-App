@@ -1,5 +1,5 @@
-import 'package:customer_app/data/common/chat_message_widget.dart';
 import 'package:customer_app/data/models/chat_message/chat_message.dart';
+import 'package:customer_app/modules/chat/widgets/chat_message_widget.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

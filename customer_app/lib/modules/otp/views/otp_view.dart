@@ -1,3 +1,4 @@
+import 'package:customer_app/core/utils/utils.dart';
 import 'package:customer_app/modules/otp/controllers/otp_controller.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,8 @@ class OtpView extends GetView<OtpController> {
                     child: Pinput(
                       length: 6,
                       controller: controller.otpController,
-                      // validator: (value) => controller.validator(),
+                      validator: (value) =>
+                          StringValidator.otpValidator(value!),
                       errorText: controller.error.value,
                     ),
                   ),
@@ -87,7 +89,7 @@ class OtpView extends GetView<OtpController> {
                                   obscureText: true,
                                   controller: controller.passwordController,
                                   validator: (value) =>
-                                      controller.passwordValidator(value!),
+                                      StringValidator.passwordValidator(value!),
                                   decoration: const InputDecoration(),
                                 ),
                               )

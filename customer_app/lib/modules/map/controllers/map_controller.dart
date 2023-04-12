@@ -96,14 +96,7 @@ class MapController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    try {
-      lifeCycleController.passenger ??=
-          await PassengerAPIService.getPassengerInfo();
-      user = lifeCycleController.passenger!;
-    } catch (e) {
-      showSnackBar("Error", e.toString());
-      Get.offAllNamed(Routes.WELCOME);
-    }
+    user = await lifeCycleController.getPassenger;
 
     isLoading.value = true;
     await getCurrentPosition();

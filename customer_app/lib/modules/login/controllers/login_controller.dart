@@ -54,6 +54,7 @@ class LoginController extends GetxController {
   }
 
   void toPasswordLoginPage() {
+    lifeCycleController.isloginByGoogle = false;
     lifeCycleController.email = emailController.text;
     lifeCycleController.phone = phoneNumberController.text;
     Get.toNamed(Routes.PASSWORD_LOGIN);
@@ -65,14 +66,16 @@ class LoginController extends GetxController {
     // handle google login
     try {
       lifeCycleController.isloginByGoogle = true;
+      lifeCycleController.email = emailController.text;
+      lifeCycleController.phone = phoneNumberController.text;
       await PassengerAPIService.authApi.loginByGoogle();
     } catch (e) {
       showSnackBar("Sign in", e.toString());
       isLoading.value = false;
       return;
     }
-    await lifeCycleController.getPassengerInfoAndRoutingHome();
 
+    await lifeCycleController.getPassengerInfoAndRoutingHome();
     isLoading.value = false;
   }
 }

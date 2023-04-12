@@ -1,3 +1,4 @@
+import 'package:customer_app/core/utils/utils.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
@@ -92,7 +93,8 @@ class RegisterView extends GetView<RegisterController> {
                       TextFormField(
                         textCapitalization: TextCapitalization.words,
                         textInputAction: TextInputAction.next,
-                        validator: (value) => controller.nameValidator(value!),
+                        validator: (value) =>
+                            StringValidator.nameValidator(value!),
                         controller: controller.nameController,
                         decoration: InputDecoration(
                           hintText: 'e.g., John Doe',
@@ -109,7 +111,7 @@ class RegisterView extends GetView<RegisterController> {
                           textInputAction: TextInputAction.next,
                           controller: controller.emailController,
                           validator: (value) =>
-                              controller.emailValidator(value!),
+                              StringValidator.emailValidator(value!),
                           decoration: InputDecoration(
                               hintText: 'e.g., name@gmail.com',
                               hintStyle:
@@ -159,7 +161,8 @@ class RegisterView extends GetView<RegisterController> {
                                   FilteringTextInputFormatter.digitsOnly
                                 ],
                                 validator: (value) =>
-                                    controller.phoneNumberValidator(value!),
+                                    StringValidator.phoneNumberValidator(
+                                        value!),
                                 decoration: InputDecoration(
                                   errorText: controller.phoneNumberError.value,
                                   hintText: '123xxxxxxx',

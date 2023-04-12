@@ -16,15 +16,6 @@ class PasswordLoginController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   var isLoading = false.obs;
 
-  String? passwordValidator(String value) {
-    if (value.isEmpty) {
-      return "This field is required";
-    } else if (value.length < 6) {
-      return "Password length must be longer than 6 digits";
-    }
-    return null;
-  }
-
   bool check() {
     final isValid = formKey.currentState!.validate();
     if (!isValid) {
@@ -44,7 +35,6 @@ class PasswordLoginController extends GetxController {
       );
 
       await PassengerAPIService.authApi.login(body: requestBody);
-
       await lifeCycleController.getPassengerInfoAndRoutingHome();
     } on IBussinessException catch (e) {
       if (e is AccountNotActiveException) {

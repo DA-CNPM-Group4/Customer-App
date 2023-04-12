@@ -63,6 +63,7 @@ class PasswordLoginView extends GetView<PasswordLoginController> {
                 Form(
                   key: controller.formKey,
                   child: TextFormField(
+                    key: const Key("password_login_password_field"),
                     obscureText: true,
                     controller: controller.passwordController,
                     validator: (value) =>
@@ -74,6 +75,7 @@ class PasswordLoginView extends GetView<PasswordLoginController> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
+              key: const Key("password_login_login_btn"),
               elevation: 0.0,
               backgroundColor: Colors.grey,
               onPressed: () async {

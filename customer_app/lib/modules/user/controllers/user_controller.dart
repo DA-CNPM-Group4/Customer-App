@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/models/local_entity/user_entity.dart';
-import 'package:customer_app/data/models/wallet.dart';
+import 'package:customer_app/modules/user/controllers/wallet.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
-import 'package:customer_app/modules/user/user_settings.dart';
+import 'package:customer_app/modules/user/controllers/user_settings.dart';
+import 'package:customer_app/modules/utils/widgets.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:get/get.dart';
 

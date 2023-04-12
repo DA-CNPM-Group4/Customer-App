@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:customer_app/data/common/fake_search.dart';
+import 'package:customer_app/modules/home/widgets/fake_search.dart';
 import 'package:customer_app/modules/find_transportation/controllers/find_transportation_controller.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';

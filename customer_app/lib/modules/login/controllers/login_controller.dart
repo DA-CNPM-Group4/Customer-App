@@ -1,7 +1,7 @@
-import 'package:customer_app/data/common/util.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
+import 'package:customer_app/modules/utils/widgets.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

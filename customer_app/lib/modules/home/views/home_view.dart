@@ -1,4 +1,4 @@
-import 'package:customer_app/data/common/fake_search.dart';
+import 'package:customer_app/modules/home/widgets/fake_search.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 
@@ -37,14 +37,14 @@ class HomeView extends GetView<HomeController> {
       {required String icon,
       Function()? onPressed,
       double? elevation,
-      TYPES? e}) {
+      BannerTypes? e}) {
     return GestureDetector(
         onTap: onPressed,
         child: Card(
           elevation: elevation ?? 10,
           margin: EdgeInsets.symmetric(
-              vertical: e == TYPES.vertical ? 10 : 0,
-              horizontal: e == TYPES.horizontal ? 10 : 0),
+              vertical: e == BannerTypes.vertical ? 10 : 0,
+              horizontal: e == BannerTypes.horizontal ? 10 : 0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Image.asset(icon),
@@ -137,7 +137,7 @@ class HomeView extends GetView<HomeController> {
                     itemBuilder: (_, item) {
                       return mainBanner(
                           icon: controller.banners[item],
-                          e: TYPES.vertical,
+                          e: BannerTypes.vertical,
                           elevation: 0);
                     },
                     itemCount: controller.banners.length,
@@ -150,4 +150,4 @@ class HomeView extends GetView<HomeController> {
   }
 }
 
-enum TYPES { vertical, horizontal }
+enum BannerTypes { vertical, horizontal }

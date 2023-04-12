@@ -6,13 +6,7 @@ class Wallet {
   String? activeCode;
   bool? status;
 
-  Wallet(
-      {id,
-        walletType,
-        idOwner,
-        balance,
-        activeCode,
-        status});
+  Wallet({id, walletType, idOwner, balance, activeCode, status});
 
   Wallet.fromJson(Map<String, dynamic> json) {
     id = json['id'];

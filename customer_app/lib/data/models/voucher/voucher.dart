@@ -8,11 +8,11 @@ class Voucher {
 
   Voucher(
       {this.discountId,
-        this.discountName,
-        this.discountPercent,
-        this.startDate,
-        this.endDate,
-        this.quantity});
+      this.discountName,
+      this.discountPercent,
+      this.startDate,
+      this.endDate,
+      this.quantity});
 
   Voucher.fromJson(Map<String, dynamic> json) {
     discountId = json['discountId'];

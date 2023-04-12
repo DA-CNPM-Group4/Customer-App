@@ -1,3 +1,4 @@
+import 'package:customer_app/modules/user/widgets/loading.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:get/get.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 
-import '../../../data/common/loading.dart';
 import '../controllers/user_controller.dart';
 
 class UserView extends GetView<UserController> {

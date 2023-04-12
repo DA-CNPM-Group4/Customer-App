@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 void showSnackBar(String title, String message, {int second = 3}) {
   Get.snackbar(title, message,
@@ -8,3 +9,5 @@ void showSnackBar(String title, String message, {int second = 3}) {
       backgroundColor: const Color.fromARGB(255, 130, 230, 63),
       duration: Duration(seconds: second));
 }
+
+final formatBalance = NumberFormat("#,##0", "vi_VN");

@@ -1,7 +1,7 @@
 import 'package:customer_app/core/constants/common_object.dart';
-import 'package:customer_app/data/common/bottom_sheets.dart';
-import 'package:customer_app/data/common/util.dart';
+import 'package:customer_app/modules/map/widgets/bottom_sheets.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
+import 'package:customer_app/modules/utils/widgets.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';

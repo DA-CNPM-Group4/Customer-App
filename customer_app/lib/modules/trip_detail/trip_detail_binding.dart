@@ -1,11 +1,11 @@
-import 'package:customer_app/modules/trip_info/trip_info_controller.dart';
+import 'package:customer_app/modules/trip_detail/trip_detail_controller.dart';
 import 'package:get/get.dart';
 
-class TripInfoBinding extends Bindings {
+class TripDetailBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TripInfoController>(
-      () => TripInfoController(),
+    Get.lazyPut<TripDetailController>(
+      () => TripDetailController(),
     );
   }
 }

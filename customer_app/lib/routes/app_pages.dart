@@ -19,6 +19,8 @@ import 'package:customer_app/modules/search_page/bindings/search_page_binding.da
 import 'package:customer_app/modules/search_page/views/search_page_view.dart';
 import 'package:customer_app/modules/splash/bindings/splash_binding.dart';
 import 'package:customer_app/modules/splash/views/splash_view.dart';
+import 'package:customer_app/modules/trip_detail/trip_detail_binding.dart';
+import 'package:customer_app/modules/trip_detail/trip_detail_view.dart';
 import 'package:customer_app/modules/trip_info/trip_info_binding.dart';
 import 'package:customer_app/modules/trip_info/trip_info_view.dart';
 import 'package:customer_app/modules/user/bindings/user_binding.dart';
@@ -41,7 +43,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.WELCOME;
+  static const INITIAL = Routes.TRIP_INFO;
 
   static final routes = [
     GetPage(
@@ -132,6 +134,11 @@ class AppPages {
       name: _Paths.TRIP_INFO,
       page: () => const TripInfoView(),
       binding: TripInfoBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRIP_DETAIL,
+      page: () => const TripDetailView(),
+      binding: TripDetailBinding(),
     ),
   ];
 }

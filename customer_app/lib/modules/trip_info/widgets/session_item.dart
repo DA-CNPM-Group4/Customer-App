@@ -1,8 +1,10 @@
 import 'package:customer_app/data/models/requests/trip_response.dart';
 import 'package:customer_app/modules/edit_profile/widgets/avatar_circle.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class SessionItem extends StatelessWidget {
   const SessionItem({Key? key, required this.session}) : super(key: key);
@@ -130,7 +132,9 @@ class SessionItem extends StatelessWidget {
                 ),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Get.toNamed(Routes.TRIP_DETAIL);
+                    },
                     child: Container(
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
                       decoration: BoxDecoration(

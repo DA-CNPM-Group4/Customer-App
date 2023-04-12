@@ -7,7 +7,6 @@ import '../../../data/common/google_map.dart';
 class FindTransportationController extends GetxController {
   var lifeCycleController = Get.find<LifeCycleController>();
 
-  final count = 0.obs;
   Rx<double> scrollPosition = 0.0.obs;
   var position = {}.obs;
   var showMap = false.obs;

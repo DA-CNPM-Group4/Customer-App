@@ -32,11 +32,11 @@ class MapController extends GetxController {
   LifeCycleController lifeCycleController = Get.find<LifeCycleController>();
   late UserEntity pasenger;
 
-  // cancel request
+  // handle cancel request timer
   final waitingSecond = 0.obs;
   var waitingMultipy = 1;
   var isShowCancel = false;
-  late Timer? _timer;
+  Timer? _timer;
   bool isPressCancel = false;
 
   var isLoading = false.obs;
@@ -48,10 +48,6 @@ class MapController extends GetxController {
   var selectedIndex = 0.obs;
   String tripId = "";
   String requestId = "";
-
-// feedback
-  TextEditingController feedbackController = TextEditingController();
-  double star = 5;
 
   Rx<DrivingStatus> status = DrivingStatus.SELECTVEHICLE.obs;
   RxString text = "Your current location".obs;
@@ -73,7 +69,7 @@ class MapController extends GetxController {
   SearchLocation? myLocation;
   SearchLocation? searchingLocation;
 
-  SelectLocation? types;
+  SearchLocationTypes? searchLocationType;
   Location? from;
   Location? to;
 
@@ -85,9 +81,12 @@ class MapController extends GetxController {
   StreamSubscription? tripDeleteListener;
   var isStateChanged = false.obs;
 
+// feedback
+  TextEditingController feedbackController = TextEditingController();
+  double star = 5;
+
   @override
   void onClose() {
-    print("ON CLOSE");
     _timer?.cancel();
     super.onClose();
   }
@@ -127,7 +126,7 @@ class MapController extends GetxController {
         await getAddress(myLocation!.location);
         await myLocationMarker("1", myLocation?.location,
             searchPageController.myPickupSearchLocationController);
-        types = SelectLocation.SELECTLOCATION;
+        searchLocationType = SearchLocationTypes.SELECTLOCATION;
       } else {
         if (Get.arguments["location"] != null &&
             Get.arguments["destination"] == null) {
@@ -136,7 +135,7 @@ class MapController extends GetxController {
           text.value = "Set destination";
           await myLocationMarker(
               "2", to, searchPageController.myDestinationSearchController);
-          types = SelectLocation.SELECTEVIAMAP;
+          searchLocationType = SearchLocationTypes.SELECTEVIAMAP;
         } else {
           isShow = true;
           searchingLocation = Get.arguments["destination"];
@@ -144,7 +143,7 @@ class MapController extends GetxController {
           from = searchPageController.currentLocation;
           await myLocationMarker(
               "1", from, searchPageController.myPickupSearchLocationController);
-          types = SelectLocation.SELECTDESTINATION;
+          searchLocationType = SearchLocationTypes.SELECTDESTINATION;
         }
       }
     }
@@ -226,25 +225,25 @@ class MapController extends GetxController {
   }
 
   Future<void> handleSearch() async {
-    if (types == SelectLocation.SELECTLOCATION) {
+    if (searchLocationType == SearchLocationTypes.SELECTLOCATION) {
       text.value = "Set pickup location";
       searchPageController.currentLocation = myLocation!.location!;
       searchPageController.myPickupSearchLocationController.text =
           address.value;
       searchPageController.location.clear();
       Get.back();
-    } else if (types == SelectLocation.SELECTDESTINATION) {
+    } else if (searchLocationType == SearchLocationTypes.SELECTDESTINATION) {
       text.value = "Set up destination";
       await myLocationMarker("2", searchingLocation?.location,
           searchPageController.myDestinationSearchController);
       to = searchingLocation?.location;
-      types = SelectLocation.HASBOTH;
-    } else if (types == SelectLocation.SELECTEVIAMAP) {
+      searchLocationType = SearchLocationTypes.HASBOTH;
+    } else if (searchLocationType == SearchLocationTypes.SELECTEVIAMAP) {
       text.value = "Set pickup location";
       await myLocationMarker(
           "1", from, searchPageController.myPickupSearchLocationController);
-      types = SelectLocation.HASBOTH;
-    } else if (types == SelectLocation.HASBOTH) {
+      searchLocationType = SearchLocationTypes.HASBOTH;
+    } else if (searchLocationType == SearchLocationTypes.HASBOTH) {
       await route(from, to);
       await updatePrice(CommonObject.vehicleList, distance.value);
 
@@ -292,7 +291,7 @@ class MapController extends GetxController {
         const ImageConfiguration(), "assets/vehicle_icons/car_icon.png");
   }
 
-  Future<void> handleBackButton() async {
+  Future<void> openCancelRequestDialog() async {
     isShowCancel = true;
     Get.defaultDialog(
         middleText: "You are waiting pretty long, do you want cancel request?",
@@ -491,12 +490,12 @@ class MapController extends GetxController {
   void startTimer() {
     _timer = Timer.periodic(
       const Duration(seconds: 1),
-      (Timer timer) async {
-        print("timer is running");
+      (timer) async {
+        debugPrint("timer is running");
         waitingSecond.value += 1;
         if (waitingSecond.value > 30 * waitingMultipy) {
           waitingMultipy += 1;
-          isShowCancel ? null : await handleBackButton();
+          isShowCancel ? null : await openCancelRequestDialog();
         }
       },
     );

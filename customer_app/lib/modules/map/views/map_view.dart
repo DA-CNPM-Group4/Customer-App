@@ -74,7 +74,7 @@ class MapView extends GetView<MapController> {
                                 f: () async {
                                   if (controller.status.value ==
                                       DrivingStatus.FINDING) {
-                                    await controller.handleBackButton();
+                                    await controller.openCancelRequestDialog();
                                   } else {
                                     Get.back();
                                   }
@@ -314,7 +314,7 @@ class MapView extends GetView<MapController> {
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red),
                             onPressed: () async {
-                              await controller.handleBackButton();
+                              await controller.openCancelRequestDialog();
                             },
                             child: const Text("Cancel order")),
                       ),

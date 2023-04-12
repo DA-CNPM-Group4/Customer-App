@@ -116,7 +116,7 @@ class SearchPageView extends GetView<SearchPageController> {
                                             .isMyLocationFocused.value
                                         ? const TextStyle(color: Colors.black)
                                         : const TextStyle(color: Colors.grey)),
-                                focusNode: controller.myLocation,
+                                focusNode: controller.pickupFocusNode,
                                 controller:
                                     controller.myPickupSearchLocationController,
                                 onFieldSubmitted: (value) async {
@@ -139,7 +139,7 @@ class SearchPageView extends GetView<SearchPageController> {
                                 color: Colors.grey[500]!,
                               ),
                               TextFormField(
-                                focusNode: controller.destination,
+                                focusNode: controller.destinationFocusNode,
                                 decoration: const InputDecoration.collapsed(
                                     hintText: 'Search for a destination'),
                                 controller:

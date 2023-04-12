@@ -1,12 +1,8 @@
-import 'dart:math';
-
 import 'package:customer_app/modules/search_page/views/search_page_view.dart';
 import 'package:customer_app/modules/trip_detail/trip_detail_controller.dart';
 import 'package:customer_app/modules/trip_detail/widgets/rate_comment.dart';
-import 'package:customer_app/modules/trip_info/widgets/session_item.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class TripDetailView extends GetView<TripDetailController> {

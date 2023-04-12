@@ -9,11 +9,13 @@ import '../../find_transportation/controllers/find_transportation_controller.dar
 
 class SearchPageController extends GetxController
     with GetSingleTickerProviderStateMixin {
+  var isLoading = false.obs;
+
   late AnimationController animationController;
   late Animation animation;
 
-  FocusNode myLocation = FocusNode();
-  FocusNode destination = FocusNode();
+  FocusNode pickupFocusNode = FocusNode();
+  FocusNode destinationFocusNode = FocusNode();
 
   var isMyLocationFocused = false.obs;
   var isDestinationFocused = false.obs;
@@ -25,7 +27,6 @@ class SearchPageController extends GetxController
   List<SearchLocation> location = [];
   late Location currentLocation;
   late Location myDestination;
-  var isLoading = false.obs;
 
   String text = "";
   Timer? _debounce;
@@ -40,15 +41,16 @@ class SearchPageController extends GetxController
     myDestination = Location(
         lat: findTransportationController.position["latitude"],
         lng: findTransportationController.position["longitude"]);
-    myLocation.addListener(() {
-      if (myLocation.hasFocus) {
+
+    pickupFocusNode.addListener(() {
+      if (pickupFocusNode.hasFocus) {
         isMyLocationFocused.value = true;
       } else {
         isMyLocationFocused.value = false;
       }
     });
-    destination.addListener(() {
-      if (destination.hasFocus) {
+    destinationFocusNode.addListener(() {
+      if (destinationFocusNode.hasFocus) {
         isDestinationFocused.value = true;
       } else {
         isDestinationFocused.value = false;

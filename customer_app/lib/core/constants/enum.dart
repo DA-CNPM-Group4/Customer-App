@@ -1,6 +1,6 @@
 enum SEARCHTYPES { location, mydestination, both }
 
-enum SelectLocation {
+enum SearchLocationTypes {
   SELECTLOCATION,
   SELECTEVIAMAP,
   SELECTDESTINATION,

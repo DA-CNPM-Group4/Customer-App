@@ -78,61 +78,64 @@ class TripInfoView extends GetView<TripInfoController> {
               const SizedBox(height: 8),
               const Divider(),
               const SizedBox(height: 16),
-              controller.isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : !controller.isLoading && controller.bookedList.isEmpty
-                      ? SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.8,
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SvgPicture.asset(
-                                  "assets/icons/ic_empty.svg",
-                                  width: 200,
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 20),
-                                  child: Text(
-                                    "You don't have any booking history",
-                                    style: TextStyle(color: Colors.grey[700]),
+              Obx(
+                () => controller.isLoading.value
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : !controller.isLoading.value &&
+                            controller.bookedList.isEmpty
+                        ? SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/icons/ic_empty.svg",
+                                    width: 200,
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 20),
+                                    child: Text(
+                                      "You don't have any booking history",
+                                      style: TextStyle(color: Colors.grey[700]),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        )
-                      : SizedBox(
-                          height: size.height * 0.8,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: ListView.separated(
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(height: 14),
-                                  itemCount: controller.bookedList.length,
-                                  controller: controller.scrollController,
-                                  itemBuilder: (context, index) => Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    child: SessionItem(
-                                      session: controller.bookedList[index],
+                          )
+                        : SizedBox(
+                            height: size.height * 0.8,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: ListView.separated(
+                                    separatorBuilder: (context, index) =>
+                                        const SizedBox(height: 14),
+                                    itemCount: controller.bookedList.length,
+                                    controller: controller.scrollController,
+                                    itemBuilder: (context, index) => Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: SessionItem(
+                                        session: controller.bookedList[index],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              if (controller.isLoadMore)
-                                const SizedBox(
-                                  height: 50,
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
+                                if (controller.isLoadMore.value)
+                                  const SizedBox(
+                                    height: 50,
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
                                   ),
-                                ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
+              ),
             ],
           ),
         ),

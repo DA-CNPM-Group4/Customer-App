@@ -1,3 +1,5 @@
+enum ComunicationMode { ClientDoShit, BackDoShit }
+
 enum SEARCHTYPES { location, mydestination, both }
 
 enum SearchLocationTypes {

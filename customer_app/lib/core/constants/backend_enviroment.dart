@@ -1,6 +1,8 @@
+import 'package:customer_app/core/constants/enum.dart';
+
 class BackendEnviroment {
   static String host = "https://dacnpmbe11.azurewebsites.net/api";
-  static String mode = "1";
+  static ComunicationMode mode = ComunicationMode.ClientDoShit;
 
   static checkDevelopmentMode({bool isUseEmulator = false}) {
     assert(() {

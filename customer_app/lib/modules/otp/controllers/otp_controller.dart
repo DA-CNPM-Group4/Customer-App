@@ -71,21 +71,6 @@ class OtpController extends GetxController {
 
   Future<void> startTimer() async {
     await handleSendOTP();
-    // isClicked.value = true;
-    // const oneSec = Duration(seconds: 1);
-
-    // timer = Timer.periodic(
-    //   oneSec,
-    //   (Timer timer) {
-    //     if (start.value == 0) {
-    //       start.value = 30;
-    //       isClicked.value = false;
-    //       timer.cancel();
-    //     } else {
-    //       start.value -= 1;
-    //     }
-    //   },
-    // );
   }
 
   Future<void> handleSendOTP() async {

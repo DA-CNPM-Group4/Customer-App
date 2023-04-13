@@ -37,10 +37,10 @@ class EditProfileController extends GetxController {
       }
 
       var body = UpdatePassengerRequestBody(
-        Gender: lifeCycleController.passenger!.gender,
+        Gender: gender.value,
         Name: nameController.text,
-        Email: lifeCycleController.passenger!.email,
-        Phone: lifeCycleController.passenger!.phone,
+        Email: passengerInfo.email,
+        Phone: passengerInfo.phone,
       );
       await PassengerAPIService.updatePassenger(body: body);
       showSnackBar("Edit Profile Success", "Your profile have been updated");

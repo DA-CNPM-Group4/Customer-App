@@ -8,6 +8,7 @@ class RegisterController extends GetxController {
   var phoneNumberError = ''.obs;
   var isLoading = false.obs;
 
+  RxBool gender = true.obs;
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController nameController = TextEditingController();

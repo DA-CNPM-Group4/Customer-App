@@ -54,9 +54,15 @@ class LoginController extends GetxController {
   }
 
   void toPasswordLoginPage() {
-    lifeCycleController.isloginByGoogle = false;
-    lifeCycleController.email = emailController.text;
-    lifeCycleController.phone = phoneNumberController.text;
+    // lifeCycleController.isloginByGoogle = false;
+    // lifeCycleController.email = emailController.text;
+    // lifeCycleController.phone = phoneNumberController.text;
+
+    lifeCycleController.setPreLoginState(
+        isloginByGoogle: false,
+        email: emailController.text,
+        phone: phoneNumberController.text);
+
     Get.toNamed(Routes.PASSWORD_LOGIN);
   }
 
@@ -65,9 +71,13 @@ class LoginController extends GetxController {
 
     // handle google login
     try {
-      lifeCycleController.isloginByGoogle = true;
-      lifeCycleController.email = emailController.text;
-      lifeCycleController.phone = phoneNumberController.text;
+      // lifeCycleController.isloginByGoogle = true;
+      // lifeCycleController.email = emailController.text;
+      // lifeCycleController.phone = phoneNumberController.text;
+
+      lifeCycleController.setPreLoginState(
+        isloginByGoogle: true,
+      );
       await PassengerAPIService.authApi.loginByGoogle();
     } catch (e) {
       showSnackBar("Sign in", e.toString());

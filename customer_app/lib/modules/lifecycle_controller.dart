@@ -16,11 +16,28 @@ class LifeCycleController extends SuperController {
   late final _rxPassenger = Rxn<UserEntity>();
   //////////////////////////////////////////////
 
+  // variable use in save state, login, register, ....
   String phone = "";
   String email = "";
   String name = "";
+  bool gender = false;
   bool isActiveOTP = true;
   bool isloginByGoogle = false;
+
+  void setPreLoginState(
+      {String? phone,
+      String? email,
+      String? name,
+      bool? gender,
+      bool? isActiveOTP,
+      bool? isloginByGoogle}) {
+    this.phone = phone ?? this.phone;
+    this.email = email ?? this.email;
+    this.name = name ?? this.name;
+    this.gender = gender ?? this.gender;
+    this.isActiveOTP = isActiveOTP ?? this.isActiveOTP;
+    this.isloginByGoogle = isloginByGoogle ?? this.isloginByGoogle;
+  }
 
   @override
   void onDetached() {}

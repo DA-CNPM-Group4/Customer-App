@@ -48,7 +48,8 @@ class PasswordLoginController extends GetxController {
   }
 
   Future<void> handleSendActiveAccountOTP() async {
-    lifeCycleController.isActiveOTP = true;
+    // lifeCycleController.isActiveOTP = true;
+    lifeCycleController.setPreLoginState(isActiveOTP: true);
     try {
       await PassengerAPIService.authApi
           .requestActiveAccountOTP(lifeCycleController.email);

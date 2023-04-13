@@ -35,8 +35,11 @@ class ForgotPasswordController extends GetxController {
   }
 
   void toOTPPage() {
-    lifeCycleController.isActiveOTP = false;
-    lifeCycleController.email = emailController.text;
+    // lifeCycleController.isActiveOTP = false;
+    // lifeCycleController.email = emailController.text;
+
+    lifeCycleController.setPreLoginState(
+        isActiveOTP: false, email: emailController.text);
     Get.toNamed(Routes.OTP);
   }
 }

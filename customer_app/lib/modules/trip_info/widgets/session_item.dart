@@ -133,7 +133,7 @@ class SessionItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Text(
-                            "Rate trip",
+                            "Chat Log",
                             style: TextStyle(color: Colors.white),
                           )
                         ],

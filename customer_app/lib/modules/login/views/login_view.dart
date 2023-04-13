@@ -1,3 +1,4 @@
+import 'package:customer_app/core/utils/utils.dart';
 import 'package:customer_app/modules/login/controllers/login_controller.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +87,8 @@ class LoginView extends GetView<LoginController> {
                         inputFormatters: [
                           FilteringTextInputFormatter.singleLineFormatter
                         ],
-                        validator: (value) => controller.emailValidator(value!),
+                        validator: (value) =>
+                            StringValidator.emailValidator(value!),
                         textCapitalization: TextCapitalization.none,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
@@ -112,7 +114,7 @@ class LoginView extends GetView<LoginController> {
                           FilteringTextInputFormatter.digitsOnly
                         ],
                         validator: (value) =>
-                            controller.phoneNumberValidator(value!),
+                            StringValidator.phoneNumberValidator(value!),
                         textCapitalization: TextCapitalization.words,
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.number,

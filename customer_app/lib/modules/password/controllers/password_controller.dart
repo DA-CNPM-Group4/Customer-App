@@ -1,4 +1,6 @@
+import 'package:customer_app/core/constants/backend_enviroment.dart';
 import 'package:customer_app/data/models/requests/register_request.dart';
+import 'package:customer_app/data/models/requests/register_request_2.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/rest/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
@@ -39,16 +41,8 @@ class PasswordController extends GetxController {
   register() async {
     isLoading.value = true;
 
-    var body = RegisterRequestBody(
-        email: registerController.emailController.text,
-        phone: registerController.phoneNumberController.text,
-        password: passwordController.text,
-        role: "Passenger",
-        name: registerController.nameController.text);
-
     try {
-      await PassengerAPIService.authApi.register(body);
-
+      await handleRegister();
       Get.offAllNamed(Routes.WELCOME);
       showSnackBar(
           "Register successfully", "Enter your OTP to active this account");
@@ -58,5 +52,27 @@ class PasswordController extends GetxController {
     }
 
     isLoading.value = false;
+  }
+
+  Future<void> handleRegister() async {
+    if (BackendEnviroment.checkV2Comunication()) {
+      final requestBodyV2 = RegisterRequestBodyV2(
+          gender: registerController.gender.value,
+          email: registerController.emailController.text,
+          phone: registerController.phoneNumberController.text,
+          password: passwordController.text,
+          role: "Passenger",
+          name: registerController.nameController.text);
+
+      await PassengerAPIService.authApi.registerV2(requestBodyV2);
+    } else {
+      final requestBodyV1 = RegisterRequestBody(
+          email: registerController.emailController.text,
+          phone: registerController.phoneNumberController.text,
+          password: passwordController.text,
+          role: "Passenger",
+          name: registerController.nameController.text);
+      await PassengerAPIService.authApi.register(requestBodyV1);
+    }
   }
 }

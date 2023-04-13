@@ -1,3 +1,4 @@
+import 'package:customer_app/core/constants/backend_enviroment.dart';
 import 'package:customer_app/core/utils/utils.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
@@ -175,6 +176,46 @@ class RegisterView extends GetView<RegisterController> {
                         ],
                       ),
                       const SizedBox(height: 32),
+                      Visibility(
+                        visible: BackendEnviroment.checkV2Comunication(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Gender",
+                              style: BaseTextStyle.heading3(fontSize: 20),
+                            ),
+                            Obx(
+                              () => ListTile(
+                                title: const Text("Male"),
+                                horizontalTitleGap: 0,
+                                contentPadding: EdgeInsets.zero,
+                                leading: Radio(
+                                  value: true,
+                                  groupValue: controller.gender.value,
+                                  onChanged: (value) {
+                                    controller.gender.value = value as bool;
+                                  },
+                                ),
+                              ),
+                            ),
+                            Obx(
+                              () => ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                horizontalTitleGap: 0,
+                                title: const Text("Female"),
+                                leading: Radio(
+                                  value: false,
+                                  groupValue: controller.gender.value,
+                                  onChanged: (value) {
+                                    controller.gender.value = value as bool;
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),

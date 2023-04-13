@@ -431,7 +431,6 @@ class MapController extends GetxController {
           if (isStateChanged.value) {
             rateDialog(tripId);
             showSnackBar("Trip Completed", "Trip Completed");
-            Get.back();
           } else {
             showSnackBar("Trip Cancel", "Your trip have been cancel by driver");
             status.value = DrivingStatus.SELECTVEHICLE;
@@ -510,7 +509,7 @@ class MapController extends GetxController {
           mainAxisSize: MainAxisSize.min,
           children: [
             const CircleAvatar(
-              backgroundImage: AssetImage("assets/icon/face_icon.png"),
+              backgroundImage: AssetImage("assets/icons/face_icon.png"),
             ),
             Text(driver.value?.info.name ?? "Driver Name"),
             RatingBar.builder(

@@ -57,10 +57,7 @@ class LifeCycleController extends SuperController {
       Get.offAllNamed(Routes.HOME);
     } on IBussinessException catch (_) {
       var body2 = CreatePassengerRequestBody(
-          Email: email,
-          Phone: phone,
-          Name: name.isEmpty ? name : "Unknown",
-          Gender: false);
+          Email: email, Phone: phone, Name: name, Gender: gender);
       await PassengerAPIService.createPassenger(body: body2);
       await getPassengerInfoAndRoutingHome();
     } catch (e) {

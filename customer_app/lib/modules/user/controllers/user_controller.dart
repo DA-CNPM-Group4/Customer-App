@@ -25,7 +25,7 @@ class UserController extends GetxController {
     super.onInit();
     settings = [
       UserSettings(
-        name: "My Orders",
+        name: "Booking History",
         icons: "assets/icons/my_orders.png",
         page: Routes.TRIP_INFO,
         ontap: () {

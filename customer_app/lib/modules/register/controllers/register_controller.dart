@@ -1,8 +1,10 @@
+import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RegisterController extends GetxController {
+  final lifecycleController = Get.find<LifeCycleController>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   var emailError = ''.obs;
   var phoneNumberError = ''.obs;
@@ -21,9 +23,15 @@ class RegisterController extends GetxController {
     isLoading.value = true;
     // check email exist
     emailError.value = '';
-
     // check phone exist
     phoneNumberError.value = '';
+
+    lifecycleController.setPreLoginState(
+      email: emailController.text,
+      gender: gender.value,
+      phone: phoneNumberController.text,
+      name: nameController.text,
+    );
 
     formKey.currentState!.save();
     isLoading.value = false;
@@ -31,9 +39,6 @@ class RegisterController extends GetxController {
   }
 
   getOTP() async {
-    // var response = await apiHandlerImp.get("sendOTP", {
-    //   "username": '0${phoneNumberController.text}'
-    // });
     Get.toNamed(Routes.OTP);
   }
 }

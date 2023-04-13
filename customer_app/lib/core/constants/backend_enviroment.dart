@@ -15,6 +15,12 @@ class BackendEnviroment {
     }());
   }
 
+  static bool checkV2Comunication() {
+    {
+      return mode == ComunicationMode.BackDoShit;
+    }
+  }
+
   /// For testing mode
   static void setTestHost(String testHost) {
     host = testHost;

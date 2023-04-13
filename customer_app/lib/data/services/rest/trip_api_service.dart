@@ -28,7 +28,7 @@ class TripApiService {
       var body = {'passengerId': passengerId};
 
       var response = await APIHandlerImp.instance
-          .get('/Trip/Trip/GetDriverTrips', body: body);
+          .get('/Trip/Trip/GetPassengerTrips', body: body);
       if (response.data["status"]) {
         var listTripJson = response.data['data'] as List;
         return listTripJson

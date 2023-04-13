@@ -37,7 +37,8 @@ class GeneralAPIService {
           .post(body.toJson(), '/Authentication/Register');
       if (response.data["status"]) {
       } else {
-        return Future.error(IBussinessException(response.data['message']));
+        return Future.error(IBussinessException(response.data['message'],
+            debugMessage: response.data['message'], place: "Register-account"));
       }
     } catch (e) {
       return Future.error(UnexpectedException(

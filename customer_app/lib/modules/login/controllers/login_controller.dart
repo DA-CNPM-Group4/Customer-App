@@ -19,24 +19,6 @@ class LoginController extends GetxController {
   var emailError = ''.obs;
   var isLoading = false.obs;
 
-  String? phoneNumberValidator(String value) {
-    if (value.isEmpty) {
-      return "This field must be filled";
-    } else if (!value.isPhoneNumber) {
-      return "You must enter a right phone number";
-    }
-    return null;
-  }
-
-  String? emailValidator(String value) {
-    if (value.isEmpty) {
-      return "This field must be filled";
-    } else if (!value.isEmail) {
-      return "You must enter a email address";
-    }
-    return null;
-  }
-
   Future<void> validateAndSave() async {
     isLoading.value = true;
     final isPhoneValid = phoneFormKey.currentState!.validate();

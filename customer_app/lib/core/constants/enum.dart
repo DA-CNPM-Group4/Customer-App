@@ -1,6 +1,6 @@
 enum ComunicationMode {
-  ClientDoShit("1"),
-  BackDoShit("2");
+  Normal("1"),
+  WithGrpc("2");
 
   const ComunicationMode(this.value);
   final String value;

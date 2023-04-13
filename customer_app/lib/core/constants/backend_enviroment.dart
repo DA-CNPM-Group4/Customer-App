@@ -2,7 +2,7 @@ import 'package:customer_app/core/constants/enum.dart';
 
 class BackendEnviroment {
   static String host = "https://dacnpmbe11.azurewebsites.net/api";
-  static ComunicationMode mode = ComunicationMode.ClientDoShit;
+  static ComunicationMode mode = ComunicationMode.Normal;
 
   static checkDevelopmentMode({bool isUseEmulator = false}) {
     assert(() {
@@ -17,7 +17,7 @@ class BackendEnviroment {
 
   static bool checkV2Comunication() {
     {
-      return mode == ComunicationMode.BackDoShit;
+      return mode == ComunicationMode.WithGrpc;
     }
   }
 

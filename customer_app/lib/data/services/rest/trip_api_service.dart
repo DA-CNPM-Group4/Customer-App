@@ -121,4 +121,19 @@ class TripApiService {
           context: "rate-trip-request", debugMessage: e.toString()));
     }
   }
+
+  Future<void> getTripFeedBack({required String tripId}) async {
+    try {
+      final requestBody = {'tripId': tripId};
+      var response = await APIHandlerImp.instance
+          .get('/Trip/TripFeedback/RateTrip', body: requestBody);
+      if (response.data["status"]) {
+      } else {
+        return Future.error(IBussinessException(response.data['message']));
+      }
+    } catch (e) {
+      return Future.error(UnexpectedException(
+          context: "get-feedback-request", debugMessage: e.toString()));
+    }
+  }
 }

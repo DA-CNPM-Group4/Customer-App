@@ -1,5 +1,6 @@
 class BackendEnviroment {
   static String host = "https://dacnpmbe11.azurewebsites.net/api";
+  static String mode = "1";
 
   static checkDevelopmentMode({bool isUseEmulator = false}) {
     assert(() {

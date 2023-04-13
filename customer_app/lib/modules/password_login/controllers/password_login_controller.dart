@@ -1,6 +1,6 @@
 import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/data/models/requests/login_request.dart';
-import 'package:customer_app/data/services/passenger_api_service.dart';
+import 'package:customer_app/data/services/rest/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:customer_app/modules/utils/widgets.dart';
 import 'package:flutter/widgets.dart';

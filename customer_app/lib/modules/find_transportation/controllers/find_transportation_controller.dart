@@ -1,4 +1,3 @@
-import 'package:customer_app/data/models/local_entity/location.dart';
 import 'package:customer_app/data/services/device_location_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:flutter/material.dart';

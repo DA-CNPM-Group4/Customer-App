@@ -30,7 +30,7 @@ void main() async {
 
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   group('Request a trip |', () {
-    testWidgets("Login flow |", (WidgetTester tester) async{
+    testWidgets("Login flow |", (WidgetTester tester) async {
       // Initialize the app
       await _initApp(tester);
 
@@ -58,7 +58,6 @@ Future<void> _initApp(WidgetTester tester) async {
   );
 }
 
-
 Future<void> _navigateFromWelcomeToLogin(WidgetTester tester) async {
   final loginFinder = find.byKey(const Key("welcome_login_btn"));
   await tester.tap(loginFinder);
@@ -66,7 +65,6 @@ Future<void> _navigateFromWelcomeToLogin(WidgetTester tester) async {
   await tester.pumpAndSettle();
   expect(find.byKey(const Key('login_email_field')), findsOneWidget);
 }
-
 
 Future<void> _loginWithEmailAndPassword(WidgetTester tester) async {
   final emailFinder = find.byKey(const Key('login_email_field'));

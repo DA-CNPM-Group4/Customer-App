@@ -14,7 +14,7 @@ import 'package:customer_app/data/models/vehicle.dart';
 import 'package:customer_app/data/models/voucher/voucher.dart';
 import 'package:customer_app/data/providers/firesbase_realtime_provider.dart';
 import 'package:customer_app/data/services/device_location_service.dart';
-import 'package:customer_app/data/services/passenger_api_service.dart';
+import 'package:customer_app/data/services/rest/passenger_api_service.dart';
 import 'package:customer_app/data/services/firebase_realtime_service.dart';
 import 'package:customer_app/modules/find_transportation/controllers/find_transportation_controller.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';

@@ -1,6 +1,6 @@
 import 'package:customer_app/data/models/requests/register_request.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
-import 'package:customer_app/data/services/passenger_api_service.dart';
+import 'package:customer_app/data/services/rest/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:customer_app/modules/register/controllers/register_controller.dart';
 import 'package:customer_app/modules/utils/widgets.dart';

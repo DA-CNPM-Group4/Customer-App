@@ -2,21 +2,26 @@ import 'package:get/get_utils/get_utils.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
-  static final formatter = DateFormat('yyyy-MM-dd hh:mm');
-  static final formatter2 = DateFormat('yyyy-MM-dd');
-  static final formatter3 = DateFormat.Hm();
+  static final formatter = DateFormat('yyyy-MM-dd HH:mm');
+  static final dmyhmFormatter = DateFormat('dd/MM/yyyy HH:mm');
+  static final dmyFormatter = DateFormat('yyyy-MM-dd');
+  static final hsFormatter = DateFormat.Hm();
 
   static String get currentDateTime {
     final DateTime now = DateTime.now();
     return formatter.format(now);
   }
 
+  static String dateTimeFullTime(DateTime time) {
+    return dmyhmFormatter.format(time);
+  }
+
   static String dateTimeToDate(DateTime time) {
-    return formatter2.format(time);
+    return dmyFormatter.format(time);
   }
 
   static String dateTimeToTime(DateTime time) {
-    return formatter3.format(time);
+    return hsFormatter.format(time);
   }
 }
 

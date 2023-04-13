@@ -2,6 +2,7 @@ import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/core/exceptions/unexpected_exception.dart';
 import 'package:customer_app/data/models/requests/create_triprequest_request.dart';
 import 'package:customer_app/data/models/requests/rate_trip_request.dart';
+import 'package:customer_app/data/models/requests/rate_trip_response.dart';
 import 'package:customer_app/data/models/requests/trip_response.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
 
@@ -122,14 +123,21 @@ class TripApiService {
     }
   }
 
-  Future<void> getTripFeedBack({required String tripId}) async {
+  Future<RateTripResponse> getTripFeedBack({required String tripId}) async {
     try {
       final requestBody = {'tripId': tripId};
       var response = await APIHandlerImp.instance
-          .get('/Trip/TripFeedback/RateTrip', body: requestBody);
+          .get('/Trip/TripFeedback/GetTripFeedback', body: requestBody);
       if (response.data["status"]) {
+        return RateTripResponse.fromJson(response.data['data']);
       } else {
-        return Future.error(IBussinessException(response.data['message']));
+        return Future.error(
+          IBussinessException(
+            response.data['message'],
+            place: "Get-Trip-Feedback",
+            debugMessage: response.data['message'],
+          ),
+        );
       }
     } catch (e) {
       return Future.error(UnexpectedException(

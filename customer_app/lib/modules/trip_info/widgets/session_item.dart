@@ -144,7 +144,7 @@ class SessionItem extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      Get.toNamed(Routes.TRIP_DETAIL);
+                      Get.toNamed(Routes.TRIP_DETAIL, arguments: session);
                     },
                     child: Container(
                       padding: const EdgeInsets.only(top: 10, bottom: 10),

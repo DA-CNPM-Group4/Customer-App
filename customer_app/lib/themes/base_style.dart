@@ -47,12 +47,13 @@ class BaseTextStyle {
         fontWeight: FontWeight.w500);
   }
 
-  static TextStyle heading3({Color? color, double? fontSize}) {
+  static TextStyle heading3(
+      {Color? color, double? fontSize, FontWeight? fontWeight}) {
     return TextStyle(
         fontFamily: "${BaseTextStyle.appFontFamily}-Regular",
         fontSize: fontSize ?? 24,
         color: color ?? BaseColor.black,
-        fontWeight: FontWeight.w400);
+        fontWeight: fontWeight ?? FontWeight.w400);
   }
 
   static TextStyle heading4({Color? color, double? fontSize}) {

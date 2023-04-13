@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class RateAndComment extends StatelessWidget {
-  const RateAndComment({Key? key}) : super(key: key);
+  const RateAndComment({
+    super.key,
+    required this.feedback,
+    required this.passengerName,
+    required this.rating,
+  });
 
+  final String feedback;
+  final String passengerName;
+  final int rating;
   @override
   Widget build(BuildContext context) {
-    String feedback = "Great trip! Great driver!";
-
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -33,7 +39,7 @@ class RateAndComment extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Passenger Name", //Replace with passenger name
+                        passengerName, //Replace with passenger name
                         style: BaseTextStyle.heading2(fontSize: 15),
                       ),
                     ],
@@ -42,7 +48,7 @@ class RateAndComment extends StatelessWidget {
               ],
             ),
             RatingBar.builder(
-              initialRating: 5,
+              initialRating: rating.toDouble(),
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: false,
@@ -57,15 +63,6 @@ class RateAndComment extends StatelessWidget {
             Container(
                 margin: const EdgeInsets.only(top: 10, bottom: 10),
                 child: feedback.isNotEmpty ? Text(feedback) : null),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: const [
-                Text(
-                  "April 12, 2023",
-                  style: TextStyle(color: Colors.grey),
-                )
-              ],
-            )
           ],
         ),
       ),

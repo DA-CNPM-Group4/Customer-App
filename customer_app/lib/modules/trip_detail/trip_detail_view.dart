@@ -48,35 +48,46 @@ class TripDetailView extends GetView<TripDetailController> {
                           style: BaseTextStyle.heading2(fontSize: 17)),
                       const SizedBox(height: 12),
                       Obx(
-                        () => controller.isRate.value
-                            ? RateAndComment(
-                                feedback: controller.feedback.note,
-                                passengerName: controller.passenger.name,
-                                rating: 3,
-                              )
-                            : GestureDetector(
-                                onTap: () async {
-                                  await controller.openRateDialog();
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.only(
-                                      top: 10, bottom: 10),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.green),
-                                      color: Colors.green,
-                                      borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4),
-                                          bottomLeft: Radius.circular(4))),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Text(
-                                        "Rate trip",
-                                        style: TextStyle(color: Colors.white),
+                        () => controller.isLoading.value
+                            ? const Center(child: CircularProgressIndicator())
+                            : Obx(
+                                () => controller.isRate.value
+                                    ? RateAndComment(
+                                        feedback: controller.feedback.note,
+                                        passengerName:
+                                            controller.passenger.name,
+                                        rating: 3,
                                       )
-                                    ],
-                                  ),
-                                ),
+                                    : GestureDetector(
+                                        onTap: () async {
+                                          await controller.openRateDialog();
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.only(
+                                              top: 10, bottom: 10),
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.green),
+                                              color: Colors.green,
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(4),
+                                                      bottomLeft:
+                                                          Radius.circular(4))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: const [
+                                              Text(
+                                                "Rate trip",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                               ),
                       ),
                     ],
@@ -293,9 +304,8 @@ class TripDetailView extends GetView<TripDetailController> {
                 ),
               ),
               TextSpan(
-                text: Utils.dateTimeToTime(DateTime.parse(controller
-                    .trip.completeTime
-                    .toString())), //Replace with trip time
+                text: Utils.dateTimeToTime(
+                    controller.trip.completeTime), //Replace with trip time
                 style: BaseTextStyle.heading3(fontSize: 18),
               ),
             ],

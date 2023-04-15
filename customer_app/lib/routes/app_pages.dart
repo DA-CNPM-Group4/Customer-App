@@ -99,7 +99,7 @@ class AppPages {
         name: _Paths.MAP,
         page: () => const MapView(),
         binding: MapBinding(),
-        bindings: [UserBinding()]),
+        bindings: [ChatBinding()]),
     GetPage(
       name: _Paths.SEARCH_PAGE,
       page: () => const SearchPageView(),

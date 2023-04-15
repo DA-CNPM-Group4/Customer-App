@@ -9,7 +9,7 @@ class TripResponse {
   String passengerId;
   String staffId;
   String vehicleId;
-  String? completeTime;
+  DateTime? completeTime;
   DateTime createdTime;
   String destination;
   double latDesAddr;

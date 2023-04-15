@@ -16,6 +16,7 @@ import 'package:customer_app/data/providers/firesbase_realtime_provider.dart';
 import 'package:customer_app/data/services/device_location_service.dart';
 import 'package:customer_app/data/services/rest/passenger_api_service.dart';
 import 'package:customer_app/data/services/firebase_realtime_service.dart';
+import 'package:customer_app/modules/chat/chat_controller.dart';
 import 'package:customer_app/modules/find_transportation/controllers/find_transportation_controller.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:customer_app/modules/search_page/controllers/search_page_controller.dart';
@@ -30,6 +31,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapController extends GetxController {
   LifeCycleController lifeCycleController = Get.find<LifeCycleController>();
+  ChatController chatController = Get.find<ChatController>();
+
   late UserEntity pasenger;
 
   // handle cancel request timer
@@ -85,6 +88,8 @@ class MapController extends GetxController {
   TextEditingController feedbackController = TextEditingController();
   double star = 5;
 
+// chat
+  final GlobalKey parentKey = GlobalKey();
   @override
   void onClose() {
     _timer?.cancel();
@@ -268,23 +273,6 @@ class MapController extends GetxController {
     );
   }
 
-  String getRate(int i) {
-    switch (i) {
-      case 1:
-        return "ONE";
-      case 2:
-        return "TWO";
-      case 3:
-        return "THREE";
-      case 4:
-        return "FOUR";
-      case 5:
-        return "FIVE";
-      default:
-        return "";
-    }
-  }
-
   Future<void> initMarker() async {
     mapMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/vehicle_icons/car_icon.png");
@@ -401,6 +389,8 @@ class MapController extends GetxController {
             await PassengerAPIService.tripApi.getCurrentTrip(requestId);
         tripId = tripInfo['tripId'] as String;
         var driverId = tripInfo['driverId'] ?? "testDriverId";
+
+        await chatController.initChat(driverId, tripId);
         polylinePoints.clear();
 
         stopTimeout();

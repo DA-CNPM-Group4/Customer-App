@@ -1,5 +1,5 @@
-import 'package:customer_app/Data/models/requests/get_chatmessage_history_response.dart';
-import 'package:customer_app/Data/providers/api_provider.dart';
+import 'package:customer_app/data/models/requests/get_chatmessage_history_response.dart';
+import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/core/exceptions/unexpected_exception.dart';
 

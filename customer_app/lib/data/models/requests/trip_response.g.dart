@@ -13,7 +13,9 @@ TripResponse _$TripResponseFromJson(Map<String, dynamic> json) => TripResponse(
       passengerId: json['passengerId'] as String,
       staffId: json['staffId'] as String,
       vehicleId: json['vehicleId'] as String,
-      completeTime: json['completeTime'] as String?,
+      completeTime: json['completeTime'] == null
+          ? null
+          : DateTime.parse(json['completeTime'] as String),
       createdTime: DateTime.parse(json['createdTime'] as String),
       destination: json['destination'] as String,
       latDesAddr: (json['latDesAddr'] as num).toDouble(),
@@ -36,7 +38,7 @@ Map<String, dynamic> _$TripResponseToJson(TripResponse instance) =>
       'passengerId': instance.passengerId,
       'staffId': instance.staffId,
       'vehicleId': instance.vehicleId,
-      'completeTime': instance.completeTime,
+      'completeTime': instance.completeTime?.toIso8601String(),
       'createdTime': instance.createdTime.toIso8601String(),
       'destination': instance.destination,
       'latDesAddr': instance.latDesAddr,

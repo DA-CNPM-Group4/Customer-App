@@ -2,26 +2,32 @@ import 'package:get/get_utils/get_utils.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
-  static final formatter = DateFormat('yyyy-MM-dd HH:mm');
+  static final formatter = DateFormat('dd-MM-yyyy HH:mm');
   static final dmyhmFormatter = DateFormat('dd/MM/yyyy HH:mm');
-  static final dmyFormatter = DateFormat('yyyy-MM-dd');
-  static final hsFormatter = DateFormat.Hm();
+  static final dmyFormatter = DateFormat('dd/MM/yyyy');
+  static final hsFormatter = DateFormat("HH:mm");
+
+  static final moneyFormatter = DateFormat('MM-dd-yyyy');
 
   static String get currentDateTime {
     final DateTime now = DateTime.now();
     return formatter.format(now);
   }
 
-  static String dateTimeFullTime(DateTime time) {
-    return dmyhmFormatter.format(time);
+  static String dateTimeFullTime(DateTime? time) {
+    return time == null ? "" : dmyhmFormatter.format(time);
   }
 
-  static String dateTimeToDate(DateTime time) {
-    return dmyFormatter.format(time);
+  static String dateTimeToDate(DateTime? time) {
+    return time == null ? "" : dmyFormatter.format(time);
   }
 
-  static String dateTimeToTime(DateTime time) {
-    return hsFormatter.format(time);
+  static String dateTimeToTime(DateTime? time) {
+    return time == null ? "" : hsFormatter.format(time);
+  }
+
+  static String moneyDateFormatter(DateTime time) {
+    return moneyFormatter.format(time);
   }
 }
 

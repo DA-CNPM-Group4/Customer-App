@@ -1,3 +1,4 @@
+import 'package:customer_app/data/models/chat_message/chat_message.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'get_chatmessage_history_response.g.dart';
 
@@ -10,6 +11,19 @@ class ChatMessageHistoryResponseBody {
 
   ChatMessageHistoryResponseBody(
       {this.tripId, this.driverId, this.passengerId, this.messages});
+
+  List<ChatMessage>? toChatMessage(String myId) {
+    messages?.sort((d1, d2) =>
+        DateTime.parse(d1.sendTime).compareTo(DateTime.parse(d2.sendTime)));
+
+    return messages
+        ?.map((e) => ChatMessage(
+            text: e.message,
+            chatMessageType: e.tripId != myId
+                ? ChatMessageType.driver
+                : ChatMessageType.passenger))
+        .toList();
+  }
 
   factory ChatMessageHistoryResponseBody.fromJson(Map<String, dynamic> json) =>
       _$ChatMessageHistoryResponseBodyFromJson(json);

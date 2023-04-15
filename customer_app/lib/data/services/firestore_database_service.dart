@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:customer_app/Data/models/realtime_models/firestore_chat.dart';
-import 'package:customer_app/Data/models/realtime_models/firestore_message.dart';
+import 'package:customer_app/data/models/realtime_models/firestore_chat.dart';
+import 'package:customer_app/data/models/realtime_models/firestore_message.dart';
 import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/core/utils/utils.dart';
 import 'package:flutter/cupertino.dart';

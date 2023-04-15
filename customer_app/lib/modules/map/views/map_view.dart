@@ -2,7 +2,9 @@ import 'package:customer_app/core/constants/common_object.dart';
 import 'package:customer_app/core/constants/enum.dart';
 import 'package:customer_app/modules/map/widgets/bottom_sheets.dart';
 import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
+import 'package:customer_app/modules/map/widgets/dragable_buble_chat.dart';
 import 'package:customer_app/modules/utils/widgets.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -23,8 +25,10 @@ class MapView extends GetView<MapController> {
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(children: [
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        key: controller.parentKey,
+        children: [
           Obx(
             () => GoogleMap(
               polylines: controller.polyline.toSet(),
@@ -139,8 +143,30 @@ class MapView extends GetView<MapController> {
                 ],
               ),
             ),
-          )
-        ]));
+          ),
+          Obx(
+            () => controller.status.value == DrivingStatus.FOUND &&
+                    !controller.isStateChanged.value
+                ? DraggableFloatingActionButton(
+                    initialOffset: const Offset(200, 70),
+                    parentKey: controller.parentKey,
+                    onPressed: () {
+                      Get.toNamed(Routes.CHAT);
+                    },
+                    child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: const ShapeDecoration(
+                          shape: CircleBorder(),
+                          color: Color.fromARGB(255, 18, 190, 69),
+                        ),
+                        child: const Icon(Icons.chat_bubble)),
+                  )
+                : Container(),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget foundDriver(
@@ -526,20 +552,21 @@ class MapView extends GetView<MapController> {
             ),
             const Spacer(),
             SizedBox(
-                width: double.infinity,
-                height: 40,
-                child: IgnorePointer(
-                  ignoring: controller.isLoading.value,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green),
-                      onPressed: () async {
-                        // await controller.bookingCar();
+              width: double.infinity,
+              height: 40,
+              child: IgnorePointer(
+                ignoring: controller.isLoading.value,
+                child: ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    onPressed: () async {
+                      // await controller.bookingCar();
 
-                        await controller.sendRequest();
-                      },
-                      child: const Text("Order")),
-                )),
+                      await controller.sendRequest();
+                    },
+                    child: const Text("Order")),
+              ),
+            ),
           ],
         ),
       ),
@@ -548,25 +575,26 @@ class MapView extends GetView<MapController> {
 
   Widget roundedButton({required IconData icon, required Function() f}) {
     return Container(
-        height: 50,
-        width: 50,
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey[350]!,
-                offset: const Offset(0.0, 0.0), //(x,y)
-                blurRadius: 10.0,
-              ),
-            ],
-            border: Border.all(color: Colors.grey[300]!)),
-        child: IconButton(
-          icon: Icon(
-            icon,
-            color: Colors.black,
-          ),
-          onPressed: f,
-        ));
+      height: 50,
+      width: 50,
+      decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[350]!,
+              offset: const Offset(0.0, 0.0), //(x,y)
+              blurRadius: 10.0,
+            ),
+          ],
+          border: Border.all(color: Colors.grey[300]!)),
+      child: IconButton(
+        icon: Icon(
+          icon,
+          color: Colors.black,
+        ),
+        onPressed: f,
+      ),
+    );
   }
 }

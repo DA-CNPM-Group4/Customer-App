@@ -1,10 +1,28 @@
-import 'package:customer_app/data/models/chat_message/chat_message.dart';
 import 'package:customer_app/modules/chat/widgets/chat_message_widget.dart';
 import 'package:customer_app/themes/base_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'chat_controller.dart';
+
+class ChatPage extends StatefulWidget {
+  const ChatPage({Key? key}) : super(key: key);
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return const ChatView();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+}
 
 class ChatView extends GetView<ChatController> {
   const ChatView({Key? key}) : super(key: key);
@@ -24,7 +42,7 @@ class ChatView extends GetView<ChatController> {
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  Get.back();
+                  controller.popBack();
                 },
               ),
               title: Text(
@@ -61,15 +79,19 @@ class ChatView extends GetView<ChatController> {
           color: Colors.grey[300],
           borderRadius: BorderRadius.circular(30),
         ),
-        child: TextField(
-          textCapitalization: TextCapitalization.sentences,
-          controller: controller.textController,
-          style: const TextStyle(color: Colors.black),
-          decoration: const InputDecoration(
-            hintText: "Type a message...",
-            hintStyle: TextStyle(color: Colors.black38),
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        child: Form(
+          key: controller.formKey,
+          child: TextFormField(
+            validator: (value) => controller.messageValidator(value!),
+            textCapitalization: TextCapitalization.sentences,
+            controller: controller.textController,
+            style: const TextStyle(color: Colors.black),
+            decoration: const InputDecoration(
+              hintText: "Type a message...",
+              hintStyle: TextStyle(color: Colors.black38),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            ),
           ),
         ),
       ),
@@ -92,19 +114,11 @@ class ChatView extends GetView<ChatController> {
                 icon: const Icon(Icons.send),
                 iconSize: 25,
                 color: Colors.white,
-                onPressed: () {
-                  //display user input
-                  // setState(() {
-                  controller.addMessage(ChatMessage(
-                      text: controller.textController.text,
-                      chatMessageType: ChatMessageType.passenger));
-                  // isLoading = true;
-                  // });
-                  controller.textController.clear();
-                  Future.delayed(const Duration(milliseconds: 50))
-                      .then((value) => _scrollDown());
-                },
-              ),
+                onPressed: () async {
+                  await controller.addMessage();
+                  // Future.delayed(const Duration(milliseconds: 50))
+                  //     .then((value) => _scrollDown());
+                }),
       ),
     );
   }

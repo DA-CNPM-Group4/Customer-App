@@ -1,6 +1,7 @@
+import 'package:customer_app/data/models/chat_message/chat_message.dart';
 import 'package:customer_app/data/models/local_entity/driver_entity.dart';
 import 'package:customer_app/data/models/local_entity/user_entity.dart';
-import 'package:customer_app/data/models/realtime_models/realtime_driver.dart';
+import 'package:customer_app/data/models/requests/get_chatmessage_history_response.dart';
 import 'package:customer_app/data/models/requests/rate_trip_request.dart';
 import 'package:customer_app/data/models/requests/rate_trip_response.dart';
 import 'package:customer_app/data/models/requests/trip_response.dart';
@@ -17,29 +18,49 @@ class TripDetailController extends GetxController {
       Get.find<LifeCycleController>();
 
   late UserEntity passenger;
+
   DriverEntity? driver;
   late TripResponse trip;
   late RateTripResponse feedback;
+  late List<ChatMessage>? chatHistory;
 
+  RxBool isLoading = false.obs;
   RxBool isRate = false.obs;
+  RxBool isChatLoaded = false.obs;
+
   int star = 2;
   TextEditingController feedbackController = TextEditingController();
   @override
   void onInit() async {
     super.onInit();
-    EasyLoading.show();
     trip = Get.arguments as TripResponse;
     passenger = await lifeCycleController.getPassenger;
-
+    isLoading.value = true;
     try {
       feedback = await PassengerAPIService.tripApi
           .getTripFeedBack(tripId: trip.tripId);
       isRate.value = true;
-      driver = await PassengerAPIService.getDriverInfo(driverId: trip.driverId);
     } catch (e) {
       isRate.value = false;
     }
-    EasyLoading.dismiss();
+    try {
+      driver = await PassengerAPIService.getDriverInfo(driverId: trip.driverId);
+    } catch (e) {
+      isLoading.value = false;
+      showSnackBar("Driver info", "Get Driver Info Failed");
+    }
+
+    try {
+      print(trip.tripId);
+      var chatLog =
+          await PassengerAPIService.chatApi.getChatLog(tripId: trip.tripId);
+      chatHistory = chatLog.toChatMessage(passenger.accountId);
+    } catch (e) {
+      print(e.toString());
+      isChatLoaded.value = false;
+      showSnackBar("Chat History", "Get Chat History Failed");
+    }
+    isLoading.value = false;
   }
 
   Future<void> openRateDialog() async {

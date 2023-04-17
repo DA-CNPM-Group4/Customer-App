@@ -33,9 +33,15 @@ class DeviceLocationService {
   }
 
   Future<Map<String, dynamic>> getCurrentPositionAsMap() async {
-    final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    return {"latitude": position.latitude, "longitude": position.longitude};
+    bool canAccessLocation = await requestPermission();
+
+    if (canAccessLocation) {
+      final position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      return {"latitude": position.latitude, "longitude": position.longitude};
+    } else {
+      throw Future.error('Access Device Location Denied');
+    }
   }
 
   Future<Stream<Position>> getLocationStream() async {

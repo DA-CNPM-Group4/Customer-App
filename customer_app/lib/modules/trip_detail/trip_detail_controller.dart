@@ -1,7 +1,6 @@
 import 'package:customer_app/data/models/chat_message/chat_message.dart';
 import 'package:customer_app/data/models/local_entity/driver_entity.dart';
 import 'package:customer_app/data/models/local_entity/user_entity.dart';
-import 'package:customer_app/data/models/requests/get_chatmessage_history_response.dart';
 import 'package:customer_app/data/models/requests/rate_trip_request.dart';
 import 'package:customer_app/data/models/requests/rate_trip_response.dart';
 import 'package:customer_app/data/models/requests/trip_response.dart';
@@ -51,12 +50,10 @@ class TripDetailController extends GetxController {
     }
 
     try {
-      print(trip.tripId);
       var chatLog =
           await PassengerAPIService.chatApi.getChatLog(tripId: trip.tripId);
       chatHistory = chatLog.toChatMessage(passenger.accountId);
     } catch (e) {
-      print(e.toString());
       isChatLoaded.value = false;
       showSnackBar("Chat History", "Get Chat History Failed");
     }

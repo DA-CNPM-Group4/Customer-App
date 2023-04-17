@@ -2,7 +2,7 @@ import 'package:get/get_utils/get_utils.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
-  static final formatter = DateFormat('dd-MM-yyyy HH:mm');
+  static final formatter = DateFormat('MM-dd-yyyy HH:mm');
   static final dmyhmFormatter = DateFormat('dd/MM/yyyy HH:mm');
   static final dmyFormatter = DateFormat('dd/MM/yyyy');
   static final hsFormatter = DateFormat("HH:mm");

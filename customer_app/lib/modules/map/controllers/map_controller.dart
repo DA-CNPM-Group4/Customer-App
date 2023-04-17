@@ -342,11 +342,11 @@ class MapController extends GetxController {
     var accountId = pasenger.accountId;
 
     var requestBody = CreateTripRequestBody(
-        LatStartAddr: from!.lng!,
+        LatStartAddr: from!.lat!,
         LongStartAddr: from!.lng!,
         StartAddress: from!.address!,
         LongDesAddr: to!.lng!,
-        LatDesAddr: to!.lng!,
+        LatDesAddr: to!.lat!,
         Destination: to!.address!,
         Distance: distance.value,
         PassengerNote: "Fast!!!",

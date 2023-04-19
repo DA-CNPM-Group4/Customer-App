@@ -18,7 +18,7 @@ class TripDetailController extends GetxController {
 
   late UserEntity passenger;
 
-  DriverEntity? driver;
+  Rxn<DriverEntity> driver = Rxn<DriverEntity>();
   late TripResponse trip;
   late RateTripResponse feedback;
   late List<ChatMessage>? chatHistory;
@@ -43,7 +43,8 @@ class TripDetailController extends GetxController {
       isRate.value = false;
     }
     try {
-      driver = await PassengerAPIService.getDriverInfo(driverId: trip.driverId);
+      driver.value =
+          await PassengerAPIService.getDriverInfo(driverId: trip.driverId);
     } catch (e) {
       isLoading.value = false;
       showSnackBar("Driver info", "Get Driver Info Failed");
@@ -71,7 +72,7 @@ class TripDetailController extends GetxController {
             const CircleAvatar(
               backgroundImage: AssetImage("assets/icons/face_icon.png"),
             ),
-            Text(driver?.name ?? "Driver Name"),
+            Text(driver.value?.name ?? "Driver Name"),
             RatingBar.builder(
               initialRating: 1,
               minRating: 1,

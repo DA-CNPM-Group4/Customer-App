@@ -124,7 +124,7 @@ class TripDetailView extends GetView<TripDetailController> {
                     ),
                   ),
                   Text(
-                      controller.driver?.name ??
+                      controller.driver.value?.name ??
                           "Driver name", //Replace with driver name
                       style: BaseTextStyle.heading2(fontSize: 12)),
                 ],
@@ -141,8 +141,8 @@ class TripDetailView extends GetView<TripDetailController> {
                         fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    controller.driver?.phone ??
-                        "0931328047", //Replace with driver phone number
+                    controller.driver.value?.phone ??
+                        "xxxxxxxxx", //Replace with driver phone number
                     style: BaseTextStyle.heading2(fontSize: 15),
                   ),
                 ],

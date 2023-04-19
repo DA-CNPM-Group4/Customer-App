@@ -101,16 +101,19 @@ class OtpView extends GetView<OtpController> {
                     width: double.infinity,
                     height: 60,
                     child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red),
-                        onPressed: () async {
-                          await controller.startTimer();
-                        },
-                        child: controller.isLoading2.value
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      onPressed: () async {
+                        await controller.startTimer();
+                      },
+                      child: Obx(
+                        () => controller.isLoading2.value
                             ? const CircularProgressIndicator(
                                 color: Colors.white,
                               )
-                            : const Text("Resend")),
+                            : const Text("Resend"),
+                      ),
+                    ),
                   ),
                 ],
               ),

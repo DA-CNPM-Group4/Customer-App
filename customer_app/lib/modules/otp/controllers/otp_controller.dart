@@ -25,24 +25,20 @@ class OtpController extends GetxController {
   var error = ''.obs;
 
   Future<void> confirmOTP() async {
-    isLoading.value = true;
     final isOTPValid = otpFormKey.currentState!.validate();
-
     if (!lifeCycleController.isActiveOTP) {
       if (!passwordFormKey.currentState!.validate()) {
-        isLoading.value = false;
         return;
       }
     }
-
     if (!isOTPValid) {
-      isLoading.value = false;
       return;
     }
     otpFormKey.currentState?.save();
     passwordFormKey.currentState?.save();
 
     try {
+      isLoading.value = true;
       if (lifeCycleController.isActiveOTP) {
         await handleActiveAccount();
       } else {
@@ -50,23 +46,32 @@ class OtpController extends GetxController {
       }
     } on IBussinessException catch (e) {
       showSnackBar("Error", e.toString());
+    } finally {
+      isLoading.value = false;
     }
-    isLoading.value = false;
     return;
   }
 
   Future<void> handleActiveAccount() async {
-    await PassengerAPIService.authApi
-        .activeAccountByOTP(lifeCycleController.email, otpController.text);
+    try {
+      await PassengerAPIService.authApi
+          .activeAccountByOTP(lifeCycleController.email, otpController.text);
+    } catch (e) {
+      showSnackBar("Active Account Failed", e.toString());
+    }
 
     await lifeCycleController.getPassengerInfoAndRoutingHome();
   }
 
   Future<void> handleResetPassword() async {
-    await PassengerAPIService.authApi.resetPassword(
-        lifeCycleController.email, passwordController.text, otpController.text);
-    Get.offAllNamed(Routes.WELCOME);
-    showSnackBar("Reset Password", "Reset Password Successfully!");
+    try {
+      await PassengerAPIService.authApi.resetPassword(lifeCycleController.email,
+          passwordController.text, otpController.text);
+      Get.offAllNamed(Routes.WELCOME);
+      showSnackBar("Reset Password", "Reset Password Successfully!");
+    } catch (e) {
+      showSnackBar("Reset Password Failed", e.toString());
+    }
   }
 
   Future<void> startTimer() async {
@@ -74,14 +79,24 @@ class OtpController extends GetxController {
   }
 
   Future<void> handleSendOTP() async {
-    isLoading2.value = true;
-    if (lifeCycleController.isActiveOTP) {
-      PassengerAPIService.authApi
-          .requestActiveAccountOTP(lifeCycleController.email);
-    } else {
-      PassengerAPIService.authApi
-          .requestResetPassword(lifeCycleController.email);
+    try {
+      isLoading2.value = true;
+      if (lifeCycleController.isActiveOTP) {
+        PassengerAPIService.authApi
+            .requestActiveAccountOTP(lifeCycleController.email);
+      } else {
+        PassengerAPIService.authApi
+            .requestResetPassword(lifeCycleController.email);
+      }
+      showSnackBar(
+          "Success",
+          lifeCycleController.isActiveOTP
+              ? "Check your email to active account"
+              : "check your email to get reset password code");
+    } catch (e) {
+      showSnackBar("Failed", e.toString());
+    } finally {
+      isLoading2.value = false;
     }
-    isLoading2.value = false;
   }
 }

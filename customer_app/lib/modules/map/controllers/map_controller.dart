@@ -124,7 +124,7 @@ class MapController extends GetxController {
     ));
 
     if (Get.arguments != null) {
-      if (Get.arguments["type"] == SEARCHTYPES.location) {
+      if (Get.arguments["type"] == SEARCHTYPES.pickupLocation) {
         isShow = true;
         text.value = "Set pickup location";
         searchPickup = Get.arguments["location"];

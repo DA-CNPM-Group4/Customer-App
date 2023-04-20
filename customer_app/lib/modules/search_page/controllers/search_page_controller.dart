@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:customer_app/core/constants/enum.dart';
 import 'package:customer_app/data/common/network_handler.dart';
 import 'package:customer_app/data/models/local_entity/location.dart';
 import 'package:customer_app/data/models/local_entity/search_location.dart';
 import 'package:customer_app/modules/find_transportation/controllers/find_transportation_controller.dart';
+import 'package:customer_app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -96,5 +98,35 @@ class SearchPageController extends GetxController
       location.add(SearchLocation.fromJson(response["result"][i]));
     }
     isLoading.value = false;
+  }
+
+  void selectSearchLocation(int index) {
+    if (myPickupSearchLocationController.text.isNotEmpty &&
+        myDestinationSearchController.text.isEmpty) {
+      myPickupSearchLocationController.text = location[index].address!;
+      Get.toNamed(Routes.MAP, arguments: {
+        'location': location[index],
+        "type": SEARCHTYPES.pickupLocation
+      });
+    } else if (myPickupSearchLocationController.text.isEmpty &&
+        myDestinationSearchController.text.isNotEmpty) {
+      myDestinationSearchController.text = location[index].address!;
+      Get.toNamed(Routes.MAP, arguments: {
+        'destination': location[index],
+        "type": SEARCHTYPES.mydestination
+      });
+    } else if (myPickupSearchLocationController.text.isNotEmpty &&
+        myDestinationSearchController.text.isNotEmpty) {
+      Get.toNamed(Routes.MAP, arguments: {
+        'destination': location[index],
+        "type": SEARCHTYPES.mydestination
+      });
+    }
+  }
+
+  @override
+  void onClose() {
+    _debounce?.cancel();
+    super.onClose();
   }
 }

@@ -8,7 +8,7 @@ enum ComunicationMode {
   final String value;
 }
 
-enum SEARCHTYPES { location, mydestination, both }
+enum SEARCHTYPES { pickupLocation, mydestination, both }
 
 enum SearchLocationTypes {
   SELECTLOCATION,

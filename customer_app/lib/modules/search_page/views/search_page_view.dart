@@ -221,41 +221,7 @@ class SearchPageView extends GetView<SearchPageController> {
                                 style: BaseTextStyle.body1(fontSize: 16),
                               ),
                               onTap: () async {
-                                if (controller.myPickupSearchLocationController
-                                        .text.isNotEmpty &&
-                                    controller.myDestinationSearchController
-                                        .text.isEmpty) {
-                                  controller.myPickupSearchLocationController
-                                          .text =
-                                      controller.location[index].address!;
-                                  Get.toNamed(Routes.MAP, arguments: {
-                                    'location': controller.location[index],
-                                    "type": SEARCHTYPES.location
-                                  });
-                                } else if (controller
-                                        .myPickupSearchLocationController
-                                        .text
-                                        .isEmpty &&
-                                    controller.myDestinationSearchController
-                                        .text.isNotEmpty) {
-                                  controller
-                                          .myDestinationSearchController.text =
-                                      controller.location[index].address!;
-                                  Get.toNamed(Routes.MAP, arguments: {
-                                    'destination': controller.location[index],
-                                    "type": SEARCHTYPES.mydestination
-                                  });
-                                } else if (controller
-                                        .myPickupSearchLocationController
-                                        .text
-                                        .isNotEmpty &&
-                                    controller.myDestinationSearchController
-                                        .text.isNotEmpty) {
-                                  Get.toNamed(Routes.MAP, arguments: {
-                                    'destination': controller.location[index],
-                                    "type": SEARCHTYPES.mydestination
-                                  });
-                                }
+                                controller.selectSearchLocation(index);
                               },
                             );
                           },

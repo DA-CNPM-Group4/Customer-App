@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 enum ComunicationMode {
-  Normal("1"),
-  WithGrpc("2");
+  ClientDoLogic("1"),
+  BackendDoLogic("2");
 
   const ComunicationMode(this.value);
   final String value;

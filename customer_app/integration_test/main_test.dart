@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
-  BackendEnviroment.setTestHost("http://10.0.2.2:8001/api");
+  BackendEnviroment.checkDevelopmentMode(isUseEmulator: true);
 
   WidgetsFlutterBinding.ensureInitialized();
 

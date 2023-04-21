@@ -44,11 +44,9 @@ class PasswordController extends GetxController {
     try {
       await handleRegister();
       Get.offAllNamed(Routes.WELCOME);
-      showSnackBar(
-          "Register successfully", "Enter your OTP to active this account");
+      showSnackBar("Sucess", "Register successfully");
     } catch (e) {
       showSnackBar("Failed", e.toString());
-      Get.snackbar("Failed: ", e.toString(), colorText: Colors.black);
     }
 
     isLoading.value = false;

@@ -4,6 +4,7 @@ import 'package:customer_app/data/models/local_entity/user_entity.dart';
 import 'package:customer_app/data/models/requests/rate_trip_request.dart';
 import 'package:customer_app/data/models/requests/rate_trip_response.dart';
 import 'package:customer_app/data/models/requests/trip_response.dart';
+import 'package:customer_app/data/services/graphql/graphql_service.dart';
 import 'package:customer_app/data/services/rest/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
 import 'package:customer_app/modules/utils/widgets.dart';
@@ -57,6 +58,15 @@ class TripDetailController extends GetxController {
     } catch (e) {
       isChatLoaded.value = false;
       showSnackBar("Chat History", "Get Chat History Failed");
+    }
+
+    try {
+      var passengerInfo = await GraphQLService.infoGraphQLService
+          .getDriverInfo(trip.passengerId);
+
+      debugPrint(passengerInfo.toString());
+    } catch (e) {
+      showSnackBar("Error", e.toString());
     }
     isLoading.value = false;
   }

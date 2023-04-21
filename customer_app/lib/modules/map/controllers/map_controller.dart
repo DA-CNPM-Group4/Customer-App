@@ -49,8 +49,6 @@ class MapController extends GetxController {
   var distance = 0.0.obs;
   var address = ''.obs;
   var selectedIndex = 0.obs;
-  String tripId = "";
-  String requestId = "";
 
   Rx<DrivingStatus> status = DrivingStatus.SELECTVEHICLE.obs;
   RxString text = "Your current location".obs;
@@ -65,24 +63,24 @@ class MapController extends GetxController {
   RxList<LatLng> polylinePoints = <LatLng>[].obs;
   final RxList<Polyline> polyline = <Polyline>[].obs;
 
-  // search
+  // search - location
   var findTransportationController = Get.find<FindTransportationController>();
   var searchPageController = Get.find<SearchPageController>();
-
   SearchLocation? searchPickup;
   SearchLocation? searchDestination;
-
-  SearchLocationTypes? searchLocationType;
   Location? from;
   Location? to;
 
-  Map<dynamic, dynamic> request = {};
+  SearchLocationTypes? searchLocationType;
+
   Rxn<RealtimeDriver> driver = Rxn<RealtimeDriver>();
   Future<DatabaseEvent>? requestListener;
   StreamSubscription? driverListener;
   StreamSubscription? tripChangeStatusListener;
   StreamSubscription? tripDeleteListener;
   var isStateChanged = false.obs;
+  String tripId = "";
+  String requestId = "";
 
 // feedback
   TextEditingController feedbackController = TextEditingController();
@@ -123,6 +121,11 @@ class MapController extends GetxController {
       color: Colors.blue,
     ));
 
+    await handleSearchType();
+    isLoading.value = false;
+  }
+
+  Future<void> handleSearchType() async {
     if (Get.arguments != null) {
       if (Get.arguments["type"] == SEARCHTYPES.pickupLocation) {
         isShow = true;
@@ -152,48 +155,54 @@ class MapController extends GetxController {
         }
       }
     }
-    isLoading.value = false;
-  }
-
-  getCurrentPosition() async {
-    findTransportationController.position.value =
-        await DeviceLocationService.instance.getCurrentPositionAsMap();
-  }
-
-  setAddress(Location? location) async {
-    var temp = await DeviceLocationService.instance.getAddressFromLatLang(
-        latitude: location?.lat ?? 0, longitude: location?.lng ?? 0);
-    address.value = temp;
-    location?.address = address.value;
   }
 
   myLocationMarker(String makerId, Location? location,
       TextEditingController textEditController) async {
     await setAddress(location);
     textEditController.text = address.value;
-    final Marker marker = Marker(
-        markerId: MarkerId(makerId),
-        draggable: true,
-        onDrag: (position) {
-          isDragging.value = true;
-        },
-        icon: makerId == "2"
-            ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue)
-            : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-        onDragEnd: ((newPosition) async {
-          isDragging.value = false;
-          location?.setLocation(newPosition);
-          await setAddress(location);
-          textEditController.text = address.value;
-        }),
-        position: LatLng(
-          location?.lat ?? 0,
-          location?.lng ?? 0,
-        ));
+
+    createGooglemapMarker(makerId, location, textEditController);
+
     googleMapController.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(target: LatLng(location!.lat!, location.lng!), zoom: 15),
     ));
+  }
+
+  void createGooglemapMarker(String makerId, Location? location,
+      TextEditingController textEditController) {
+    final Marker marker = Marker(
+      markerId: MarkerId(makerId),
+      draggable: true,
+      onDrag: (position) {
+        isDragging.value = true;
+      },
+      icon: makerId == "2"
+          ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue)
+          : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      onDragEnd: ((newPosition) async {
+        isDragging.value = false;
+        location?.setLocation(newPosition);
+        await setAddress(location);
+        textEditController.text = address.value;
+      }),
+      position: LatLng(
+        location?.lat ?? 0,
+        location?.lng ?? 0,
+      ),
+    );
     markers[MarkerId(makerId)] = marker;
+  }
+
+  setAddress(Location? location) async {
+    if (location?.address == null || location!.address!.isEmpty) {
+      var temp = await DeviceLocationService.instance.getAddressFromLatLang(
+          latitude: location?.lat ?? 0, longitude: location?.lng ?? 0);
+      address.value = temp;
+      location?.address = temp;
+    } else {
+      address.value = location.address!;
+    }
   }
 
   route(Location? from, Location? to) async {
@@ -334,6 +343,11 @@ class MapController extends GetxController {
     }
     EasyLoading.dismiss();
     isLoading.value = false;
+  }
+
+  getCurrentPosition() async {
+    findTransportationController.position.value =
+        await DeviceLocationService.instance.getCurrentPositionAsMap();
   }
 
   Future<void> sendRequest() async {

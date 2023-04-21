@@ -248,7 +248,7 @@ class TripDetailView extends GetView<TripDetailController> {
                 ],
               ),
               child: Text(
-                "Price: ${controller.trip.price}", //Replace with price
+                "Price: ${controller.trip.price.toInt()}", //Replace with price
                 style: BaseTextStyle.heading2(
                   fontSize: 15,
                   color: Colors.white,

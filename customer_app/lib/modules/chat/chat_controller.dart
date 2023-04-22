@@ -76,6 +76,7 @@ class ChatController extends GetxController {
     messages.clear();
     FireStoreDatabaseService.instance.createChat(
         data: FirestoreChatModel(
+          createTime: Utils.currentDateTime,
           driverId: driverId,
           passengerId: passengerEntity.accountId,
         ),

@@ -4,12 +4,12 @@ part 'firestore_chat.g.dart';
 
 @JsonSerializable()
 class FirestoreChatModel {
-  final String? createTime;
+  final String createTime;
   final String driverId;
   final String passengerId;
 
   FirestoreChatModel({
-    this.createTime,
+    required this.createTime,
     required this.driverId,
     required this.passengerId,
   });

@@ -8,7 +8,7 @@ part of 'firestore_chat.dart';
 
 FirestoreChatModel _$FirestoreChatModelFromJson(Map<String, dynamic> json) =>
     FirestoreChatModel(
-      createTime: json['createTime'] as String?,
+      createTime: json['createTime'] as String,
       driverId: json['driverId'] as String,
       passengerId: json['passengerId'] as String,
     );

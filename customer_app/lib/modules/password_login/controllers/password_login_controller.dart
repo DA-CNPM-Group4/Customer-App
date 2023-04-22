@@ -39,14 +39,11 @@ class PasswordLoginController extends GetxController {
     } on IBussinessException catch (e) {
       if (e is AccountNotActiveException) {
         showSnackBar("Active Account", "Check your Email To Get OTP");
-        // TODO: uncomment this after backend fix
-        // await handleSendActiveAccountOTP();
+        await handleSendActiveAccountOTP();
       } else {
         showSnackBar("Login Failed", e.toString());
       }
     }
-    // TODO: delete after backend fix
-    Get.toNamed(Routes.HOME);
 
     isLoading.value = false;
   }

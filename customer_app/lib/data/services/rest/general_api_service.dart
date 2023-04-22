@@ -97,9 +97,11 @@ class GeneralAPIService {
 
   Future<void> loginByGoogle() async {
     try {
+      await GoogleSignIn().signOut();
+    } catch (_) {}
+    try {
       // begin sign in process
 
-      await GoogleSignIn().signOut();
       final GoogleSignInAccount? gUser = await GoogleSignIn(
         scopes: [
           'https://www.googleapis.com/auth/userinfo.email',
@@ -107,8 +109,12 @@ class GeneralAPIService {
         ],
       ).signIn();
 
+      if (gUser == null) {
+        return Future.error(
+            const CancelActionException(message: "Cancel Google Signin"));
+      }
       // obtain auth detail from request
-      final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
 
       // create a new credential for user
       final credential = GoogleAuthProvider.credential(
@@ -116,7 +122,7 @@ class GeneralAPIService {
 
       final body = {
         "loginToken": credential.accessToken,
-        "role": "Passenger",
+        "role": "Driver",
       };
 
       var response = await APIHandlerImp.instance

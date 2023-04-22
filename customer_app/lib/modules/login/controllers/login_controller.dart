@@ -1,3 +1,4 @@
+import 'package:customer_app/core/exceptions/bussiness_exception.dart';
 import 'package:customer_app/data/providers/api_provider.dart';
 import 'package:customer_app/data/services/rest/passenger_api_service.dart';
 import 'package:customer_app/modules/lifecycle_controller.dart';
@@ -61,6 +62,9 @@ class LoginController extends GetxController {
         isloginByGoogle: true,
       );
       await PassengerAPIService.authApi.loginByGoogle();
+    } on CancelActionException catch (_) {
+      isLoading.value = false;
+      return;
     } catch (e) {
       showSnackBar("Sign in", e.toString());
       isLoading.value = false;

@@ -144,4 +144,65 @@ class TripApiService {
           context: "get-feedback-request", debugMessage: e.toString()));
     }
   }
+
+  Future<List<TripResponse>> getPassengerTripsPaging(
+      {required int pageSize, required int pageNum}) async {
+    try {
+      var passengerId = await APIHandlerImp.instance.getIdentity();
+      var requestBody = {
+        "passengerId": passengerId,
+        "pageSize": pageSize,
+        "pageNum": pageNum,
+      };
+      var response = await APIHandlerImp.instance.get(
+        '/Trip/Trip/GetPassengersTripPaging',
+        body: requestBody,
+      );
+      if (response.data["status"]) {
+        var listTripJson = response.data['data'] as List;
+        return listTripJson
+            .map((tripJson) => TripResponse.fromJson(tripJson))
+            .toList();
+      } else {
+        return Future.error(IBussinessException(
+          response.data['message'],
+          place: "getPassengerTripsPaging",
+          debugMessage: response.data['message'],
+        ));
+      }
+    } catch (e) {
+      return Future.error(
+        UnexpectedException(
+            context: "api: getPassengerTripsPaging",
+            debugMessage: e.toString()),
+      );
+    }
+  }
+
+  Future<int> getPassengerTripsTotalPage({required int pageSize}) async {
+    try {
+      var passengerId = await APIHandlerImp.instance.getIdentity();
+      var requestBody = {
+        "driverId": passengerId,
+        "pageSize": pageSize,
+      };
+      var response = await APIHandlerImp.instance.get(
+        '/Trip/Trip/GetPassengersTripTotalPages',
+        body: requestBody,
+      );
+
+      if (response.data["status"]) {
+        return response.data['data'];
+      } else {
+        return Future.error(IBussinessException(
+          response.data['message'],
+          place: "getPassengerTripsTotalPage",
+          debugMessage: response.data['message'],
+        ));
+      }
+    } catch (e) {
+      return Future.error(UnexpectedException(
+          context: "getPassengerTripsTotalPage", debugMessage: e.toString()));
+    }
+  }
 }

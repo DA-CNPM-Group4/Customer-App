@@ -31,6 +31,7 @@ class RegisterController extends GetxController {
       gender: gender.value,
       phone: phoneNumberController.text,
       name: nameController.text,
+      isloginByGoogle: false,
     );
 
     formKey.currentState!.save();

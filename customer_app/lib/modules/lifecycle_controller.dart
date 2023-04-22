@@ -108,6 +108,8 @@ class LifeCycleController extends SuperController {
   }
 
   void _resetState({bool isCallAPI = false}) {
+    isloginByGoogle = false;
+    isActiveOTP = true;
     phone = "";
     email = "";
     passenger = null;

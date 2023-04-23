@@ -183,7 +183,7 @@ class TripApiService {
     try {
       var passengerId = await APIHandlerImp.instance.getIdentity();
       var requestBody = {
-        "driverId": passengerId,
+        "passengerId": passengerId,
         "pageSize": pageSize,
       };
       var response = await APIHandlerImp.instance.get(

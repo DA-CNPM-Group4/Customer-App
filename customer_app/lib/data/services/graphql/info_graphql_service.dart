@@ -9,23 +9,23 @@ class InfoGraphQLService {
 
   InfoGraphQLService(this.host);
 
-  Future<Map<String, dynamic>> getDriverInfo(String passengerId) async {
+  Future<Map<String, dynamic>> getDriverInfo(String driverId) async {
     final QueryOptions options = QueryOptions(
-      document: gql(InfoGraphQLQueryString.queryPassengerInfo(passengerId)),
+      document: gql(InfoGraphQLQueryString.queryDriverInfo(driverId)),
     );
     final QueryResult result = await MyGraphQLProvider.baseQuery(host,
         client: _client, queryOptions: options);
     if (result.hasException) {
       debugPrint(result.exception.toString());
-      Future.error(const UnexpectedException(context: "graphql-get-trips"));
+      Future.error(const UnexpectedException(context: "graphql-get-Info"));
     }
 
-    return Map<String, dynamic>.from(result.data!['passengerById']);
+    return Map<String, dynamic>.from(result.data!['driverById']);
   }
 }
 
 class InfoGraphQLQueryString {
-  static String queryPassengerInfo(String driverId) => '''
+  static String queryDriverInfo(String driverId) => '''
 query{
    driverById(driverId: "$driverId"){
        gender

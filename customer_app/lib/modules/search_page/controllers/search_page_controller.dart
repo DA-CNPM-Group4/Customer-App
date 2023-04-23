@@ -19,6 +19,9 @@ class SearchPageController extends GetxController
   FocusNode pickupFocusNode = FocusNode();
   FocusNode destinationFocusNode = FocusNode();
 
+  String previousSearchPickup = "";
+  String previousSearhDestination = "";
+
   var isMyLocationFocused = false.obs;
   var isDestinationFocused = false.obs;
 
@@ -60,24 +63,34 @@ class SearchPageController extends GetxController
     });
 
     myPickupSearchLocationController.addListener(() {
+      if (Get.routing.current != Routes.SEARCH_PAGE ||
+          previousSearchPickup == myPickupSearchLocationController.text) return;
+
       if (myPickupSearchLocationController.text == "") {
         location = [];
       }
       if (_debounce?.isActive ?? false) _debounce!.cancel();
       _debounce = Timer(const Duration(milliseconds: 650), () {
         if (myPickupSearchLocationController.text != "") {
+          previousSearchPickup = myPickupSearchLocationController.text;
           searchLocation(myPickupSearchLocationController.text);
         }
       });
     });
 
     myDestinationSearchController.addListener(() {
+      if (Get.routing.current != Routes.SEARCH_PAGE ||
+          previousSearhDestination == myDestinationSearchController.text) {
+        return;
+      }
+
       if (myDestinationSearchController.text.isEmpty) {
         location = [];
       }
       if (_debounce?.isActive ?? false) _debounce!.cancel();
       _debounce = Timer(const Duration(milliseconds: 650), () {
         if (myDestinationSearchController.text != "") {
+          previousSearhDestination = myDestinationSearchController.text;
           searchLocation(myDestinationSearchController.text);
         }
       });
@@ -95,7 +108,9 @@ class SearchPageController extends GetxController
     var response =
         await NetworkHandler.getWithQuery('place/text-search', query);
     for (var i = 0; i < response["result"].length; i++) {
-      location.add(SearchLocation.fromJson(response["result"][i]));
+      var iResult = response['result'][i];
+      debugPrint("Map4D Search Result $i : ${iResult.toString()} ");
+      location.add(SearchLocation.fromJson(iResult));
     }
     isLoading.value = false;
   }
@@ -103,20 +118,35 @@ class SearchPageController extends GetxController
   void selectSearchLocation(int index) {
     if (myPickupSearchLocationController.text.isNotEmpty &&
         myDestinationSearchController.text.isEmpty) {
+      previousSearchPickup = location[index].address!;
+
       myPickupSearchLocationController.text = location[index].address!;
+
+      debugPrint("Select Pickup Location: ${location[index].toJson()}");
+
       Get.toNamed(Routes.MAP, arguments: {
         'location': location[index],
         "type": SEARCHTYPES.pickupLocation
       });
     } else if (myPickupSearchLocationController.text.isEmpty &&
         myDestinationSearchController.text.isNotEmpty) {
+      previousSearhDestination = location[index].address!;
+
       myDestinationSearchController.text = location[index].address!;
+
+      debugPrint("Select Destination Location: ${location[index].toJson()}");
+
       Get.toNamed(Routes.MAP, arguments: {
         'destination': location[index],
         "type": SEARCHTYPES.mydestination
       });
     } else if (myPickupSearchLocationController.text.isNotEmpty &&
         myDestinationSearchController.text.isNotEmpty) {
+      previousSearhDestination = location[index].address!;
+      myDestinationSearchController.text = location[index].address!;
+
+      debugPrint("Select Both Location: ${location[index].toJson()}");
+
       Get.toNamed(Routes.MAP, arguments: {
         'destination': location[index],
         "type": SEARCHTYPES.mydestination

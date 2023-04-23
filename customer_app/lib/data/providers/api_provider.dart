@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:customer_app/core/constants/backend_enviroment.dart';
+import 'package:customer_app/core/exceptions/unexpected_exception.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract class APIHandlerInterface {
@@ -77,6 +79,11 @@ class APIHandlerImp implements APIHandlerInterface {
         data: json.encode(body),
         queryParameters: query,
         options: Options(headers: await _buildHeader(useToken: useToken)));
+
+    if (response.statusCode == 401) {
+      return await _handleRefreshToken(
+          HttpMethod.POST, endpoint, body, query, useToken);
+    }
     return response;
   }
 
@@ -95,6 +102,11 @@ class APIHandlerImp implements APIHandlerInterface {
         headers: await _buildHeader(useToken: useToken),
       ),
     );
+
+    if (response.statusCode == 401) {
+      return await _handleRefreshToken(
+          HttpMethod.GET, endpoint, body, query, useToken);
+    }
     return response;
   }
 
@@ -113,7 +125,69 @@ class APIHandlerImp implements APIHandlerInterface {
         headers: await _buildHeader(useToken: useToken),
       ),
     );
+
+    if (response.statusCode == 401) {
+      return await _handleRefreshToken(
+          HttpMethod.PUT, endpoint, body, query, useToken);
+    }
     return response;
+  }
+
+  Future<void> refreshToken() async {
+    debugPrint("Refresh Token Start");
+    final accessToken = await getAccessToken();
+    final refreshToken = await getRefreshToken();
+    var body = {
+      'AccessToken': accessToken,
+      'RefreshToken': refreshToken,
+    };
+
+    try {
+      var response = await post(body, "/Authentication/RetriveTokens");
+
+      if (response.data['status'] ?? false) {
+        await storeAccessToken(response.data['accessToken']);
+        await storeRefreshToken(response.data['refreshToken']);
+      } else {
+        Future.error(const RefreshTokenException());
+      }
+    } catch (e) {
+      Future.error(const RefreshTokenException());
+    }
+  }
+
+  Future<Response<dynamic>> _handleRefreshToken(HttpMethod method,
+      String endpoint, body, Map<String, dynamic>? query, bool useToken) async {
+    await refreshToken();
+    switch (method) {
+      case HttpMethod.GET:
+        return await client.get(
+          host + endpoint,
+          data: json.encode(body),
+          queryParameters: query,
+          options: Options(
+            headers: await _buildHeader(useToken: useToken),
+          ),
+        );
+      case HttpMethod.PUT:
+        return await client.put(
+          host + endpoint,
+          data: json.encode(body),
+          queryParameters: query,
+          options: Options(
+            headers: await _buildHeader(useToken: useToken),
+          ),
+        );
+      case HttpMethod.POST:
+        return await client.post(
+          host + endpoint,
+          data: json.encode(body),
+          queryParameters: query,
+          options: Options(
+            headers: await _buildHeader(useToken: useToken),
+          ),
+        );
+    }
   }
 
   @override
@@ -150,4 +224,10 @@ class APIHandlerImp implements APIHandlerInterface {
   Future<void> deleteToken() async {
     await _storage.deleteAll();
   }
+}
+
+enum HttpMethod {
+  GET,
+  PUT,
+  POST,
 }

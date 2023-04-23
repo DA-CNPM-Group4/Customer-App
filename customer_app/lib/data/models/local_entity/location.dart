@@ -26,8 +26,14 @@ class Location {
         latitude: position.latitude, longitude: position.longitude);
   }
 
-  factory Location.fromJson(Map<String, dynamic> json) =>
-      _$LocationFromJson(json);
+  factory Location.fromJson(Map<String, dynamic> json,
+      {String? actualAddress}) {
+    final result = _$LocationFromJson(json);
+
+    result.address = actualAddress ?? result.address;
+
+    return result;
+  }
 
   factory Location.fromGeoPosition(Position position) =>
       Location()..setLocationFromPosition(position);

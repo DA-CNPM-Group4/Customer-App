@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:customer_app/Data/models/realtime_models/realtime_passenger.dart';
 import 'package:customer_app/core/constants/common_object.dart';
 import 'package:customer_app/core/constants/enum.dart';
@@ -47,7 +48,7 @@ class MapController extends GetxController {
   var isShow = false;
   var pass = false.obs;
   var distance = 0.0.obs;
-  var address = ''.obs;
+  var displayAddress = ''.obs;
   var selectedIndex = 0.obs;
 
   Rx<DrivingStatus> status = DrivingStatus.SELECTVEHICLE.obs;
@@ -91,6 +92,9 @@ class MapController extends GetxController {
   @override
   void onClose() {
     _timer?.cancel();
+    driverListener?.cancel();
+    tripChangeStatusListener?.cancel();
+    tripDeleteListener?.cancel();
     super.onClose();
   }
 
@@ -102,16 +106,7 @@ class MapController extends GetxController {
     isLoading.value = true;
     await getCurrentPosition();
 
-    from = Location(
-        lat: findTransportationController.position["latitude"],
-        lng: findTransportationController.position["longitude"]);
-
-    await setAddress(from);
     await initMarker();
-
-    to = Location(
-        lat: findTransportationController.position["latitude"],
-        lng: findTransportationController.position["longitude"]);
 
     polyline.add(Polyline(
       polylineId: const PolylineId('line1'),
@@ -131,7 +126,8 @@ class MapController extends GetxController {
         isShow = true;
         text.value = "Set pickup location";
         searchPickup = Get.arguments["location"];
-        await setAddress(searchPickup!.location);
+
+        debugPrint("Set Address searchPickup");
         await myLocationMarker("1", searchPickup?.location,
             searchPageController.myPickupSearchLocationController);
         searchLocationType = SearchLocationTypes.SELECTLOCATION;
@@ -149,6 +145,7 @@ class MapController extends GetxController {
           searchDestination = Get.arguments["destination"];
           text.value = "Set pickup location";
           from = searchPageController.currentLocation;
+          debugPrint("From: ${from?.toJson()}");
           await myLocationMarker(
               "1", from, searchPageController.myPickupSearchLocationController);
           searchLocationType = SearchLocationTypes.SELECTDESTINATION;
@@ -160,7 +157,6 @@ class MapController extends GetxController {
   myLocationMarker(String makerId, Location? location,
       TextEditingController textEditController) async {
     await setAddress(location);
-    textEditController.text = address.value;
 
     createGooglemapMarker(makerId, location, textEditController);
 
@@ -181,10 +177,10 @@ class MapController extends GetxController {
           ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue)
           : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       onDragEnd: ((newPosition) async {
+        debugPrint("On Drag");
         isDragging.value = false;
         location?.setLocation(newPosition);
         await setAddress(location);
-        textEditController.text = address.value;
       }),
       position: LatLng(
         location?.lat ?? 0,
@@ -196,12 +192,13 @@ class MapController extends GetxController {
 
   setAddress(Location? location) async {
     if (location?.address == null || location!.address!.isEmpty) {
+      debugPrint("Modify Address By Geocoding");
       var temp = await DeviceLocationService.instance.getAddressFromLatLang(
           latitude: location?.lat ?? 0, longitude: location?.lng ?? 0);
-      address.value = temp;
+      displayAddress.value = temp;
       location?.address = temp;
     } else {
-      address.value = location.address!;
+      displayAddress.value = location.address!;
     }
   }
 
@@ -242,14 +239,15 @@ class MapController extends GetxController {
       text.value = "Set pickup location";
       searchPageController.currentLocation = searchPickup!.location!;
       searchPageController.myPickupSearchLocationController.text =
-          address.value;
+          displayAddress.value;
       searchPageController.location.clear();
       Get.back();
     } else if (searchLocationType == SearchLocationTypes.SELECTDESTINATION) {
       text.value = "Set up destination";
-      await myLocationMarker("2", searchDestination?.location,
-          searchPageController.myDestinationSearchController);
       to = searchDestination?.location;
+      debugPrint("to : ${to?.toJson()}");
+      await myLocationMarker(
+          "2", to, searchPageController.myDestinationSearchController);
       searchLocationType = SearchLocationTypes.HASBOTH;
     } else if (searchLocationType == SearchLocationTypes.SELECTEVIAMAP) {
       text.value = "Set pickup location";

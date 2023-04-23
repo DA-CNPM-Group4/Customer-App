@@ -1,4 +1,3 @@
-
 import 'package:customer_app/data/models/local_entity/location.dart';
 
 class SearchLocation {
@@ -14,8 +13,9 @@ class SearchLocation {
     id = json['id'];
     name = json['name'];
     address = json['address'];
-    location =
-        json['location'] != null ? Location.fromJson(json['location']) : null;
+    location = json['location'] != null
+        ? Location.fromJson(json['location'], actualAddress: json['address'])
+        : null;
     types = json['types'].cast<String>();
   }
 

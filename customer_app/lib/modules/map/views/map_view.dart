@@ -365,12 +365,12 @@ class MapView extends GetView<MapController> {
         ),
         const SizedBox(height: 48),
         Text(
-          controller.address.value,
+          controller.displayAddress.value,
           style: BaseTextStyle.body3(fontSize: 16),
         ),
         const SizedBox(height: 20),
         Text(
-          controller.address.value,
+          controller.displayAddress.value,
           style: BaseTextStyle.body2(fontSize: 15),
         ),
         const SizedBox(height: 20),

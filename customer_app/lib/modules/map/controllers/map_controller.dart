@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:customer_app/Data/models/realtime_models/realtime_passenger.dart';
 import 'package:customer_app/core/constants/common_object.dart';
 import 'package:customer_app/core/constants/enum.dart';

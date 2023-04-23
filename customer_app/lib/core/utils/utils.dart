@@ -7,27 +7,21 @@ class Utils {
   static final dmyFormatter = DateFormat('dd/MM/yyyy');
   static final hsFormatter = DateFormat("HH:mm");
 
-  static final moneyFormatter = DateFormat('MM-dd-yyyy');
-
   static String get currentDateTime {
-    final DateTime now = DateTime.now();
+    final DateTime now = DateTime.now().toUtc();
     return formatter.format(now);
   }
 
   static String dateTimeFullTime(DateTime? time) {
-    return time == null ? "" : dmyhmFormatter.format(time);
+    return time == null ? "" : dmyhmFormatter.format(time.toLocal());
   }
 
   static String dateTimeToDate(DateTime? time) {
-    return time == null ? "" : dmyFormatter.format(time);
+    return time == null ? "" : dmyFormatter.format(time.toLocal());
   }
 
   static String dateTimeToTime(DateTime? time) {
-    return time == null ? "" : hsFormatter.format(time);
-  }
-
-  static String moneyDateFormatter(DateTime time) {
-    return moneyFormatter.format(time);
+    return time == null ? "" : hsFormatter.format(time.toLocal());
   }
 }
 

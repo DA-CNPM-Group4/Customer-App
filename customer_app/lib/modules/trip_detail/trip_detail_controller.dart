@@ -41,16 +41,15 @@ class TripDetailController extends GetxController {
           .getTripFeedBack(tripId: trip.tripId);
       isRate.value = true;
     } catch (e) {
+      debugPrint(e.toString());
       isRate.value = false;
     }
+
     try {
-      debugPrint(trip.driverId);
-      debugPrint(trip.passengerId);
-      final driver =
+      driver =
           await GraphQLService.infoGraphQLService.getDriverInfo(trip.driverId);
-      debugPrint(driver.toString());
     } catch (e) {
-      isLoading.value = false;
+      debugPrint(e.toString());
       showSnackBar("Driver info", "Get Driver Info Failed");
     }
 
@@ -60,17 +59,8 @@ class TripDetailController extends GetxController {
       chatHistory = chatLog.toChatMessage(passenger.accountId);
       debugPrint(chatHistory?.length.toString());
     } catch (e) {
-      isChatLoaded.value = false;
+      debugPrint(e.toString());
       showSnackBar("Chat History", "Get Chat History Failed");
-    }
-
-    try {
-      var passengerInfo = await GraphQLService.infoGraphQLService
-          .getDriverInfo(trip.passengerId);
-
-      debugPrint(passengerInfo.toString());
-    } catch (e) {
-      showSnackBar("Error", e.toString());
     }
     isLoading.value = false;
   }
@@ -86,7 +76,7 @@ class TripDetailController extends GetxController {
             const CircleAvatar(
               backgroundImage: AssetImage("assets/icons/face_icon.png"),
             ),
-            Text(null ?? "Driver Name"),
+            Text(driver?['name'] ?? "Driver Name"),
             RatingBar.builder(
               initialRating: 1,
               minRating: 1,

@@ -80,10 +80,10 @@ class APIHandlerImp implements APIHandlerInterface {
         queryParameters: query,
         options: Options(headers: await _buildHeader(useToken: useToken)));
 
-    if (response.statusCode == 401) {
-      return await _handleRefreshToken(
-          HttpMethod.POST, endpoint, body, query, useToken);
-    }
+    // if (response.statusCode == 401) {
+    //   return await _handleRefreshToken(
+    //       HttpMethod.POST, endpoint, body, query, useToken);
+    // }
     return response;
   }
 
@@ -103,10 +103,10 @@ class APIHandlerImp implements APIHandlerInterface {
       ),
     );
 
-    if (response.statusCode == 401) {
-      return await _handleRefreshToken(
-          HttpMethod.GET, endpoint, body, query, useToken);
-    }
+    // if (response.statusCode == 401) {
+    //   return await _handleRefreshToken(
+    //       HttpMethod.GET, endpoint, body, query, useToken);
+    // }
     return response;
   }
 
@@ -126,10 +126,10 @@ class APIHandlerImp implements APIHandlerInterface {
       ),
     );
 
-    if (response.statusCode == 401) {
-      return await _handleRefreshToken(
-          HttpMethod.PUT, endpoint, body, query, useToken);
-    }
+    // if (response.statusCode == 401) {
+    //   return await _handleRefreshToken(
+    //       HttpMethod.PUT, endpoint, body, query, useToken);
+    // }
     return response;
   }
 

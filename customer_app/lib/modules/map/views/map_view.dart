@@ -337,6 +337,7 @@ class MapView extends GetView<MapController> {
                             const EdgeInsets.only(left: 10, right: 10, top: 30),
                         width: double.infinity,
                         child: ElevatedButton(
+                            key: const Key("map_view_cancel_order_btn"),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red),
                             onPressed: () async {
@@ -379,6 +380,7 @@ class MapView extends GetView<MapController> {
               visible: controller.isShow,
               child: Expanded(
                 child: ElevatedButton(
+                    key: const Key("map_view_next_btn"),
                     onPressed: () async {
                       await controller.handleSearch();
                     },
@@ -557,6 +559,7 @@ class MapView extends GetView<MapController> {
               child: IgnorePointer(
                 ignoring: controller.isLoading.value,
                 child: ElevatedButton(
+                    key: const Key("map_view_order_btn"),
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: () async {

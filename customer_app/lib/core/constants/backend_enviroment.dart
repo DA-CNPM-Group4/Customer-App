@@ -4,7 +4,7 @@ class BackendEnviroment {
   static ComunicationMode mode = ComunicationMode.BackendDoLogic;
   static bool isPoor = true;
 
-  static String host = "https://dacnpmbe11.azurewebsites.net/api";
+  static String host = "https://dacnpmbe.azurewebsites.net/api";
   static GraphQLEnviroment graphQLEnviroment = GraphQLEnviroment();
 
   static checkDevelopmentMode({bool isUseEmulator = false}) {
@@ -27,7 +27,7 @@ class BackendEnviroment {
 }
 
 class GraphQLEnviroment {
-  String graphqlHost = 'https://dacnpmbe11.azurewebsites/';
+  String graphqlHost = 'https://dacnpmbe.azurewebsites.net/';
 
   String tripPath = 'trip/graphql';
   String infoPath = 'info/graphql';

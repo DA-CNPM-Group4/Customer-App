@@ -139,6 +139,8 @@ class SearchPageView extends GetView<SearchPageController> {
                                 color: Colors.grey[500]!,
                               ),
                               TextFormField(
+                                key: const Key(
+                                    "search_page_view_search_for_a_destination"),
                                 focusNode: controller.destinationFocusNode,
                                 decoration: const InputDecoration.collapsed(
                                     hintText: 'Search for a destination'),
@@ -210,6 +212,8 @@ class SearchPageView extends GetView<SearchPageController> {
                       : ListView.separated(
                           itemBuilder: (context, index) {
                             return ListTile(
+                              key: Key(
+                                  "search_page_view_destination_item${index.toString()}"),
                               leading: const Icon(Icons.location_on),
                               horizontalTitleGap: 0,
                               title: Text(

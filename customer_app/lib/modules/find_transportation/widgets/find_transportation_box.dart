@@ -67,6 +67,7 @@ class FindTransportationBox extends StatelessWidget {
           ),
           h,
           FakeSearch(
+            key: const Key("find_transportation_box_search_field"),
             borderColor: Colors.grey[300],
             backgroundColor: Colors.grey[200],
             hint: "Search a location",

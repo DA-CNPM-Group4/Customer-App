@@ -2,19 +2,21 @@ import 'package:customer_app/core/constants/enum.dart';
 
 class BackendEnviroment {
   static ComunicationMode mode = ComunicationMode.BackendDoLogic;
-  static bool isPoor = true;
+  static bool isPoor = false;
+  static String url = "https://dacnpmbe.azurewebsites.net";
 
-  static String host = "https://dacnpmbe.azurewebsites.net/api";
-  static GraphQLEnviroment graphQLEnviroment = GraphQLEnviroment();
+  static String get host => "$url/api";
+  static GraphQLEnviroment graphQLEnviroment = GraphQLEnviroment(url);
 
   static checkDevelopmentMode({bool isUseEmulator = false}) {
     assert(() {
       if (isUseEmulator) {
-        host = "http://10.0.2.2:8001/api";
+        url = "http://10.0.2.2:8001";
+        graphQLEnviroment.graphqlHost = url;
       } else {
-        host = "http://192.168.1.4:8001/api";
+        url = "http://192.168.1.4:8001";
+        graphQLEnviroment.graphqlHost = url;
       }
-      graphQLEnviroment.checkDevelopmentMode();
       return true;
     }());
   }
@@ -27,22 +29,13 @@ class BackendEnviroment {
 }
 
 class GraphQLEnviroment {
-  String graphqlHost = 'https://dacnpmbe.azurewebsites.net/';
+  String graphqlHost = 'https://dacnpmbe.azurewebsites.net';
 
-  String tripPath = 'trip/graphql';
-  String infoPath = 'info/graphql';
+  String tripPath = '/trip/graphql';
+  String infoPath = '/info/graphql';
 
   String get tripHost => graphqlHost + tripPath;
   String get infoHost => graphqlHost + infoPath;
 
-  checkDevelopmentMode({bool isUseEmulator = false}) {
-    assert(() {
-      if (isUseEmulator) {
-        graphqlHost = "http://10.0.2.2:8001/";
-      } else {
-        graphqlHost = "http://192.168.1.4:8001/";
-      }
-      return true;
-    }());
-  }
+  GraphQLEnviroment(this.graphqlHost);
 }

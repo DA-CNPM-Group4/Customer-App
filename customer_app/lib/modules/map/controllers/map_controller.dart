@@ -241,7 +241,7 @@ class MapController extends GetxController {
       searchPageController.currentLocation = searchPickup!.location!;
       searchPageController.myPickupSearchLocationController.text =
           displayAddress.value;
-      searchPageController.location.clear();
+      // searchPageController.location.clear();
       Get.back();
     } else if (searchLocationType == SearchLocationTypes.SELECTDESTINATION) {
       text.value = "Set up destination";
@@ -296,10 +296,19 @@ class MapController extends GetxController {
             const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         textConfirm: "Yes",
         onConfirm: () async {
-          await cancelBooking();
-          isShowCancel = false;
-          Get.offNamedUntil(
-              Routes.FIND_TRANSPORTATION, ModalRoute.withName(Routes.FIND_TRANSPORTATION));
+          try {
+            await cancelBooking();
+            showSnackBar("Sucess", "Cancel Request Sucess");
+          } catch (e) {
+            debugPrint(e.toString());
+            showSnackBar(
+                "Failed", "Cancel Request Failed, but you can cancel anyway");
+          } finally {
+            Get.until(
+              (route) => Get.currentRoute == Routes.FIND_TRANSPORTATION,
+            );
+            isShowCancel = false;
+          }
         },
         onCancel: () {
           isShowCancel = false;
@@ -562,6 +571,8 @@ class MapController extends GetxController {
           ),
         ],
       ),
-    );
+    ).then((value) {
+      Get.until((route) => Get.currentRoute == Routes.FIND_TRANSPORTATION);
+    });
   }
 }

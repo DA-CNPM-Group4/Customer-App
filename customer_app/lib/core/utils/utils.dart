@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:intl/intl.dart';
 
@@ -85,5 +86,15 @@ class StringValidator {
       return "This is a valid phone number";
     }
     return null;
+  }
+
+  static Future<bool> validateField(GlobalKey<FormState> form) async {
+    final isPhoneValid = form.currentState!.validate();
+    if (!isPhoneValid) {
+      return false;
+    }
+    // call api to check
+    form.currentState?.save();
+    return true;
   }
 }

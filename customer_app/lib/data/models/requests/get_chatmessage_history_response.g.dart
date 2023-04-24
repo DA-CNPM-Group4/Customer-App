@@ -31,6 +31,7 @@ ChatMessageResponseBody _$ChatMessageResponseBodyFromJson(
         Map<String, dynamic> json) =>
     ChatMessageResponseBody(
       tripId: json['tripId'] as String?,
+      senderId: json['senderId'] as String,
       message: json['message'] as String,
       senderName: json['senderName'] as String?,
       sendTime: json['sendTime'] as String,

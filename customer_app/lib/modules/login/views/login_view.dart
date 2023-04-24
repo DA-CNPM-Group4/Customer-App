@@ -92,7 +92,7 @@ class LoginView extends GetView<LoginController> {
                         textCapitalization: TextCapitalization.none,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
-                            errorText: controller.emailError.value,
+                            errorText: controller.errorText.value,
                             hintText: 'someone@gmail.com',
                             hintStyle: BaseTextStyle.body3(color: Colors.grey),
                             suffixIcon: const Icon(Icons.email_rounded)),
@@ -119,7 +119,7 @@ class LoginView extends GetView<LoginController> {
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                            errorText: controller.emailError.value,
+                            errorText: controller.errorText.value,
                             hintText: 'Enter phone number',
                             hintStyle: BaseTextStyle.body3(color: Colors.grey),
                             suffixIcon: const Icon(Icons.phone_android)),

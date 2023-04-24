@@ -1,4 +1,5 @@
 import 'package:customer_app/core/utils/utils.dart';
+import 'package:customer_app/modules/chat/widgets/chat_message_widget.dart';
 import 'package:customer_app/modules/search_page/views/search_page_view.dart';
 import 'package:customer_app/modules/trip_detail/trip_detail_controller.dart';
 import 'package:customer_app/modules/trip_detail/widgets/rate_comment.dart';
@@ -27,13 +28,14 @@ class TripDetailView extends GetView<TripDetailController> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: size.height,
           margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 22),
           child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildDriverInfo(),
+                Obx(() => controller.isLoadinginfo.value
+                    ? const Center(child: CircularProgressIndicator())
+                    : _buildDriverInfo()),
                 const SizedBox(height: 18),
                 _buildTripAddress(size.height, size.width),
                 const SizedBox(height: 12),
@@ -48,46 +50,74 @@ class TripDetailView extends GetView<TripDetailController> {
                           style: BaseTextStyle.heading2(fontSize: 17)),
                       const SizedBox(height: 12),
                       Obx(
-                        () => controller.isLoading.value
+                        () => controller.isLoadingFeedback.value
                             ? const Center(child: CircularProgressIndicator())
-                            : Obx(
-                                () => controller.isRate.value
-                                    ? RateAndComment(
-                                        feedback: controller.feedback.note,
-                                        passengerName:
-                                            controller.passenger.name,
-                                        rating: 3,
-                                      )
-                                    : GestureDetector(
-                                        onTap: () async {
-                                          await controller.openRateDialog();
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.only(
-                                              top: 10, bottom: 10),
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors.green),
-                                              color: Colors.green,
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                      topLeft:
-                                                          Radius.circular(4),
-                                                      bottomLeft:
-                                                          Radius.circular(4))),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Text(
-                                                "Rate trip",
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              )
-                                            ],
-                                          ),
-                                        ),
+                            : controller.isRate.value
+                                ? RateAndComment(
+                                    feedback: controller.feedback.note,
+                                    passengerName: controller.passenger.name,
+                                    rating: 3,
+                                  )
+                                : GestureDetector(
+                                    onTap: () async {
+                                      await controller.openRateDialog();
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, bottom: 10),
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.green),
+                                          color: Colors.green,
+                                          borderRadius: const BorderRadius.only(
+                                              topLeft: Radius.circular(4),
+                                              bottomLeft: Radius.circular(4))),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Text(
+                                            "Rate trip",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          )
+                                        ],
                                       ),
+                                    ),
+                                  ),
+                      ),
+                      Text("Chats History",
+                          style: BaseTextStyle.heading2(fontSize: 20)),
+                      const SizedBox(height: 12),
+                      Obx(
+                        () => !controller.isLoadingChatHistory.value
+                            ? controller.isHaveChatLog.value
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 154, 147, 147),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    height: size.width,
+                                    child: ListView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount:
+                                          controller.chatHistory?.length ?? 0,
+                                      itemBuilder: (context, index) {
+                                        var message =
+                                            controller.chatHistory![index];
+                                        return ChatMessageWidget(
+                                          text: message.text,
+                                          chatMessageType:
+                                              message.chatMessageType,
+                                        );
+                                      },
+                                    ),
+                                  )
+                                : const Text("None")
+                            : const Center(
+                                child: CircularProgressIndicator(),
                               ),
                       ),
                     ],

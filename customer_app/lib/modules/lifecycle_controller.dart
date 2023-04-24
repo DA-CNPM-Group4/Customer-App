@@ -19,6 +19,7 @@ class LifeCycleController extends SuperController {
   // variable use in save state, login, register, ....
   String phone = "";
   String email = "";
+  String? googleEmail;
   String name = "";
   bool gender = false;
   bool isActiveOTP = true;
@@ -30,13 +31,15 @@ class LifeCycleController extends SuperController {
       String? name,
       bool? gender,
       bool? isActiveOTP,
-      bool? isloginByGoogle}) {
+      bool? isloginByGoogle,
+      String? googleEmail}) {
     this.phone = phone ?? this.phone;
     this.email = email ?? this.email;
     this.name = name ?? this.name;
     this.gender = gender ?? this.gender;
     this.isActiveOTP = isActiveOTP ?? this.isActiveOTP;
     this.isloginByGoogle = isloginByGoogle ?? this.isloginByGoogle;
+    this.googleEmail = googleEmail;
   }
 
   @override
@@ -58,6 +61,15 @@ class LifeCycleController extends SuperController {
     } on IBussinessException catch (_) {
       var body2 = CreatePassengerRequestBody(
           Email: email, Phone: phone, Name: name, Gender: gender);
+      if (isloginByGoogle) {
+        String? yourPhone = await openInputPhoneBottomSheet();
+        if (yourPhone == null || googleEmail == null) {
+          Future.error("You Must Enter Phone");
+        }
+        body2.Email = googleEmail!;
+        body2.Phone = yourPhone!;
+      }
+
       await PassengerAPIService.createPassenger(body: body2);
       await getPassengerInfoAndRoutingHome();
     } catch (e) {

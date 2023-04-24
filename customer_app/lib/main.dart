@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
-  // BackendEnviroment.checkDevelopmentMode();
+  BackendEnviroment.checkDevelopmentMode();
   await setup();
   runApp(
     GetMaterialApp(

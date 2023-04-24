@@ -95,7 +95,7 @@ class GeneralAPIService {
     }
   }
 
-  Future<void> loginByGoogle() async {
+  Future<String> loginByGoogle() async {
     try {
       await GoogleSignIn().signOut();
     } catch (_) {}
@@ -131,6 +131,7 @@ class GeneralAPIService {
       var responseBody = LoginResponseBody.fromJson(response.data['data']);
       await _storeAllIdentity(responseBody);
 
+      return gUser.email;
       // await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
       return Future.error(UnexpectedException(

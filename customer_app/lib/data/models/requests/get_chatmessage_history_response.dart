@@ -19,7 +19,7 @@ class ChatMessageHistoryResponseBody {
     return messages
         ?.map((e) => ChatMessage(
             text: e.message,
-            chatMessageType: e.tripId != myId
+            chatMessageType: e.senderId != myId
                 ? ChatMessageType.driver
                 : ChatMessageType.passenger))
         .toList();
@@ -37,10 +37,12 @@ class ChatMessageResponseBody {
   final String message;
   final String? senderName;
   final String sendTime;
+  final String senderId;
 
   ChatMessageResponseBody({
     this.tripId,
     required this.message,
+    required this.senderId,
     required this.senderName,
     required this.sendTime,
   });

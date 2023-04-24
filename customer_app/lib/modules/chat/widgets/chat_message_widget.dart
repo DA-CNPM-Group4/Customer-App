@@ -95,7 +95,6 @@ class ProfileContainer extends StatelessWidget {
             )
           : Image.asset(
               "assets/icons/face_icon.png",
-              color: Colors.white,
               scale: 1.5,
             ),
     );

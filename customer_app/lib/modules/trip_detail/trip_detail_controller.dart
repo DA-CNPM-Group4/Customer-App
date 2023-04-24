@@ -23,9 +23,11 @@ class TripDetailController extends GetxController {
   late RateTripResponse feedback;
   late List<ChatMessage>? chatHistory;
 
-  RxBool isLoading = false.obs;
-  RxBool isRate = false.obs;
-  RxBool isChatLoaded = false.obs;
+  final RxBool isLoadinginfo = false.obs;
+  final RxBool isLoadingFeedback = false.obs;
+  final RxBool isRate = false.obs;
+  final RxBool isLoadingChatHistory = false.obs;
+  final RxBool isHaveChatLog = false.obs;
 
   int star = 2;
   TextEditingController feedbackController = TextEditingController();
@@ -33,16 +35,12 @@ class TripDetailController extends GetxController {
   void onInit() async {
     super.onInit();
     trip = Get.arguments as TripResponse;
+
     passenger = await lifeCycleController.getPassenger;
-    isLoading.value = true;
-    try {
-      feedback = await PassengerAPIService.tripApi
-          .getTripFeedBack(tripId: trip.tripId);
-      isRate.value = true;
-    } catch (e) {
-      debugPrint(e.toString());
-      isRate.value = false;
-    }
+
+    isLoadinginfo.value = true;
+    isLoadingFeedback.value = true;
+    isLoadingChatHistory.value = true;
 
     try {
       driver =
@@ -50,18 +48,34 @@ class TripDetailController extends GetxController {
     } catch (e) {
       debugPrint(e.toString());
       showSnackBar("Driver info", "Get Driver Info Failed");
+    } finally {
+      isLoadinginfo.value = false;
+    }
+
+    try {
+      feedback = await PassengerAPIService.tripApi
+          .getTripFeedBack(tripId: trip.tripId);
+      isRate.value = true;
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoadingFeedback.value = false;
     }
 
     try {
       var chatLog =
           await PassengerAPIService.chatApi.getChatLog(tripId: trip.tripId);
       chatHistory = chatLog.toChatMessage(passenger.accountId);
+
+      isHaveChatLog.value = true;
+
       debugPrint(chatHistory?.length.toString());
     } catch (e) {
       debugPrint(e.toString());
       showSnackBar("Chat History", "Get Chat History Failed");
+    } finally {
+      isLoadingChatHistory.value = false;
     }
-    isLoading.value = false;
   }
 
   Future<void> openRateDialog() async {

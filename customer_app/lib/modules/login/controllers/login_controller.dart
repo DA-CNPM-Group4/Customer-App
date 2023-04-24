@@ -17,7 +17,8 @@ class LoginController extends GetxController {
   TextEditingController emailController = TextEditingController();
 
   APIHandlerImp apiHandlerImp = APIHandlerImp();
-  var emailError = ''.obs;
+  var errorText = ''.obs;
+
   var isLoading = false.obs;
 
   Future<void> validateAndSave() async {
@@ -52,16 +53,12 @@ class LoginController extends GetxController {
   Future<void> signInWithGoogle() async {
     isLoading.value = true;
 
-    // handle google login
+    String gooleEmail = await PassengerAPIService.authApi.loginByGoogle();
     try {
-      // lifeCycleController.isloginByGoogle = true;
-      // lifeCycleController.email = emailController.text;
-      // lifeCycleController.phone = phoneNumberController.text;
-
       lifeCycleController.setPreLoginState(
         isloginByGoogle: true,
+        googleEmail: gooleEmail,
       );
-      await PassengerAPIService.authApi.loginByGoogle();
     } on CancelActionException catch (_) {
       isLoading.value = false;
       return;
@@ -70,7 +67,6 @@ class LoginController extends GetxController {
       isLoading.value = false;
       return;
     }
-
     await lifeCycleController.getPassengerInfoAndRoutingHome();
     isLoading.value = false;
   }

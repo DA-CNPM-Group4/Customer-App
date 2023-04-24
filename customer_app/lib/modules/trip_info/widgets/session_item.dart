@@ -88,7 +88,7 @@ class SessionItem extends StatelessWidget {
                                 width: 20),
                           ),
                           Text(
-                            " ${Utils.dateTimeToTime(session.createdTime)} - ${Utils.dateTimeToTime(DateTime.parse(session.completeTime.toString()))}", //Replace with trip create time and end time
+                            " ${Utils.dateTimeToTime(session.createdTime)} - ${Utils.dateTimeToTime(session.completeTime)}", //Replace with trip create time and end time
                             style: const TextStyle(fontSize: 13),
                           ),
                         ],

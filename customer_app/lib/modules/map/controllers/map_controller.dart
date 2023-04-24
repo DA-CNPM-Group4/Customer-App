@@ -29,6 +29,8 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../routes/app_pages.dart';
+
 class MapController extends GetxController {
   LifeCycleController lifeCycleController = Get.find<LifeCycleController>();
   ChatController chatController = Get.find<ChatController>();
@@ -296,7 +298,8 @@ class MapController extends GetxController {
         onConfirm: () async {
           await cancelBooking();
           isShowCancel = false;
-          Get.back();
+          Get.offNamedUntil(
+              Routes.FIND_TRANSPORTATION, ModalRoute.withName(Routes.FIND_TRANSPORTATION));
         },
         onCancel: () {
           isShowCancel = false;

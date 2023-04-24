@@ -122,7 +122,7 @@ class GeneralAPIService {
 
       final body = {
         "loginToken": credential.accessToken,
-        "role": "Driver",
+        "role": "Passenger",
       };
 
       var response = await APIHandlerImp.instance

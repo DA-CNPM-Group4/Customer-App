@@ -20,13 +20,11 @@ class PasswordController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  String? passwordValidator(String value) {
-    if (value.isEmpty) {
-      return "This field is required";
-    } else if (value.length < 6) {
-      return "Password length must be longer than 6 digits";
-    }
-    return null;
+  @override
+  void onClose() {
+    passwordController.dispose();
+
+    super.onClose();
   }
 
   bool check() {

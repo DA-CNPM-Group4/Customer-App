@@ -37,8 +37,20 @@ class SearchPageController extends GetxController
   Timer? _debounce;
 
   @override
+  void onClose() {
+    _debounce?.cancel();
+    animationController.dispose();
+    pickupFocusNode.dispose();
+    destinationFocusNode.dispose();
+    myPickupSearchLocationController.dispose();
+    myDestinationSearchController.dispose();
+    super.onClose();
+  }
+
+  @override
   void onInit() {
     super.onInit();
+
     currentLocation = Location(
         lat: findTransportationController.position["latitude"],
         lng: findTransportationController.position["longitude"]);
@@ -152,11 +164,5 @@ class SearchPageController extends GetxController
         "type": SEARCHTYPES.mydestination
       });
     }
-  }
-
-  @override
-  void onClose() {
-    _debounce?.cancel();
-    super.onClose();
   }
 }

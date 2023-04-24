@@ -91,11 +91,13 @@ class MapController extends GetxController {
 // chat
   final GlobalKey parentKey = GlobalKey();
   @override
-  void onClose() {
+  void onClose() async {
     _timer?.cancel();
-    driverListener?.cancel();
-    tripChangeStatusListener?.cancel();
-    tripDeleteListener?.cancel();
+    feedbackController.dispose();
+
+    await driverListener?.cancel();
+    await tripChangeStatusListener?.cancel();
+    await tripDeleteListener?.cancel();
     super.onClose();
   }
 
@@ -152,6 +154,40 @@ class MapController extends GetxController {
           searchLocationType = SearchLocationTypes.SELECTDESTINATION;
         }
       }
+    }
+  }
+
+  Future<void> handleNextButton() async {
+    if (searchLocationType == SearchLocationTypes.SELECTLOCATION) {
+      text.value = "Set pickup location";
+      searchPageController.currentLocation = searchPickup!.location!;
+      searchPageController.myPickupSearchLocationController.text =
+          displayAddress.value;
+      // searchPageController.location.clear();
+      Get.back();
+    } else if (searchLocationType == SearchLocationTypes.SELECTDESTINATION) {
+      text.value = "Set up destination";
+      to = searchDestination?.location;
+      debugPrint("to : ${to?.toJson()}");
+      await myLocationMarker(
+          "2", to, searchPageController.myDestinationSearchController);
+      searchLocationType = SearchLocationTypes.HASBOTH;
+    } else if (searchLocationType == SearchLocationTypes.SELECTEVIAMAP) {
+      text.value = "Set pickup location";
+      await myLocationMarker(
+          "1", from, searchPageController.myPickupSearchLocationController);
+      searchLocationType = SearchLocationTypes.HASBOTH;
+    } else if (searchLocationType == SearchLocationTypes.HASBOTH) {
+      await route(from, to);
+      await updatePrice(CommonObject.vehicleList, distance.value);
+
+      pass.value = true;
+      googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target: LatLng(
+                (from!.lat! + to!.lat!) / 2, (from!.lng! + to!.lng!) / 2),
+            zoom: 15),
+      ));
     }
   }
 
@@ -233,40 +269,6 @@ class MapController extends GetxController {
     LatLng newMarkerPosition =
         LatLng(position.target.latitude, position.target.longitude);
     markers[markerId] = Marker(markerId: markerId, position: newMarkerPosition);
-  }
-
-  Future<void> handleSearch() async {
-    if (searchLocationType == SearchLocationTypes.SELECTLOCATION) {
-      text.value = "Set pickup location";
-      searchPageController.currentLocation = searchPickup!.location!;
-      searchPageController.myPickupSearchLocationController.text =
-          displayAddress.value;
-      // searchPageController.location.clear();
-      Get.back();
-    } else if (searchLocationType == SearchLocationTypes.SELECTDESTINATION) {
-      text.value = "Set up destination";
-      to = searchDestination?.location;
-      debugPrint("to : ${to?.toJson()}");
-      await myLocationMarker(
-          "2", to, searchPageController.myDestinationSearchController);
-      searchLocationType = SearchLocationTypes.HASBOTH;
-    } else if (searchLocationType == SearchLocationTypes.SELECTEVIAMAP) {
-      text.value = "Set pickup location";
-      await myLocationMarker(
-          "1", from, searchPageController.myPickupSearchLocationController);
-      searchLocationType = SearchLocationTypes.HASBOTH;
-    } else if (searchLocationType == SearchLocationTypes.HASBOTH) {
-      await route(from, to);
-      await updatePrice(CommonObject.vehicleList, distance.value);
-
-      pass.value = true;
-      googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-            target: LatLng(
-                (from!.lat! + to!.lat!) / 2, (from!.lng! + to!.lng!) / 2),
-            zoom: 15),
-      ));
-    }
   }
 
   Future<void> handleMyLocationButton() async {

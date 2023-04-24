@@ -382,7 +382,7 @@ class MapView extends GetView<MapController> {
                 child: ElevatedButton(
                     key: const Key("map_view_next_btn"),
                     onPressed: () async {
-                      await controller.handleSearch();
+                      await controller.handleNextButton();
                     },
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.green),

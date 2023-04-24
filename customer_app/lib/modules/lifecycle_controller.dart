@@ -125,6 +125,7 @@ class LifeCycleController extends SuperController {
     phone = "";
     email = "";
     passenger = null;
+    googleEmail = null;
     _rxPassenger.value = null;
     if (!isCallAPI) {
       Get.offAllNamed(Routes.WELCOME);

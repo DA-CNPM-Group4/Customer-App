@@ -72,7 +72,7 @@ class TripDetailController extends GetxController {
       debugPrint(chatHistory?.length.toString());
     } catch (e) {
       debugPrint(e.toString());
-      showSnackBar("Chat History", "Get Chat History Failed");
+      // showSnackBar("Chat History", "Get Chat History Failed");
     } finally {
       isLoadingChatHistory.value = false;
     }

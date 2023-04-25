@@ -3,26 +3,30 @@ import 'package:get/get_utils/get_utils.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
+  static const _utcPlus7 = Duration(hours: 7);
   static final formatter = DateFormat('MM-dd-yyyy HH:mm');
   static final dmyhmFormatter = DateFormat('dd/MM/yyyy HH:mm');
   static final dmyFormatter = DateFormat('dd/MM/yyyy');
   static final hsFormatter = DateFormat("HH:mm");
 
   static String get currentDateTime {
-    final DateTime now = DateTime.now().toUtc();
+    final DateTime now = DateTime.now().toLocal();
     return formatter.format(now);
   }
 
   static String dateTimeFullTime(DateTime? time) {
-    return time == null ? "" : dmyhmFormatter.format(time.toLocal());
+    // return time == null ? "" : dmyhmFormatter.format(time.toLocal());
+    return time == null ? "" : dmyhmFormatter.format(time.add(_utcPlus7));
   }
 
   static String dateTimeToDate(DateTime? time) {
-    return time == null ? "" : dmyFormatter.format(time.toLocal());
+    // return time == null ? "" : dmyFormatter.format(time.toLocal());
+    return time == null ? "" : dmyFormatter.format(time.add(_utcPlus7));
   }
 
   static String dateTimeToTime(DateTime? time) {
-    return time == null ? "" : hsFormatter.format(time.toLocal());
+    // return time == null ? "" : hsFormatter.format(time.toLocal());
+    return time == null ? "" : hsFormatter.format(time.add(_utcPlus7));
   }
 }
 

@@ -11,6 +11,7 @@ class ChatAPIService {
       var response = await APIHandlerImp.instance.post(
         body,
         '/Chat/Chat/GetChats',
+        useToken: true,
       );
       if (response.data["status"]) {
         return ChatMessageHistoryResponseBody.fromJson(response.data['data']);

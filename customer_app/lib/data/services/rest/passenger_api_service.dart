@@ -19,8 +19,11 @@ class PassengerAPIService {
     try {
       var identity = await APIHandlerImp.instance.getIdentity();
       body.AccountId = identity;
-      var response = await APIHandlerImp.instance
-          .post(body.toJson(), '/Info/Passenger/AddInfo');
+      var response = await APIHandlerImp.instance.post(
+        body.toJson(),
+        '/Info/Passenger/AddInfo',
+        useToken: true,
+      );
       if (response.data["status"]) {
         return;
       } else {
@@ -37,8 +40,11 @@ class PassengerAPIService {
       var identity = await APIHandlerImp.instance.getIdentity();
       var body = {"accountId": identity};
 
-      var response = await APIHandlerImp.instance
-          .post(body, '/Info/Passenger/GetPassengerInfoById');
+      var response = await APIHandlerImp.instance.post(
+        body,
+        '/Info/Passenger/GetPassengerInfoById',
+        useToken: true,
+      );
       if (response.data["status"]) {
         var user = UserEntity.fromJson(response.data['data']);
         return user;
@@ -57,8 +63,11 @@ class PassengerAPIService {
       var identity = await APIHandlerImp.instance.getIdentity();
       body.AccountId = identity;
 
-      var response = await APIHandlerImp.instance
-          .post(body.toJson(), '/Info/Passenger/UpdateInfo');
+      var response = await APIHandlerImp.instance.post(
+        body.toJson(),
+        '/Info/Passenger/UpdateInfo',
+        useToken: true,
+      );
       if (response.data["status"]) {
         return;
       } else {
@@ -73,8 +82,11 @@ class PassengerAPIService {
   static Future<DriverEntity> getDriverInfo({required String driverId}) async {
     try {
       var body = {'accountId': driverId};
-      var response = await APIHandlerImp.instance
-          .post(body, '/Info/Driver/GetDriverInfoById');
+      var response = await APIHandlerImp.instance.post(
+        body,
+        '/Info/Driver/GetDriverInfoById',
+        useToken: true,
+      );
       if (!response.data["status"]) {
         if (response.data['data'] == null) {
           return Future.error(IBussinessException(response.data['message']));

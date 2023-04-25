@@ -98,6 +98,7 @@ class MapController extends GetxController {
     await driverListener?.cancel();
     await tripChangeStatusListener?.cancel();
     await tripDeleteListener?.cancel();
+    await gpsStreamSubscription?.cancel();
     super.onClose();
   }
 

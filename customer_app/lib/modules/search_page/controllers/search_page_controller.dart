@@ -119,6 +119,11 @@ class SearchPageController extends GetxController
     };
     var response =
         await NetworkHandler.getWithQuery('place/text-search', query);
+
+    if (response["result"] == null) {
+      isLoading.value = false;
+      return;
+    }
     for (var i = 0; i < response["result"].length; i++) {
       var iResult = response['result'][i];
       debugPrint("Map4D Search Result $i : ${iResult.toString()} ");

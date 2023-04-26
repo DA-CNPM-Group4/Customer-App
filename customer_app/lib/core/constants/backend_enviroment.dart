@@ -3,7 +3,7 @@ import 'package:customer_app/core/constants/enum.dart';
 class BackendEnviroment {
   static ComunicationMode mode = ComunicationMode.BackendDoLogic;
   static bool isPoor = false;
-  static String url = "https://dacnpmbe.azurewebsites.net";
+  static String url = "https://dacnpm4be.azurewebsites.net";
 
   static String get host => "$url/api";
   static GraphQLEnviroment graphQLEnviroment = GraphQLEnviroment(url);

@@ -32,8 +32,8 @@ void main() async {
       // Log in with email and password
       await _loginWithEmailAndPassword(
         tester,
-        email: 'changkho6313@gmail.com',
-        phone: '123456111',
+        email: 'gyqyliro@afia.pro',
+        phone: '123124001',
         password: '123456',
       );
 
@@ -184,8 +184,7 @@ Future<void> _testConfirmCancelOrder({required WidgetTester tester}) async{
   expect(find.text('Yes'), findsOneWidget);
   expect(find.text('No'), findsOneWidget);
   await tester.tap(find.text('Yes'));
-  await tester.pumpAndSettle(const Duration(seconds: 1));
-
+  await tester.pumpAndSettle(const Duration(seconds: 3));
   expect(find.text('Yes'), findsNothing);
   expect(find.text('No'), findsNothing);
   expect(find.byKey(const Key("map_view_order_btn")), findsOneWidget);
